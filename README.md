@@ -2,7 +2,7 @@
 
 Pre-check and review assist for PV, energy storage and emergency power submittals.
 
-Ohmsight ranks electrical design deficiencies by severity and frequency, runs a pre-check on key project data, and gives plan reviewers a risk-ranked checklist with a correction list.
+Ohmsight checks key project data against electrical code rules, ranks the likely deficiencies by risk, gives plan reviewers a risk-ranked checklist, and tracks deficiency trends over time.
 
 > Ohmsight flags likely deficiencies. It does not approve plans. Final code determinations rest with the authority having jurisdiction.
 
@@ -11,29 +11,45 @@ Ohmsight ranks electrical design deficiencies by severity and frequency, runs a 
 | File | What it is |
 |---|---|
 | `index.html` | Business landing page: the problem, how it works, audiences, plans, FAQ and pilot request form |
-| `platform.html` | The Ohmsight app: About, Pre-check, Review checklist, Taxonomy, Risk model and Method sheets |
-| `samples/` | Example projects to load with the app's **Upload JSON or CSV** button |
+| `platform.html` | Product and methodology page with the working MVP: pre-check, reviewer view, analytics dashboard and rule library |
+| `samples/` | Example projects to load with the MVP's **Upload JSON or CSV** button |
 
-Both pages are static, self-contained HTML. There is no build step and no server code. The app runs entirely in the browser; nothing a user enters is sent anywhere.
+Both pages are static, self-contained HTML. There is no build step and no server code. The MVP runs entirely in the browser; nothing a user enters is sent anywhere.
 
-## App sheets
+## MVP scope
 
-| Sheet | What it does |
+- **Input:** key project data entered in a form, or uploaded as JSON or CSV
+- **Output:** likely deficiencies ranked by risk, with the calculation and the required fix
+- **Reviewer view:** risk-ranked checklist with Deficiency, Cleared and N/A dispositions, notes, and a generated correction list
+- **Analytics:** deficiencies per submittal by month and system type, most frequent rules, and share of submittals with critical findings (synthetic demo data)
+
+### Risk model
+
+`Risk = Severity (1-5) x Likelihood (1-5)`
+
+| Band | Score |
 |---|---|
-| E-0 About | The problem, who it serves, and how the model works |
-| E-1 Pre-check | Enter key project data or upload JSON or CSV; likely deficiencies ranked by risk, with the calculation and the fix |
-| E-2 Review checklist | Ranked checklist for the project type; record deficiency, cleared or not applicable, then copy the correction list |
-| E-3 Taxonomy | 60 known deficiencies across 7 systems, each mapped to code sections |
-| E-4 Risk model | Severity x frequency risk matrix and breakdown by system |
-| E-5 Method | How severity and frequency are scored, with sources |
+| Critical | 20-25 |
+| High | 12-19 |
+| Medium | 6-11 |
+| Low | 1-5 |
 
-Each sheet can be opened directly with a link such as `platform.html#precheck` or `platform.html#taxonomy`.
+Severity runs from S5 (fire, life safety, or loss of emergency power) down to S2 (labeling and documentation). Likelihood is L5 when calculated from submitted values, L4 when a required item is absent, and L3 when a value is within a few percent of a limit.
 
-Code references follow NEC 2023. Confirm them against the edition and local amendments adopted by each jurisdiction.
+### Rules (23)
+
+| Group | Rules | Code basis |
+|---|---|---|
+| General | GEN-01 single-line diagram | NEC 110.3(B) |
+| PV | PV-01 to PV-10: max DC voltage, conductor sizing, 120% busbar rule, backfeed breaker, rapid shutdown, supply-side detail, grounding, spec sheets, labels, structural letter | NEC 690, 705 |
+| Energy storage | ES-01 to ES-05: UL 9540 listing, per-unit and aggregate kWh limits, location, disconnect | NEC 706, IRC R328, NFPA 855 |
+| Emergency and standby | EM-01 to EM-07: generator capacity, transfer time, selective coordination, transfer equipment listing, wiring separation, fuel duration, load calculation | NEC 700, 701, 702 |
+
+Code references default to NEC 2023 article numbers. Confirm them against the edition and local amendments adopted by each jurisdiction.
 
 ## Data format for uploads
 
-JSON uses the same shape as the **Copy as JSON** button in the app. See `samples/residential-pv-battery.json`.
+JSON uses the same shape as the **Copy as JSON** button in the MVP. See `samples/residential-pv-battery.json`.
 
 CSV uses one `key,value` row per field, with dotted keys for nested values:
 
@@ -66,7 +82,7 @@ python3 -m http.server 8000
 
 ## Roadmap
 
-1. **Now:** deficiency taxonomy and risk model, browser pre-check, form and file input, reviewer checklist and correction list
+1. **MVP (now):** browser rule engine, form and file input, risk-ranked output, reviewer checklist, demo analytics
 2. **Python service:** rules ported to a tested Python package, FastAPI endpoint, disposition history in a database, export to Power BI or the web dashboard, assisted extraction from equipment spec sheets
 3. **Pilot:** jurisdiction rule overlays, code edition switching, pilot with plan reviewers, measured change in correction cycles and review time
 

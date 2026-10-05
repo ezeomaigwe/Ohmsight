@@ -6,1017 +6,905 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='11' fill='none' stroke='%230A6C88' stroke-width='2.4'/%3E%3Cpath d='M8 17h3.2v-2.4a4 4 0 1 1 3.6 0V17H18' fill='none' stroke='%230A6C88' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Ohmsight Platform</title>
-<meta name="description" content="Ohmsight is a risk-ranked method and tool for electrical plan review: an evidence-based deficiency taxonomy, a code pre-check, and a reviewer checklist.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: a drawing set. Title block header, six sheets as tabs, redline red marks what to review first. */
+/* Layout: a drawing set. Title-block header, sheets (sections) tagged E-0..E-5, the working tool as the center sheet. */
 :root{
-  --paper:#F2F5F7; --sheet:#FFFFFF; --ink:#15202A; --ink-2:#47566A; --ink-3:#6F7D8B;
-  --rule:#D3DBE2; --rule-2:#E7ECF0; --grid:rgba(29,79,122,.06);
-  --blue:#1D4F7A; --blue-soft:#E3EDF6; --hl:#FFE7A3;
-  --red:#B91C2C; --t1-bg:#B91C2C; --t1-fg:#FFFFFF; --t2-bg:#F6D2D5; --t2-fg:#5E1119; --t3-bg:#E6ECF0; --t3-fg:#3E4C59;
-  --ok:#2F6B47; --ok-soft:#DFEFE5; --warn:#8A5A00; --warn-soft:#F8EBC8;
-  --focus:#1D4F7A;
-  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
-  --f-body:"IBM Plex Sans",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --paper:#EEF2F2; --sheet:#FBFCFC; --ink:#13212B; --ink-2:#3F4F59; --muted:#62737C;
+  --rule:#C6D0D3; --grid:#DFE6E8;
+  --accent:#0A6C88; --accent-ink:#FFFFFF; --accent-soft:#D9ECF2;
+  --crit:#B42318; --crit-soft:#FBE4E1; --high:#A94A06; --high-soft:#FBE9DA;
+  --med:#7F6200; --med-soft:#F8EEC4; --low:#356247; --low-soft:#DFEEE4;
+  --hl:#FFE36A;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --t-xs:.75rem; --t-sm:.875rem; --t-md:1rem; --t-lg:1.25rem; --t-xl:1.75rem; --t-2xl:2.5rem; --t-3xl:clamp(2.2rem,5.4vw,4rem);
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#0E151B; --sheet:#151F28; --ink:#E5EBF0; --ink-2:#A7B4C1; --ink-3:#7E8C99;
-  --rule:#2B3946; --rule-2:#202C37; --grid:rgba(127,178,224,.05);
-  --blue:#86B6E2; --blue-soft:#1C2E3E; --hl:#5A4A12;
-  --red:#FF7A80; --t1-bg:#D63B48; --t1-fg:#FFFFFF; --t2-bg:#4D2329; --t2-fg:#F7D6D9; --t3-bg:#22303B; --t3-fg:#B3C0CC;
-  --ok:#86C9A0; --ok-soft:#163222; --warn:#E8C065; --warn-soft:#382B0C;
-  --focus:#86B6E2; color-scheme:dark}}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0D1317; --sheet:#141C21; --ink:#E1E9EC; --ink-2:#B2C0C6; --muted:#8B9BA3;
+  --rule:#2B3941; --grid:#19232A;
+  --accent:#4DB3D0; --accent-ink:#06141A; --accent-soft:#12313B;
+  --crit:#F2806F; --crit-soft:#3A1714; --high:#F0A15F; --high-soft:#3A2410;
+  --med:#E4C55C; --med-soft:#322A0B; --low:#82C59A; --low-soft:#14301F;
+  --hl:#5E4F0E;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  color-scheme:dark;
+}}
 :root[data-theme="dark"]{
-  --paper:#0E151B; --sheet:#151F28; --ink:#E5EBF0; --ink-2:#A7B4C1; --ink-3:#7E8C99;
-  --rule:#2B3946; --rule-2:#202C37; --grid:rgba(127,178,224,.05);
-  --blue:#86B6E2; --blue-soft:#1C2E3E; --hl:#5A4A12;
-  --red:#FF7A80; --t1-bg:#D63B48; --t1-fg:#FFFFFF; --t2-bg:#4D2329; --t2-fg:#F7D6D9; --t3-bg:#22303B; --t3-fg:#B3C0CC;
-  --ok:#86C9A0; --ok-soft:#163222; --warn:#E8C065; --warn-soft:#382B0C;
-  --focus:#86B6E2; color-scheme:dark}
+  --paper:#0D1317; --sheet:#141C21; --ink:#E1E9EC; --ink-2:#B2C0C6; --muted:#8B9BA3;
+  --rule:#2B3941; --grid:#19232A;
+  --accent:#4DB3D0; --accent-ink:#06141A; --accent-soft:#12313B;
+  --crit:#F2806F; --crit-soft:#3A1714; --high:#F0A15F; --high-soft:#3A2410;
+  --med:#E4C55C; --med-soft:#322A0B; --low:#82C59A; --low-soft:#14301F;
+  --hl:#5E4F0E;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70;
+  color-scheme:dark;
+}
 *{box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--f-body);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:20px 48px}
-@media (max-width:600px){.wrap{padding-inline:16px}}
-button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:.01em}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--t-md);line-height:1.55;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1180px;margin-inline:auto}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--f-display);font-stretch:118%;text-wrap:balance;margin:0;line-height:1.08;letter-spacing:-.01em}
+h2{font-size:var(--t-2xl);font-weight:750}
+h3{font-size:var(--t-lg);font-weight:700;font-stretch:108%}
 p{margin:0}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.muted{color:var(--ink-3)}
-a{color:var(--blue)}
+.mono{font-family:var(--f-mono)}
+.label{font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prose{max-width:65ch;color:var(--ink-2)}
 
-/* Title block */
-.tb{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));border:1.5px solid var(--ink);background:var(--sheet)}
-.tb>div{padding:10px 14px;border-left:1px solid var(--rule);min-width:0}
-.tb>div:first-child{border-left:0}
-.tb .lbl{display:block;font:500 10.5px/1.2 var(--f-body);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:4px}
-.tb .val{font:500 13px/1.3 var(--f-mono)}
-.brand{display:flex;align-items:center;gap:12px}
-.brand svg{flex:none}
-.brand h1{font-size:30px;font-weight:700;letter-spacing:.06em;line-height:1}
-.brand p{margin-top:3px;font-size:13px;color:var(--ink-2)}
-@media (max-width:820px){.tb{grid-template-columns:1fr 1fr}.tb>div:first-child{grid-column:1/-1}.tb>div{border-top:1px solid var(--rule)}.tb>div:nth-child(2n){border-left:0}.tb>div:first-child{border-top:0}}
+/* Title block header */
+.tb{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1.5px solid var(--ink);margin-inline:-16px;padding-inline:16px}
+.tb-in{max-width:1180px;margin-inline:auto;display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+.tb-brand{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 0;border-right:1px solid var(--rule);text-decoration:none;color:var(--ink)}
+.tb-brand b{font-family:var(--f-display);font-stretch:125%;font-weight:800;font-size:1.05rem;letter-spacing:.02em}
+.tb-nav{display:flex;gap:0;overflow-x:auto;flex:1;min-width:0}
+.tb-nav a{display:flex;align-items:center;gap:6px;padding:10px 14px;text-decoration:none;color:var(--ink-2);font-size:var(--t-sm);white-space:nowrap;border-right:1px solid var(--grid)}
+.tb-nav a span{font-family:var(--f-mono);font-size:var(--t-xs);color:var(--muted)}
+.tb-nav a:hover{background:var(--sheet);color:var(--ink)}
+.tb-meta{display:flex;align-items:center;gap:14px;padding-left:14px;font-family:var(--f-mono);font-size:var(--t-xs);color:var(--muted);border-left:1px solid var(--rule)}
+@media (max-width:860px){.tb-meta{display:none}.tb-brand{border-right:0}}
 
-/* Tabs */
-nav.tabs{display:flex;gap:2px;margin-top:18px;border-bottom:1.5px solid var(--ink);overflow-x:auto}
-nav.tabs button{background:none;border:1px solid transparent;border-bottom:0;padding:9px 12px 8px;cursor:pointer;font:600 17px/1 var(--f-display);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;border-radius:3px 3px 0 0}
-nav.tabs button[aria-selected="true"]{background:var(--sheet);border-color:var(--ink);color:var(--ink);margin-bottom:-1.5px;border-bottom:1.5px solid var(--sheet)}
-nav.tabs .sheetno{font:500 11px var(--f-mono);color:var(--ink-3);margin-right:6px}
-.panel{background:var(--sheet);border:1.5px solid var(--ink);border-top:0;padding:24px}
-@media (max-width:600px){.panel{padding:16px}}
+/* Sheets */
+.sheet{padding-block:64px 8px}
+.sheet-head{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;align-items:end;border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:28px}
+.sheet-tag{grid-row:span 2;font-family:var(--f-mono);font-weight:600;font-size:var(--t-sm);border:1.5px solid var(--ink);padding:10px 10px;line-height:1;align-self:stretch;display:flex;align-items:center}
+@media (max-width:560px){.sheet-head{grid-template-columns:1fr}.sheet-tag{grid-row:auto;justify-self:start}}
 
-/* Generic */
-.intro{max-width:72ch;color:var(--ink-2);margin:0 0 18px}
-.section-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}
-.section-h h2{font-size:22px;font-weight:600}
-.btn{border:1px solid var(--ink);background:var(--sheet);padding:7px 12px;border-radius:3px;cursor:pointer;font-weight:500;font-size:14px;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
-.btn:hover{background:var(--blue-soft)}
-.btn.primary{background:var(--ink);color:var(--sheet)}
-.btn.primary:hover{opacity:.9;background:var(--ink)}
-.btn.sm{padding:5px 9px;font-size:13px}
-.chip{display:inline-block;font:500 12px/1.4 var(--f-mono);padding:1px 6px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);white-space:nowrap}
-.tier{display:inline-block;font:600 12px/1.3 var(--f-body);padding:2px 8px;border-radius:999px;white-space:nowrap}
-.tier.t1{background:var(--t1-bg);color:var(--t1-fg)} .tier.t2{background:var(--t2-bg);color:var(--t2-fg)} .tier.t3{background:var(--t3-bg);color:var(--t3-fg)}
-.cert{display:inline-block;font:500 11.5px/1.4 var(--f-mono);padding:1px 7px;border-radius:3px;border:1px solid currentColor;white-space:nowrap}
-.cert.calc{color:var(--red)} .cert.doc{color:var(--ink-2)} .cert.warn{color:var(--warn);background:var(--warn-soft)}
-.flag{display:inline-block;font:600 11.5px/1.4 var(--f-body);padding:1px 7px;border-radius:3px;background:var(--hl);color:var(--ink);white-space:nowrap}
-.sev{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
-.sev::before{content:"";display:inline-block;width:8px;height:8px;margin-right:5px;border:1.5px solid var(--ink-2);vertical-align:0}
-.sev[data-s="Life safety"]::before{background:var(--ink-2)} .sev[data-s="Fire"]::before{background:linear-gradient(135deg,var(--ink-2) 50%,transparent 50%)}
-.sev[data-s="Administrative"]::before{border-style:dotted}
-.empty{padding:24px;text-align:center;color:var(--ink-3);border:1px dashed var(--rule)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--sheet);padding:9px 14px;font-size:14px;border-radius:3px;z-index:50}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);margin-bottom:16px}
-.stats>div{padding:10px 14px;border-left:1px solid var(--rule);min-width:0}
-.stats>div:first-child{border-left:0}
-.stats .n{font:600 28px/1 var(--f-display);font-variant-numeric:tabular-nums}
-.stats .k{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
-.stats .n.red{color:var(--red)}
-.progress{height:6px;background:var(--rule-2);border-radius:3px;overflow:hidden;margin-top:8px}
-.progress span{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:40px;padding-block:56px 24px;align-items:start;position:relative}
+.hero::before{content:"";position:absolute;inset:0 -16px;z-index:-1;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(180deg,#000 40%,transparent)}
+.hero h1{font-size:var(--t-3xl);font-weight:800;font-stretch:122%;letter-spacing:-.02em}
+.hero h1 mark{background:linear-gradient(transparent 58%,var(--hl) 58%);color:inherit;padding:0 .08em}
+.hero .lede{font-size:1.15rem;color:var(--ink-2);max-width:56ch;margin-top:20px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{font:inherit;font-weight:700;font-size:var(--t-sm);border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border-radius:2px}
+.btn:hover{background:var(--accent-soft)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.sm{padding:6px 10px;font-size:var(--t-xs)}
+@media (max-width:860px){.hero{grid-template-columns:1fr;gap:28px;padding-top:36px}}
 
-/* About */
-.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:36px;align-items:center;padding-bottom:28px;border-bottom:1px solid var(--rule)}
-.hero h2{font-size:clamp(34px,5vw,52px);font-weight:700;line-height:1.02;letter-spacing:0}
-.hero h2 mark{background:linear-gradient(transparent 58%,var(--hl) 58%);color:inherit;padding:0 .05em}
-.hero .lede{font-size:17px;color:var(--ink-2);margin-top:16px;max-width:58ch}
-.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
-@media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px}}
-.sample-card{border:1.5px solid var(--ink);background:var(--paper)}
-.sample-card .h{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rule);font-size:13px;flex-wrap:wrap}
-.sample-card .r{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;padding:10px 14px;border-bottom:1px dashed var(--rule)}
-.sample-card .r:last-child{border-bottom:0}
-.sample-card .s{font:600 20px/1 var(--f-display);text-align:center;padding-top:2px}
-.sample-card .t{font-weight:600;font-size:14px;line-height:1.3}
-.sample-card .m{font-size:12px;color:var(--ink-3);margin-top:2px}
-.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--rule);margin-top:28px}
-.about-grid>div{padding:20px;border-left:1px solid var(--rule);display:grid;gap:8px;align-content:start;min-width:0}
-.about-grid>div:first-child{border-left:0}
-.about-grid h3{font-size:19px;font-weight:600}
-.about-grid p{color:var(--ink-2);font-size:14.5px}
-.about-grid .k{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
-@media (max-width:860px){.about-grid{grid-template-columns:1fr}.about-grid>div{border-left:0;border-top:1px solid var(--rule)}.about-grid>div:first-child{border-top:0}}
-.about-h{font-size:24px;font-weight:600;margin:34px 0 4px}
-.flowrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
-.flowrow>div{border-top:2px solid var(--ink);padding-top:10px;min-width:0}
-.flowrow b{display:block;margin-bottom:3px}
-.flowrow span{color:var(--ink-2);font-size:14px}
-.flowrow .k{display:block;font:500 11px var(--f-mono);color:var(--ink-3);margin-bottom:4px}
-@media (max-width:860px){.flowrow{grid-template-columns:1fr 1fr}}
-@media (max-width:480px){.flowrow{grid-template-columns:1fr}}
-.contact{margin-top:30px;border:1.5px solid var(--ink);padding:20px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:center;background:var(--paper)}
-.contact p{color:var(--ink-2)}
-.contact .addr{font:500 15px var(--f-mono);user-select:all;word-break:break-all}
-@media (max-width:760px){.contact{grid-template-columns:1fr}}
+.stamp{background:var(--sheet);border:1.5px solid var(--ink);box-shadow:6px 6px 0 var(--rule)}
+.stamp-h{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.stamp-b{padding:6px 0}
+.mini{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:10px 14px;align-items:start;border-bottom:1px dashed var(--grid)}
+.mini:last-child{border-bottom:0}
+.mini .t{font-weight:700;font-size:var(--t-sm);line-height:1.3}
+.mini .r{font-family:var(--f-mono);font-size:var(--t-xs);color:var(--muted)}
+.stamp-f{padding:10px 14px;border-top:1px solid var(--rule);font-size:var(--t-xs);color:var(--muted)}
 
-/* Pre-check */
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 0 14px}
+/* Score badge and bands */
+.score{font-family:var(--f-mono);font-weight:600;font-variant-numeric:tabular-nums;font-size:.95rem;width:44px;height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;border:1.5px solid currentColor;border-radius:2px}
+.score small{font-size:.58rem;font-weight:500;letter-spacing:.06em;margin-top:3px}
+.b-crit{color:var(--crit);background:var(--crit-soft)}
+.b-high{color:var(--high);background:var(--high-soft)}
+.b-med{color:var(--med);background:var(--med-soft)}
+.b-low{color:var(--low);background:var(--low-soft)}
+.b-pass{color:var(--muted);background:transparent}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:var(--t-xs);font-weight:600;padding:2px 7px;border-radius:2px;white-space:nowrap}
+
+/* Audience / three-up */
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--rule);background:var(--sheet)}
+.trio>div{padding:22px;border-right:1px solid var(--rule);display:grid;gap:10px;align-content:start}
+.trio>div:last-child{border-right:0}
+.trio p{color:var(--ink-2);font-size:var(--t-sm)}
+@media (max-width:760px){.trio{grid-template-columns:1fr}.trio>div{border-right:0;border-bottom:1px solid var(--rule)}.trio>div:last-child{border-bottom:0}}
+
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr;gap:28px}}
+
+/* Process */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--grid);counter-increment:s}
+.steps li::before{content:counter(s);font-family:var(--f-mono);font-weight:600;width:30px;height:30px;border:1.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:var(--t-sm)}
+.steps b{display:block;margin-bottom:2px}
+.steps span{color:var(--ink-2);font-size:var(--t-sm)}
+
+.formula{background:var(--sheet);border:1.5px solid var(--ink);padding:20px}
+.formula .eq{font-family:var(--f-mono);font-size:1.05rem;font-weight:600;padding:12px 0 16px;border-bottom:1px solid var(--rule);margin-bottom:12px}
+.scale{width:100%;border-collapse:collapse;font-size:var(--t-sm)}
+.scale td{padding:5px 6px;border-bottom:1px solid var(--grid);vertical-align:top}
+.scale td:first-child{font-family:var(--f-mono);font-weight:600;width:28px}
+.bands{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+
+/* App shell */
+.app{background:var(--sheet);border:1.5px solid var(--ink)}
+.tabs{display:flex;border-bottom:1.5px solid var(--ink);overflow-x:auto}
+.tab{font:inherit;font-weight:700;font-size:var(--t-sm);background:transparent;border:0;border-right:1px solid var(--rule);padding:14px 18px;cursor:pointer;color:var(--ink-2);display:flex;gap:8px;align-items:center;white-space:nowrap}
+.tab .n{font-family:var(--f-mono);font-size:var(--t-xs);font-weight:500;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--sheet)}
+.tab[aria-selected="true"] .n{color:var(--sheet);opacity:.75}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px;border-bottom:1px solid var(--rule);background:var(--paper)}
 .toolbar .sp{flex:1}
-.toolbar select{border:1px solid var(--rule);background:var(--sheet);padding:6px 8px;border-radius:3px;font-size:14px;max-width:100%}
-.pc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);border:1px solid var(--rule)}
+select.ctl,input.ctl,textarea.ctl{font:inherit;font-size:var(--t-sm);color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-radius:2px;padding:7px 9px;width:100%}
+select.ctl{width:auto}
+.ctl:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 2px var(--accent-soft)}
+
+.pc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}
 .pc>.col{min-width:0}
 .pc>.col+.col{border-left:1px solid var(--rule)}
 @media (max-width:920px){.pc{grid-template-columns:1fr}.pc>.col+.col{border-left:0;border-top:1.5px solid var(--ink)}}
-.col-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rule);background:var(--paper);flex-wrap:wrap}
-.col-h .t{font:600 14px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
-fieldset{border:0;border-bottom:1px solid var(--rule);margin:0;padding:12px 14px 14px}
+.col-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule)}
+
+fieldset{border:0;border-bottom:1px solid var(--rule);margin:0;padding:14px 16px 16px}
 fieldset[hidden]{display:none!important}
-legend{float:left;width:100%;font:600 14px var(--f-display);letter-spacing:.07em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;padding:0}
-.fgrid{clear:both;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px}
+legend{float:left;width:100%;font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px;padding:0}
+.fgrid{clear:both;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
 .fgrid .wide{grid-column:1/-1}
 @media (max-width:520px){.fgrid{grid-template-columns:1fr}}
-.f label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:3px;font-weight:500}
-.ctl{border:1px solid var(--rule);background:var(--sheet);padding:6px 8px;border-radius:3px;font-size:14px;width:100%;color:var(--ink)}
-.ctl:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 2px var(--blue-soft)}
-.unitwrap{display:flex}
-.unitwrap .ctl{border-top-right-radius:0;border-bottom-right-radius:0;min-width:0}
-.unit{font:500 12px var(--f-mono);color:var(--ink-3);border:1px solid var(--rule);border-left:0;padding:0 8px;display:flex;align-items:center;background:var(--paper);min-width:44px;justify-content:center;border-radius:0 3px 3px 0}
-.chk{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer;padding:3px 0;line-height:1.35}
-.f label.chk{display:flex;color:var(--ink);font-size:14px;font-weight:400;margin:0}
-.chk input{width:16px;height:16px;margin:2px 0 0;accent-color:var(--blue);flex:none}
-.chk small{display:block;color:var(--ink-3);font-size:12px}
-.find{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;padding:13px 14px;border-bottom:1px solid var(--rule-2)}
-.scorebox{font:600 22px/1 var(--f-display);font-variant-numeric:tabular-nums;text-align:center;border-radius:3px;padding:6px 0 5px;align-self:start}
-.scorebox small{display:block;font:500 9.5px var(--f-mono);letter-spacing:.06em;margin-top:3px}
-.scorebox.t1{background:var(--t1-bg);color:var(--t1-fg)} .scorebox.t2{background:var(--t2-bg);color:var(--t2-fg)} .scorebox.t3{background:var(--t3-bg);color:var(--t3-fg)}
-.find h4{margin:0;font-size:15px;line-height:1.35}
-.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:5px 0 6px}
-.det{font:400 12.5px/1.5 var(--f-mono);background:var(--paper);border-left:2px solid var(--rule);padding:6px 9px;overflow-wrap:anywhere}
-.fix{font-size:14px;color:var(--ink-2);margin-top:6px}
-.fix b{color:var(--ink)}
-.minor{padding:10px 14px;border-top:1px solid var(--rule-2)}
-.minor summary{cursor:pointer;font-size:14px;font-weight:600}
-.minor ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px}
-.minor li{font-size:13.5px;color:var(--ink-2);display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px}
-.minor li .mono{color:var(--ink-3);font-size:12px;padding-top:1px}
+.f label{display:block;font-size:var(--t-xs);color:var(--ink-2);margin-bottom:3px;font-weight:700}
+.f .unitwrap{display:flex;align-items:stretch}
+.f .unitwrap input{border-top-right-radius:0;border-bottom-right-radius:0}
+.f .unit{font-family:var(--f-mono);font-size:var(--t-xs);color:var(--muted);border:1px solid var(--rule);border-left:0;padding:0 8px;display:flex;align-items:center;background:var(--paper);min-width:42px;justify-content:center}
+.chk{display:flex;gap:9px;align-items:flex-start;font-size:var(--t-sm);cursor:pointer;padding:3px 0}
+.chk input{width:17px;height:17px;margin:2px 0 0;accent-color:var(--accent);flex:none}
 
-/* Checklist */
-.check-layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;align-items:start}
-@media (max-width:960px){.check-layout{grid-template-columns:1fr}}
-.scope{border:1px solid var(--rule);padding:16px;border-radius:3px;background:var(--paper);position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
-@media (max-width:960px){.scope{position:static}}
-.scope fieldset{border:0;padding:0;margin:0 0 14px}
-.scope legend{color:var(--ink);margin-bottom:6px;float:none}
-.note-box{font-size:12.5px;color:var(--ink-2);background:var(--blue-soft);padding:8px 10px;border-radius:3px;margin-bottom:12px}
-.tier-group{margin-bottom:22px}
-.tier-group h3{font-size:18px;font-weight:600;display:flex;gap:10px;align-items:center;margin-bottom:4px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
-.tier-group h3 .cnt{font:500 13px var(--f-mono);color:var(--ink-3)}
-.ci{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;padding:12px 0 12px 14px;border-bottom:1px solid var(--rule-2);position:relative}
-.ci::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--t3-bg)}
-.ci.t1::before{background:var(--t1-bg)} .ci.t2::before{background:var(--t2-bg)}
-.ci .title{font-weight:600;line-height:1.35}
-.ci .title .mono{font-weight:500;color:var(--ink-3);margin-right:6px;font-size:13px}
-.ci .what{color:var(--ink-2);font-size:14px;margin-top:2px}
-.ci .refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center}
-.ci .refs .ca{font-size:12.5px;color:var(--ink-3)}
-.ci .score{text-align:right;white-space:nowrap}
-.ci .score .r{font:600 22px/1 var(--f-display);font-variant-numeric:tabular-nums}
-.ci .score .f{font:400 11.5px var(--f-mono);color:var(--ink-3)}
-.ci .act{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
-.ci .act textarea{flex:1 1 220px;min-height:34px;resize:vertical;font-size:13.5px}
-.ci .pf{grid-column:1/-1}
-.ci.d-def{background:linear-gradient(90deg,var(--t2-bg),transparent 60%)}
-.ci.d-clr .title,.ci.d-na .title{color:var(--ink-3)}
-.seg{display:inline-flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;flex:none}
-.seg button{border:0;border-right:1px solid var(--rule);background:var(--sheet);padding:5px 10px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink-2)}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--rule)}
+.summary>div{padding:12px 14px;border-right:1px solid var(--grid);display:grid;gap:2px}
+.summary>div:last-child{border-right:0}
+.summary b{font-family:var(--f-mono);font-size:var(--t-xl);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.summary .bar{height:3px;width:100%;margin-top:4px}
+@media (max-width:420px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary>div:nth-child(2){border-right:0}.summary>div:nth-child(-n+2){border-bottom:1px solid var(--grid)}}
+
+.find{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:14px 16px;border-bottom:1px solid var(--grid)}
+.find h4{margin:0;font-size:var(--t-md);line-height:1.3}
+.find .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 6px}
+.find .det{font-family:var(--f-mono);font-size:.8rem;color:var(--ink);background:var(--paper);border-left:2px solid var(--rule);padding:6px 9px;overflow-wrap:anywhere}
+.find .fix{font-size:var(--t-sm);color:var(--ink-2);margin-top:6px}
+.find .fix b{color:var(--ink)}
+.passed{padding:12px 16px}
+.passed summary{cursor:pointer;font-size:var(--t-sm);font-weight:700}
+.passed ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px}
+.passed li{font-size:var(--t-sm);color:var(--ink-2);display:flex;gap:8px}
+.passed li .mono{color:var(--muted);font-size:var(--t-xs);min-width:52px;padding-top:2px}
+.empty{padding:28px 16px;color:var(--muted);font-size:var(--t-sm)}
+
+/* Reviewer */
+.rv{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.rv>.col{min-width:0}
+.rv>.col+.col{border-left:1px solid var(--rule)}
+@media (max-width:920px){.rv{grid-template-columns:1fr}.rv>.col+.col{border-left:0;border-top:1.5px solid var(--ink)}}
+.prog{height:6px;background:var(--grid);margin:0 16px 0}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.ck{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:12px 16px;border-bottom:1px solid var(--grid)}
+.ck.done{background:color-mix(in oklab,var(--paper) 55%,transparent)}
+.ck h4{margin:0;font-size:var(--t-sm);line-height:1.35}
+.ck .meta{display:flex;gap:8px;flex-wrap:wrap;margin:3px 0 6px;align-items:center}
+.ck .det{font-family:var(--f-mono);font-size:.76rem;color:var(--ink-2);overflow-wrap:anywhere}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:2px;margin-top:8px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:var(--t-xs);font-weight:700;background:var(--sheet);color:var(--ink-2);border:0;border-right:1px solid var(--rule);padding:6px 10px;cursor:pointer}
 .seg button:last-child{border-right:0}
-.seg button:hover{background:var(--blue-soft)}
-.seg button[aria-pressed="true"][data-d="def"]{background:var(--t1-bg);color:var(--t1-fg)}
-.seg button[aria-pressed="true"][data-d="clr"]{background:var(--ok);color:var(--sheet)}
+.seg button[aria-pressed="true"][data-d="def"]{background:var(--crit);color:var(--sheet)}
+.seg button[aria-pressed="true"][data-d="clr"]{background:var(--low);color:var(--sheet)}
 .seg button[aria-pressed="true"][data-d="na"]{background:var(--ink-2);color:var(--sheet)}
-.corr{margin-top:8px;border:1px solid var(--rule)}
-.corr pre{margin:0;padding:14px;font:12.5px/1.55 var(--f-mono);white-space:pre-wrap;max-height:420px;overflow:auto;background:var(--paper)}
+.ck textarea{margin-top:8px;min-height:38px;resize:vertical}
+.group-h{padding:10px 16px;background:var(--paper);border-bottom:1px solid var(--rule)}
+.notice{padding:16px;display:grid;gap:12px}
+.notice pre{margin:0;font-family:var(--f-mono);font-size:.78rem;white-space:pre-wrap;background:var(--paper);border:1px solid var(--rule);padding:12px;max-height:440px;overflow:auto;color:var(--ink)}
 
-/* Taxonomy */
-.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:end}
-.filters label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
-.filters input,.filters select{border:1px solid var(--rule);background:var(--sheet);padding:7px 9px;border-radius:3px;font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink)}
-.filters input[type=search]{min-width:220px}
-@media (max-width:600px){.filters input[type=search]{min-width:0;width:100%}.filters label{flex:1 1 140px}}
-.tablewrap{overflow-x:auto;border:1px solid var(--rule)}
-table{border-collapse:collapse;width:100%;font-size:14px}
-th{font:600 12px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);text-align:left;padding:9px 10px;border-bottom:1.5px solid var(--ink);background:var(--sheet);white-space:nowrap}
-th button{all:unset;cursor:pointer} th button:focus-visible{outline:2px solid var(--focus)}
-td{padding:9px 10px;border-bottom:1px solid var(--rule-2);vertical-align:top}
-tr.row{cursor:pointer} tr.row:hover td{background:var(--blue-soft)}
-td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
-tr.detail td{background:var(--paper);padding:14px 16px}
-.dgrid{position:sticky;left:16px;max-width:min(1080px,calc(100vw - 96px));display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 28px}
-.dgrid h4{margin:0 0 4px;font:600 12px var(--f-body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
-.stepper{display:inline-flex;align-items:center;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
-.stepper button{border:0;background:var(--sheet);width:30px;height:28px;cursor:pointer;font-weight:600}
-.stepper button:hover{background:var(--blue-soft)}
-.stepper span{min-width:34px;text-align:center;font-family:var(--f-mono);border-inline:1px solid var(--rule);line-height:28px}
-.count-line{font-size:13px;color:var(--ink-3);margin-top:8px}
-.auto{font:500 11px var(--f-mono);color:var(--blue);border:1px solid var(--blue);border-radius:3px;padding:0 5px;white-space:nowrap}
+/* Analytics */
+.an{padding:16px;display:grid;gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--rule)}
+.kpis>div{padding:14px;border-right:1px solid var(--rule);display:grid;gap:4px;align-content:start;min-width:0}
+.kpis>div:last-child{border-right:0}
+.kpis b{font-family:var(--f-mono);font-size:var(--t-xl);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1;overflow-wrap:anywhere}
+.kpis span.s{font-size:var(--t-xs);color:var(--muted)}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis>div:nth-child(2){border-right:0}.kpis>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}
+.charts{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+@media (max-width:920px){.charts{grid-template-columns:1fr}}
+.card{border:1px solid var(--rule);padding:14px;min-width:0;display:grid;gap:10px;align-content:start}
+.card .sub{font-size:var(--t-xs);color:var(--muted)}
+.chart{position:relative;min-height:240px}
+.chart svg{display:block;width:100%;overflow:visible}
+.chart text{font-family:var(--f-mono);font-size:11px;fill:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:var(--t-xs);color:var(--ink-2)}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--sheet);font-family:var(--f-mono);font-size:var(--t-xs);padding:7px 9px;border-radius:2px;white-space:nowrap;z-index:5;transform:translate(-50%,-110%);line-height:1.45}
+.tip[hidden]{display:none!important}
+.hbars{display:grid;gap:8px}
+.hb{display:grid;grid-template-columns:minmax(0,1fr) 38px;gap:4px 10px;align-items:center;cursor:default;position:relative}
+.hb .lab{font-size:var(--t-xs);color:var(--ink-2);display:flex;gap:6px;align-items:baseline;min-width:0}
+.hb .lab span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb .trk{grid-column:1;height:10px;background:var(--grid);border-radius:0 4px 4px 0}
+.hb .fil{height:100%;background:var(--accent);border-radius:0 4px 4px 0}
+.hb .v{grid-column:2;grid-row:1/span 2;font-family:var(--f-mono);font-size:var(--t-sm);text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.hb:hover .fil{filter:brightness(1.15)}
+details.tbl summary{cursor:pointer;font-size:var(--t-xs);color:var(--accent);font-weight:700}
+.tscroll{overflow-x:auto;margin-top:8px}
+.tscroll table{border-collapse:collapse;font-size:var(--t-xs);font-family:var(--f-mono);font-variant-numeric:tabular-nums;width:100%}
+.tscroll th,.tscroll td{padding:4px 8px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+.tscroll th:first-child,.tscroll td:first-child{text-align:left}
+.tscroll th{color:var(--muted);font-weight:500}
+.synth{display:inline-flex;gap:6px;align-items:center;font-size:var(--t-xs);color:var(--med);background:var(--med-soft);padding:3px 8px;border-radius:2px;font-weight:700}
 
-/* Model */
-.model-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;align-items:start}
-@media (max-width:900px){.model-layout{grid-template-columns:1fr}}
-.matrix{display:grid;grid-template-columns:110px repeat(5,minmax(0,1fr));gap:2px;font-size:13px}
-.matrix .ax{display:flex;align-items:center;color:var(--ink-2);font-size:12.5px;padding-right:6px;line-height:1.25}
-.matrix .axx{text-align:center;color:var(--ink-2);font-size:12px;padding-top:4px}
-.cell{aspect-ratio:1.35;border:0;border-radius:3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-.cell.t1{background:var(--t1-bg);color:var(--t1-fg)} .cell.t2{background:var(--t2-bg);color:var(--t2-fg)} .cell.t3{background:var(--t3-bg);color:var(--t3-fg)}
-.cell .c{font:600 22px/1 var(--f-display);font-variant-numeric:tabular-nums}
-.cell .s{font:400 11px var(--f-mono);opacity:.85}
-.cell.zero .c{opacity:.35}
-.cell:hover{outline:2px solid var(--ink);outline-offset:1px}
-.tip{position:fixed;z-index:10;pointer-events:none;background:var(--ink);color:var(--sheet);font-size:12.5px;padding:6px 9px;border-radius:3px;max-width:260px;line-height:1.35}
-.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--ink-2);align-items:center}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
-.axis-title{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;text-align:center;margin-top:6px}
-.controls{display:grid;gap:22px;align-content:start}
-.ctrl-group h3{font-size:17px;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-.ctrl{display:grid;grid-template-columns:minmax(0,1fr) 120px 34px;gap:10px;align-items:center;padding:4px 0;font-size:14px}
-.ctrl input[type=range]{width:100%;accent-color:var(--blue)}
-.ctrl output{font-family:var(--f-mono);text-align:right}
-.sys-table td.num,.sys-table th.num{text-align:right;font-family:var(--f-mono)}
+/* Rule library */
+.lib-wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--sheet)}
+table.lib{border-collapse:collapse;width:100%;min-width:760px;font-size:var(--t-sm)}
+.lib th{font-family:var(--f-mono);font-size:var(--t-xs);font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1.5px solid var(--ink);background:var(--paper)}
+.lib td{padding:9px 12px;border-bottom:1px solid var(--grid);vertical-align:top}
+.lib td.mono{font-size:var(--t-xs);white-space:nowrap}
+.lib tr.grp td{background:var(--paper);font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
 
-/* Method */
-.method{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
-@media (max-width:900px){.method{grid-template-columns:1fr}}
-.method p,.method li{max-width:65ch;color:var(--ink-2)}
-.method h2{font-size:22px;font-weight:600;margin:0 0 8px}
-.method h3{font-size:16px;font-weight:600;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.05em}
-.method ul{padding-left:20px;margin:6px 0}
-.src{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 10px;padding:9px 0;border-bottom:1px solid var(--rule-2);font-size:13.5px}
-.src .t{font-weight:500}
-.src .p{color:var(--ink-3);font-size:12.5px}
-.road{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);margin-top:8px}
-.road>div{padding:14px;border-left:1px solid var(--rule);min-width:0}
-.road>div:first-child{border-left:0;background:var(--blue-soft)}
-.road b{display:block;font:600 16px var(--f-display);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.road ul{padding-left:18px;margin:0;font-size:13.5px}
-@media (max-width:700px){.road{grid-template-columns:1fr}.road>div{border-left:0;border-top:1px solid var(--rule)}.road>div:first-child{border-top:0}}
-footer{margin-top:14px;font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Roadmap */
+.road{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1.5px solid var(--ink);background:var(--sheet)}
+.road>div{padding:20px;border-right:1px solid var(--rule);display:grid;gap:10px;align-content:start}
+.road>div:last-child{border-right:0}
+.road ul{margin:0;padding-left:18px;font-size:var(--t-sm);color:var(--ink-2);display:grid;gap:5px}
+.road .now{background:var(--accent-soft)}
+@media (max-width:860px){.road{grid-template-columns:1fr}.road>div{border-right:0;border-bottom:1px solid var(--rule)}.road>div:last-child{border-bottom:0}}
+.arch{display:flex;flex-wrap:wrap;gap:0;align-items:stretch;margin-top:24px;border:1px solid var(--rule);background:var(--sheet)}
+.arch>div{flex:1 1 160px;padding:14px;border-right:1px dashed var(--rule);display:grid;gap:4px;align-content:start;min-width:0}
+.arch>div:last-child{border-right:0}
+.arch b{font-size:var(--t-sm)}
+.arch span{font-size:var(--t-xs);color:var(--ink-2)}
+
+footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;font-size:var(--t-sm);color:var(--ink-2)}
+@media (max-width:760px){footer{grid-template-columns:1fr}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--sheet);padding:9px 14px;font-size:var(--t-sm);border-radius:2px;z-index:50}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="tb" aria-label="Title block">
-    <div class="brand">
-      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 21.5h4.2a6.3 6.3 0 1 1 7.6 0H25" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-      <div><h1>OHMSIGHT</h1><p>Risk-ranked electrical plan review &middot; <a href="index.html">Home</a></p></div>
-    </div>
-    <div><span class="lbl">Sheet</span><span class="val" id="tb-sheet">E-0</span></div>
-    <div><span class="lbl">Code basis</span><span class="val">NEC 2023</span></div>
-    <div><span class="lbl">Model</span><span class="val">Rev 0.3 · 60 items</span></div>
-    <div><span class="lbl">Developed by</span><span class="val">E. Igwe, EE</span></div>
-  </header>
+<header class="tb">
+  <div class="tb-in">
+    <a class="tb-brand" href="index.html" aria-label="Ohmsight home">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 17h3.2v-2.4a4 4 0 1 1 3.6 0V17H18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <b>OHMSIGHT</b>
+    </a>
+    <nav class="tb-nav" aria-label="Sections">
+      <a href="index.html"><span>&larr;</span>Home</a>
+      <a href="#problem"><span>E-1</span>Problem</a>
+      <a href="#method"><span>E-2</span>Method</a>
+      <a href="#mvp"><span>E-3</span>MVP</a>
+      <a href="#rules"><span>E-4</span>Rule library</a>
+      <a href="#roadmap"><span>E-5</span>Roadmap</a>
+    </nav>
+    <div class="tb-meta"><span>REV 0.1</span><span>2026-10-05</span></div>
+  </div>
+</header>
 
-  <nav class="tabs" role="tablist" aria-label="Sheets">
-    <button role="tab" id="tab-about" aria-controls="v-about" data-v="about"><span class="sheetno">E-0</span>About</button>
-    <button role="tab" id="tab-precheck" aria-controls="v-precheck" data-v="precheck"><span class="sheetno">E-1</span>Pre-check</button>
-    <button role="tab" id="tab-review" aria-controls="v-review" data-v="review"><span class="sheetno">E-2</span>Review checklist</button>
-    <button role="tab" id="tab-taxonomy" aria-controls="v-taxonomy" data-v="taxonomy"><span class="sheetno">E-3</span>Taxonomy</button>
-    <button role="tab" id="tab-model" aria-controls="v-model" data-v="model"><span class="sheetno">E-4</span>Risk model</button>
-    <button role="tab" id="tab-method" aria-controls="v-method" data-v="method"><span class="sheetno">E-5</span>Method</button>
-  </nav>
+<main class="wrap" id="top">
 
-  <!-- ABOUT -->
-  <section class="panel" id="v-about" role="tabpanel" aria-labelledby="tab-about">
-    <div class="hero">
-      <div>
-        <h2>Check the riskiest electrical items <mark>first.</mark></h2>
-        <p class="lede">Ohmsight is a research project that ranks electrical design deficiencies by how dangerous they are and how often they appear in plan check. It turns that ranking into a pre-check for designers and a review checklist for building departments, starting with solar, battery storage and emergency power.</p>
-        <div class="cta">
-          <button class="btn primary" type="button" data-go="precheck">Run the pre-check</button>
-          <button class="btn" type="button" data-go="review">Open the review checklist</button>
-          <button class="btn" type="button" data-go="method">How the ranking works</button>
-        </div>
+  <section class="hero" aria-labelledby="h1">
+    <div>
+      <div class="label" style="margin-bottom:16px">Project Ohmsight &middot; PV, storage and emergency power</div>
+      <h1 id="h1">Find the corrections <mark>before plan check</mark> does.</h1>
+      <p class="lede">Ohmsight pre-checks PV, energy storage and emergency power submittals against electrical code rules, then ranks the likely deficiencies by risk. Designers fix them before submitting. Reviewers start with the items that matter most.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#mvp">Run the pre-check</a>
+        <a class="btn" href="#method">How the risk ranking works</a>
       </div>
-      <figure class="sample-card" style="margin:0" aria-label="Top of the live pre-check for the sample project">
-        <div class="h"><b id="hero-name">Sample project</b><span class="muted" id="hero-count"></span></div>
-        <div id="hero-list"></div>
-      </figure>
     </div>
-
-    <h3 class="about-h">The problem</h3>
-    <p class="intro">Solar, battery and emergency power plans are often sent back for the same short list of problems: an overloaded panel busbar, no rapid shutdown method, a battery with no disconnect, a generator with no coordination study. Each correction adds a review cycle for the applicant and the building department, and some of these misses are life-safety issues, not paperwork.</p>
-
-    <div class="about-grid">
-      <div><span class="k">Designers and installers</span><h3>Pre-check before submitting</h3><p>Enter the key values from the plans and see which deficiencies a reviewer is likely to flag, ranked by risk, with the calculation and the fix.</p></div>
-      <div><span class="k">Plan reviewers</span><h3>Review the riskiest items first</h3><p>Get a checklist for the project type, ordered so life-safety and high-frequency items come first, then record each item and copy a correction list.</p></div>
-      <div><span class="k">Building departments</span><h3>Consistent, evidence-based review</h3><p>Every item traces to an NEC 2023 section and to published sources, so any jurisdiction that adopts the NEC can use and adapt it.</p></div>
-    </div>
-
-    <h3 class="about-h">How it works</h3>
-    <div class="flowrow">
-      <div><span class="k">Taxonomy</span><b>60 known deficiencies</b><span>Recurring electrical design problems across 7 systems, each mapped to code sections.</span></div>
-      <div><span class="k">Risk model</span><b>Severity × frequency</b><span>Severity is what happens if it's missed. Frequency comes from published plan review checklists and industry reporting.</span></div>
-      <div><span class="k">Pre-check</span><b>Calculated checks</b><span>For items that can be calculated or confirmed from project data, the tool runs the check itself.</span></div>
-      <div><span class="k">Review</span><b>Ranked checklist</b><span>Reviewers record deficiency, cleared or not applicable for each item and copy the correction list.</span></div>
-    </div>
-
-    <div class="contact">
-      <div>
-        <h3 style="font-size:22px;font-weight:600">Evaluate Ohmsight</h3>
-        <p style="margin-top:6px">Ohmsight is an independent research and development project. It is free to use, and we're looking for building departments and design professionals to try it and tell us what to improve.</p>
-      </div>
-      <div id="contact-box"></div>
-    </div>
+    <aside class="stamp" aria-label="Sample pre-check output">
+      <div class="stamp-h"><span class="label">Live sample run</span><span class="label" id="heroName"></span></div>
+      <div class="stamp-b" id="heroList"></div>
+      <div class="stamp-f" id="heroFoot"></div>
+    </aside>
   </section>
 
-  <!-- PRE-CHECK -->
-  <section class="panel" id="v-precheck" role="tabpanel" aria-labelledby="tab-precheck" hidden>
-    <p class="intro">Enter key values from a solar, battery storage or emergency power submittal. Ohmsight runs the checks that can be calculated or confirmed from that data and ranks the likely deficiencies with the same risk model used everywhere else in the tool. Everything runs in your browser; nothing is sent anywhere.</p>
-    <div class="toolbar">
-      <label for="sample" class="muted" style="font-size:13px">Sample project</label>
-      <select id="sample"></select>
-      <span class="sp"></span>
-      <label class="btn sm" for="upload" style="cursor:pointer">Upload JSON or CSV</label>
-      <input id="upload" type="file" accept=".json,.csv,application/json,text/csv" hidden>
-      <button class="btn sm" id="copy-json" type="button">Copy as JSON</button>
-      <button class="btn sm" id="blank" type="button">Blank project</button>
-    </div>
-    <div class="pc">
-      <div class="col">
-        <div class="col-h"><span class="t">Project data</span><span class="muted" id="up-msg" style="font-size:12.5px"></span></div>
-        <form id="form" novalidate></form>
+  <!-- E-1 -->
+  <section class="sheet" id="problem">
+    <div class="sheet-head"><div class="sheet-tag">E-1</div><div class="label">Problem</div><h2>The same corrections, every cycle</h2></div>
+    <div class="two">
+      <div class="prose" style="display:grid;gap:14px">
+        <p>PV, battery storage and emergency power submittals fail plan check for a short list of recurring reasons: a backfed breaker that breaks the 120% busbar rule, a roof array with no rapid shutdown method, a generator system with no selective coordination study, a single-line diagram that leaves out the battery disconnect.</p>
+        <p>Each miss costs a full correction cycle for the applicant and a second review for the jurisdiction. Most of these checks are arithmetic or a yes/no on whether a required item is in the package. They can run before anyone opens the plans.</p>
+        <p>Ohmsight turns those checks into a rule engine, scores every finding on severity and likelihood, and records the reviewer's decision so the program can see which deficiencies keep coming back.</p>
       </div>
-      <div class="col">
-        <div class="col-h"><span class="t">Likely deficiencies, ranked</span><button class="btn sm primary" type="button" id="to-review">Review this project</button></div>
-        <div class="stats" style="margin:0;border:0;border-bottom:1px solid var(--rule)">
-          <div><div class="n red" id="pc-t1">0</div><div class="k">Review first</div></div>
-          <div><div class="n" id="pc-all">0</div><div class="k">Findings</div></div>
-          <div><div class="n" id="pc-pass">0</div><div class="k">Checks passed</div></div>
-        </div>
-        <div id="out"></div>
+      <div class="trio" style="grid-template-columns:1fr">
+        <div><span class="label">Applicants and designers</span><h3>Pre-check before submitting</h3><p>Enter key project data or upload it, see the likely corrections ranked by risk, and fix them before the first submittal.</p></div>
+        <div><span class="label">Plan reviewers</span><h3>Review riskiest items first</h3><p>A checklist ordered by risk score with the calculation shown, one-click dispositions, and a correction list ready to paste.</p></div>
+        <div><span class="label">Program managers</span><h3>See deficiency trends</h3><p>Track which rules fail most, by system type and month, to target bulletins, training and checklist updates.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- REVIEW CHECKLIST -->
-  <section class="panel" id="v-review" role="tabpanel" aria-labelledby="tab-review" hidden>
-    <p class="intro">The full review checklist for a project type, ranked so the deficiencies most likely to put people at risk or send plans back come first. Items the pre-check flagged are marked. Record each item as a deficiency, cleared or not applicable, and the correction list builds itself.</p>
-    <div class="check-layout">
-      <form class="scope" id="scope" aria-label="Project scope">
-        <div class="note-box" id="scope-note"></div>
-        <fieldset>
-          <legend>Occupancy</legend>
-          <label class="chk"><input type="radio" name="occ" id="occ-dwelling" value="dwelling"><span>One- or two-family dwelling</span></label>
-          <label class="chk"><input type="radio" name="occ" id="occ-multifamily" value="multifamily"><span>Multifamily</span></label>
-          <label class="chk"><input type="radio" name="occ" id="occ-nonres" value="nonres"><span>Commercial or other nonresidential</span></label>
-        </fieldset>
-        <fieldset>
-          <legend>Type of work</legend>
-          <label class="chk"><input type="checkbox" id="w-newc" data-k="newc"><span>New construction</span></label>
-          <label class="chk"><input type="checkbox" id="w-addition" data-k="addition"><span>Addition or alteration<small>Adds load to an existing service</small></span></label>
-        </fieldset>
-        <fieldset>
-          <legend>Systems in scope</legend>
-          <label class="chk"><input type="checkbox" id="w-pv" data-k="pv"><span>Solar PV</span></label>
-          <label class="chk"><input type="checkbox" id="w-ess" data-k="ess"><span>Battery energy storage</span></label>
-          <label class="chk"><input type="checkbox" id="w-gen" data-k="gen"><span>Optional standby generator</span></label>
-          <label class="chk"><input type="checkbox" id="w-emerg" data-k="emerg"><span>Emergency or legally required system</span></label>
-          <label class="chk"><input type="checkbox" id="w-fa" data-k="fa"><span>Fire alarm</span></label>
-          <label class="chk"><input type="checkbox" id="w-ev" data-k="ev"><span>EV charging</span></label>
-          <label class="chk"><input type="checkbox" id="w-service" data-k="service"><span>New or upgraded service</span></label>
-          <label class="chk"><input type="checkbox" id="w-large" data-k="large"><span>Service or feeder 1000 A or larger</span></label>
-        </fieldset>
-        <label class="chk"><input type="checkbox" id="show-ca"><span>Show California Title 24 references<small>NEC references always show</small></span></label>
-        <button class="btn sm" type="button" id="from-pc" style="margin-top:12px">Match the pre-check project</button>
-      </form>
-
-      <div style="min-width:0">
-        <div class="stats" aria-live="polite">
-          <div><div class="n" id="st-total">0</div><div class="k">Items to check</div></div>
-          <div><div class="n red" id="st-t1">0</div><div class="k">Review first</div></div>
-          <div><div class="n" id="st-done">0</div><div class="k">Recorded</div><div class="progress"><span id="st-bar"></span></div></div>
+  <!-- E-2 -->
+  <section class="sheet" id="method">
+    <div class="sheet-head"><div class="sheet-tag">E-2</div><div class="label">Method</div><h2>From project data to a ranked checklist</h2></div>
+    <div class="two">
+      <ol class="steps">
+        <li><div><b>Intake</b><span>Key values from the submittal: module and inverter ratings, busbar and breaker sizes, ESS capacity and location, generator rating and calculated load, and which required documents are in the package. Entered in a form or uploaded as JSON or CSV.</span></div></li>
+        <li><div><b>Rule engine</b><span>Each rule is a small, testable function tied to one code section. Rules either calculate (string voltage at design low temperature, 120% busbar sum) or confirm that a required item is present.</span></div></li>
+        <li><div><b>Risk ranking</b><span>Every finding gets a severity and a likelihood score. The product ranks the list so life-safety calculations lead and labeling items trail.</span></div></li>
+        <li><div><b>Reviewer disposition</b><span>The reviewer confirms, clears or marks each item not applicable. Confirmed items become a numbered correction list.</span></div></li>
+        <li><div><b>Trend analytics</b><span>Dispositions roll up into a dashboard of deficiency rates by rule, system type and month.</span></div></li>
+      </ol>
+      <div class="formula">
+        <div class="label">Risk score</div>
+        <div class="eq">Risk = Severity (1-5) &times; Likelihood (1-5)</div>
+        <table class="scale" aria-label="Severity scale">
+          <tr><td>S5</td><td>Fire or life-safety exposure, or loss of emergency power</td></tr>
+          <tr><td>S4</td><td>Code violation that blocks approval or damages equipment</td></tr>
+          <tr><td>S3</td><td>Design information missing; reviewer cannot verify</td></tr>
+          <tr><td>S2</td><td>Labeling, directory or documentation gap</td></tr>
+        </table>
+        <table class="scale" aria-label="Likelihood scale" style="margin-top:10px">
+          <tr><td>L5</td><td>Calculated from submitted values</td></tr>
+          <tr><td>L4</td><td>Required item absent from the package</td></tr>
+          <tr><td>L3</td><td>Within 3% or 10% of a limit; verify</td></tr>
+        </table>
+        <div class="bands">
+          <span class="pill b-crit">&#9650; Critical 20-25</span>
+          <span class="pill b-high">&#9670; High 12-19</span>
+          <span class="pill b-med">&#9679; Medium 6-11</span>
+          <span class="pill b-low">&#9675; Low 1-5</span>
         </div>
-        <div class="section-h">
-          <h2>Review checklist</h2>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn sm" type="button" id="accept-flags">Mark pre-check flags as deficiencies</button>
-            <button class="btn sm" type="button" id="clear-dec">Clear all</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- E-3 -->
+  <section class="sheet" id="mvp">
+    <div class="sheet-head"><div class="sheet-tag">E-3</div><div class="label">Minimum viable product</div><h2>Pre-check, review and analytics</h2></div>
+    <p class="prose" style="margin-bottom:20px">This is a working build. The rule engine runs in your browser on the data you enter; nothing is sent anywhere. Start from a sample project or upload your own.</p>
+
+    <div class="app">
+      <div class="tabs" role="tablist" aria-label="Ohmsight tools">
+        <button class="tab" role="tab" id="t-pre" aria-controls="p-pre" aria-selected="true"><span class="n">A</span>Pre-check</button>
+        <button class="tab" role="tab" id="t-rev" aria-controls="p-rev" aria-selected="false"><span class="n">B</span>Reviewer view</button>
+        <button class="tab" role="tab" id="t-an" aria-controls="p-an" aria-selected="false"><span class="n">C</span>Analytics</button>
+      </div>
+
+      <!-- Pre-check -->
+      <div id="p-pre" role="tabpanel" aria-labelledby="t-pre">
+        <div class="toolbar">
+          <label for="sample" class="label">Sample</label>
+          <select id="sample" class="ctl"></select>
+          <span class="sp"></span>
+          <label class="btn sm" for="upload" style="cursor:pointer">Upload JSON or CSV</label>
+          <input id="upload" type="file" accept=".json,.csv,application/json,text/csv" hidden>
+          <button class="btn sm" id="copyJson" type="button">Copy as JSON</button>
+          <button class="btn sm" id="clearForm" type="button">Blank project</button>
+        </div>
+        <div class="pc">
+          <div class="col">
+            <div class="col-h"><span class="label">Input &middot; key project data</span><span class="label" id="upMsg"></span></div>
+            <form id="form" novalidate></form>
+          </div>
+          <div class="col">
+            <div class="col-h"><span class="label">Output &middot; likely deficiencies by risk</span><button class="btn sm" type="button" id="toReview">Open in reviewer view</button></div>
+            <div class="summary" id="sum"></div>
+            <div id="out"></div>
           </div>
         </div>
-        <div id="checklist"></div>
-        <div class="section-h" style="margin-top:26px">
-          <h2>Correction list</h2>
-          <button class="btn sm primary" type="button" id="copy-corr">Copy correction list</button>
+      </div>
+
+      <!-- Reviewer -->
+      <div id="p-rev" role="tabpanel" aria-labelledby="t-rev" hidden>
+        <div class="toolbar">
+          <span class="label" id="rvProj"></span>
+          <span class="sp"></span>
+          <button class="btn sm" type="button" id="rvAccept">Confirm all flagged</button>
+          <button class="btn sm" type="button" id="rvReset">Reset dispositions</button>
         </div>
-        <div class="corr"><pre id="corr" tabindex="0"></pre></div>
+        <div class="rv">
+          <div class="col">
+            <div class="col-h"><span class="label">Risk-ranked checklist</span><span class="label" id="rvCount"></span></div>
+            <div class="prog" aria-hidden="true"><i id="rvBar" style="width:0"></i></div>
+            <div id="rvList"></div>
+          </div>
+          <div class="col">
+            <div class="col-h"><span class="label">Correction list</span><button class="btn sm" type="button" id="copyNotice">Copy</button></div>
+            <div class="notice">
+              <p style="font-size:var(--t-sm);color:var(--ink-2)">Items you mark as a deficiency appear here in risk order, with the code section and the required action. Notes you add are appended.</p>
+              <pre id="notice"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics -->
+      <div id="p-an" role="tabpanel" aria-labelledby="t-an" hidden>
+        <div class="toolbar">
+          <label for="anGroup" class="label">System</label>
+          <select id="anGroup" class="ctl">
+            <option value="all">All systems</option>
+            <option value="PV">PV only</option>
+            <option value="ESS">PV with storage</option>
+            <option value="EM">Emergency and standby</option>
+          </select>
+          <span class="sp"></span>
+          <span class="synth">&#9679; Synthetic demo data, Jan to Sep 2026</span>
+        </div>
+        <div class="an">
+          <div class="kpis" id="kpis"></div>
+          <div class="charts">
+            <div class="card">
+              <div><h3 style="font-size:var(--t-md)">Deficiencies per submittal, by month</h3><div class="sub">Average count of findings confirmed by reviewers</div></div>
+              <div class="legend" id="lgLine"></div>
+              <div class="chart" id="chLine"></div>
+              <details class="tbl"><summary>Show as table</summary><div class="tscroll" id="tbLine"></div></details>
+            </div>
+            <div class="card">
+              <div><h3 style="font-size:var(--t-md)">Most frequent deficiencies</h3><div class="sub">Submittals with the finding, top 8 rules</div></div>
+              <div class="hbars chart" id="chBars" style="min-height:0"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div><h3 style="font-size:var(--t-md)">Submittals with at least one critical finding</h3><div class="sub">Share of submittals per month</div></div>
+            <div class="chart" id="chCol" style="min-height:200px"></div>
+            <details class="tbl"><summary>Show as table</summary><div class="tscroll" id="tbCol"></div></details>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- TAXONOMY -->
-  <section class="panel" id="v-taxonomy" role="tabpanel" aria-labelledby="tab-taxonomy" hidden>
-    <p class="intro">All 60 deficiencies in the model. Items marked <span class="auto">Auto</span> are also checked automatically by the pre-check. Select a row to see what the reviewer checks, the sources behind its frequency score, and its code references. Field adjustments made here change the ranking everywhere in the tool.</p>
-    <div class="filters">
-      <label>Search<input type="search" id="f-q" placeholder="Deficiency, ID, or code section"></label>
-      <label>System<select id="f-sys"><option value="">All systems</option></select></label>
-      <label>Severity<select id="f-sev"><option value="">All</option><option>Life safety</option><option>Fire</option><option>Equipment</option><option>Administrative</option></select></label>
-      <label>Tier<select id="f-tier"><option value="">All tiers</option><option value="1">Tier 1: Review first</option><option value="2">Tier 2: Standard</option><option value="3">Tier 3: Spot check</option></select></label>
-      <label>Frequency<select id="f-freq"><option value="">Any</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
-      <button class="btn" type="button" id="f-reset">Reset filters</button>
-    </div>
-    <div class="tablewrap">
-      <table aria-label="Deficiency taxonomy">
-        <thead><tr>
-          <th><button data-sort="rank">Rank</button></th><th><button data-sort="id">ID</button></th><th>Deficiency</th><th><button data-sort="sys">System</button></th>
-          <th>Severity</th><th><button data-sort="freq">Freq.</button></th><th><button data-sort="risk">Risk</button></th><th>Tier</th><th>NEC 2023</th>
-        </tr></thead>
-        <tbody id="tax-body"></tbody>
-      </table>
-    </div>
-    <p class="count-line" id="tax-count"></p>
+  <!-- E-4 -->
+  <section class="sheet" id="rules">
+    <div class="sheet-head"><div class="sheet-tag">E-4</div><div class="label">Rule library</div><h2 id="ruleCountH">Rules in the MVP</h2></div>
+    <p class="prose" style="margin-bottom:20px">References default to NEC 2023 article numbers, with IRC R328 and NFPA 855 for residential storage limits. Each jurisdiction confirms the adopted edition and local amendments; those load as overlays in a later phase.</p>
+    <div class="lib-wrap"><table class="lib" id="lib"></table></div>
   </section>
 
-  <!-- MODEL -->
-  <section class="panel" id="v-model" role="tabpanel" aria-labelledby="tab-model" hidden>
-    <p class="intro">Risk score = severity weight × frequency score, out of 25. This one model ranks the taxonomy, the pre-check findings and the review checklist. Change the weights or tier cutoffs and every ranking updates. Select a cell to list the deficiencies in it.</p>
-    <div class="model-layout">
-      <div>
-        <div class="section-h"><h2>Risk matrix</h2><span class="muted" style="font-size:13px">Count of deficiencies per cell</span></div>
-        <div class="matrix" id="matrix" aria-label="Risk matrix: severity by frequency"></div>
-        <div class="axis-title">Frequency score (published evidence + field adjustment)</div>
-        <div class="legend">
-          <span><i style="background:var(--t1-bg)"></i>Tier 1: Review first</span>
-          <span><i style="background:var(--t2-bg)"></i>Tier 2: Standard</span>
-          <span><i style="background:var(--t3-bg);border:1px solid var(--rule)"></i>Tier 3: Spot check</span>
-        </div>
-        <div class="section-h" style="margin-top:26px"><h2>By system</h2></div>
-        <div class="tablewrap"><table class="sys-table" aria-label="Summary by system"><thead><tr><th>System</th><th class="num">Items</th><th class="num">Tier 1</th><th class="num">Life safety</th><th class="num">Auto-checked</th><th class="num">Avg. risk</th></tr></thead><tbody id="sys-body"></tbody></table></div>
-      </div>
-      <div class="controls">
-        <div class="ctrl-group"><h3>Severity weights</h3><div id="w-sev"></div></div>
-        <div class="ctrl-group">
-          <h3>Tier cutoffs (minimum risk score)</h3>
-          <div class="ctrl"><label for="t1">Tier 1: Review first</label><input type="range" id="t1" min="2" max="25"><output for="t1" id="t1-o"></output></div>
-          <div class="ctrl"><label for="t2">Tier 2: Standard</label><input type="range" id="t2" min="1" max="24"><output for="t2" id="t2-o"></output></div>
-        </div>
-        <div class="ctrl-group">
-          <h3>Field adjustments</h3>
-          <p class="muted" style="margin:0 0 8px;font-size:13.5px" id="adj-summary"></p>
-          <button class="btn" type="button" id="reset-model">Restore model defaults</button>
-        </div>
-      </div>
+  <!-- E-5 -->
+  <section class="sheet" id="roadmap">
+    <div class="sheet-head"><div class="sheet-tag">E-5</div><div class="label">Roadmap</div><h2>From MVP to a reviewer pilot</h2></div>
+    <div class="road">
+      <div class="now"><span class="label">Phase 1 &middot; now</span><h3>MVP</h3><ul>
+        <li>Rule engine for PV, ESS and emergency power</li>
+        <li>Form entry plus JSON and CSV upload</li>
+        <li>Risk-ranked output and reviewer checklist</li>
+        <li>Trend dashboard on demo data</li></ul></div>
+      <div><span class="label">Phase 2</span><h3>Python service</h3><ul>
+        <li>Rules ported to a Python package with unit tests per code section</li>
+        <li>FastAPI endpoint for pre-checks and dispositions</li>
+        <li>Disposition history in a database, exported as a tidy table for Power BI or the web dashboard</li>
+        <li>Assisted extraction of values from equipment spec sheets</li></ul></div>
+      <div><span class="label">Phase 3</span><h3>Pilot and measure</h3><ul>
+        <li>Jurisdiction rule overlays and code edition switching</li>
+        <li>Pilot with plan reviewers on live submittals</li>
+        <li>Measure correction cycles and review hours against a baseline</li>
+        <li>Publish anonymized deficiency trends</li></ul></div>
+    </div>
+    <div class="arch" aria-label="Architecture">
+      <div><span class="label">Input</span><b>Form, JSON, CSV</b><span>Later: spec sheet and single-line extraction</span></div>
+      <div><span class="label">Engine</span><b>Rule functions</b><span>One rule per code section, versioned by code edition</span></div>
+      <div><span class="label">Scoring</span><b>Severity &times; likelihood</b><span>Bands set the review order</span></div>
+      <div><span class="label">Review</span><b>Dispositions</b><span>Confirm, clear, not applicable, notes</span></div>
+      <div><span class="label">Analytics</span><b>Python + web or Power BI</b><span>Trends by rule, system and month</span></div>
     </div>
   </section>
 
-  <!-- METHOD -->
-  <section class="panel" id="v-method" role="tabpanel" aria-labelledby="tab-method" hidden>
-    <div class="method">
-      <div>
-        <h2>How the model works</h2>
-        <p>Every deficiency gets a severity weight and a frequency score. Their product is its risk score, out of 25, and that score orders the taxonomy, the pre-check findings and the review checklist.</p>
-        <h3>Severity</h3>
-        <p>Life safety (5): failure could injure or kill occupants, workers or first responders. Fire (4): failure could start or spread a fire. Equipment (2): damage or outage with limited safety impact. Administrative (1): documentation or labeling gaps that mainly cause resubmittals.</p>
-        <h3>Frequency, from published evidence</h3>
-        <p>Frequency is scored from public plan review checklists and industry reporting. The rules are applied in order:</p>
-        <div class="tablewrap" style="margin-top:8px"><table><tbody>
-          <tr><td class="mono">5</td><td>Named as a top or most-overlooked problem by a source, and cited by 2 or more sources in total</td></tr>
-          <tr><td class="mono">4</td><td>Cited by at least 1 industry source and 1 jurisdiction checklist, or by 3 or more jurisdiction checklists</td></tr>
-          <tr><td class="mono">3</td><td>Cited by 2 jurisdiction checklists, or by at least 1 industry source</td></tr>
-          <tr><td class="mono">2</td><td>Cited by 1 jurisdiction checklist</td></tr>
-          <tr><td class="mono">1</td><td>Code requirement with no published frequency signal found</td></tr>
-        </tbody></table></div>
-        <p style="margin-top:8px">A field adjustment of up to 2 points either way lets a reviewer calibrate each score with measured results from sample and pilot projects.</p>
-        <h3>Pre-check findings</h3>
-        <p>Each pre-check rule is tied to one deficiency in the taxonomy and takes that deficiency's risk score. Findings also show how they were found: <span class="cert calc">Calculated</span> from the values entered, <span class="cert doc">Missing from package</span> when a required document or detail is not included, or <span class="cert warn">Near limit</span> when a value is within a few percent of a code limit and should be verified.</p>
-        <h3>Limits of this version</h3>
-        <ul>
-          <li>Frequency reflects how often an item appears in published checklists and reporting, not a measured rate from reviewed projects.</li>
-          <li>Public data is richest for residential PV. A low score can mean little published evidence rather than a rare problem.</li>
-          <li>The pre-check covers 22 automated checks for PV, battery storage and emergency power. Other items are reviewed from the checklist.</li>
-          <li>Code references are section numbers only; no code text is reproduced. References marked "Needs check" should be confirmed against the adopted edition.</li>
-          <li>No agency records were used. All data comes from public documents.</li>
-        </ul>
-        <h3>Code basis</h3>
-        <p>NEC 2023 (NFPA 70). California Title 24 references (2025 edition, effective January 1, 2026) can be shown on the review checklist. Residential battery limits follow IRC R328 and NFPA 855 (CRC R328 in California).</p>
-        <h3>Roadmap</h3>
-        <div class="road">
-          <div><b>Now</b><ul><li>Evidence-based taxonomy and risk model</li><li>Pre-check for PV, storage and emergency power</li><li>Ranked review checklist and correction list</li></ul></div>
-          <div><b>Next</b><ul><li>Evaluation with building departments in several states</li><li>Field calibration of frequency scores</li><li>More automated checks (load calculations, fault current)</li></ul></div>
-          <div><b>Later</b><ul><li>Jurisdiction code overlays and edition switching</li><li>Measured before and after review results</li><li>Published deficiency trends</li></ul></div>
-        </div>
-      </div>
-      <div>
-        <h2>Sources</h2>
-        <div id="sources"></div>
-      </div>
+  <footer>
+    <div style="display:grid;gap:8px">
+      <b style="color:var(--ink)">Project Ohmsight</b>
+      <p>A pre-check and review-assist tool for PV, energy storage and emergency power submittals, led by electrical engineer Ezeoma Igwe.</p>
+      <p>Ohmsight flags likely deficiencies. It does not approve plans. Final code determinations rest with the authority having jurisdiction.</p>
     </div>
-  </section>
-
-  <footer><span>Ohmsight · Risk-ranked electrical plan review · Rev 0.3</span><span>A review aid. Ohmsight does not approve plans; final code decisions rest with the authority having jurisdiction.</span></footer>
-</div>
-<div class="tip" id="tip" hidden></div>
-<div class="toast" id="toast" hidden role="status"></div>
+    <div style="display:grid;gap:4px;align-content:start" class="mono">
+      <span class="label">Sheet index</span>
+      <span>E-1 Problem</span><span>E-2 Method</span><span>E-3 MVP</span><span>E-4 Rule library</span><span>E-5 Roadmap</span>
+    </div>
+  </footer>
+</main>
+<div class="toast" id="toast" hidden></div>
 
 <script>
 (function(){
 "use strict";
-const CONFIG = { email: "" }; // set to the project email to show it on the About sheet
-const ITEMS = [{"id": "GD-01", "sys": "General documentation", "d": "Wrong or outdated code edition cited on plans", "chk": "Code editions on cover sheet match the editions adopted by the jurisdiction", "sev": "Administrative", "ahj": 0, "ind": 2, "top": "No", "src": "S10, S11", "nec": "90.4 (enforcement)", "ca": "Title 24 Part 3 CEC 2025 (NEC 2023 base)", "ref": "Confirmed in source (S14)"}, {"id": "GD-02", "sys": "General documentation", "d": "One-line diagram missing required ratings or replaced by a riser diagram", "chk": "Conductors, OCPDs, disconnects, grounding, AIC and SCCR shown for service and feeders", "sev": "Administrative", "ahj": 3, "ind": 1, "top": "No", "src": "S4, S5, S6, S10", "nec": "None (submittal requirement)", "ca": "Part 2 CBC Ch. 1 construction documents; local submittal rules", "ref": "Needs check"}, {"id": "GD-03", "sys": "General documentation", "d": "Resubmittal response letter does not address each correction", "chk": "Each correction answered with sheet and detail reference, not 'will comply'", "sev": "Administrative", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "None (process item)", "ca": "Local plan check procedures", "ref": "Not a code section"}, {"id": "PV-01", "sys": "PV", "d": "Maximum PV DC circuit voltage not calculated with low-temperature correction", "chk": "String Voc x temperature factor vs. inverter, module, and DC equipment ratings", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "690.7", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S1)"}, {"id": "PV-02", "sys": "PV", "d": "PV circuit conductors or overcurrent devices not sized with required continuous-current factors", "chk": "Isc x 125% x 125%, ampacity after correction and adjustment, OCPD rating", "sev": "Fire", "ahj": 1, "ind": 2, "top": "Yes", "src": "S1, S10, S11", "nec": "690.8; 690.9", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S1)"}, {"id": "PV-03", "sys": "PV", "d": "Rapid shutdown not specified or described only in vague notes", "chk": "Listed rapid shutdown method, initiation device location, array boundary", "sev": "Life safety", "ahj": 1, "ind": 1, "top": "No", "src": "S1, S11", "nec": "690.12; 690.56(C)", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S1)"}, {"id": "PV-04", "sys": "PV", "d": "Roof access pathways and setbacks for firefighters not shown", "chk": "Pathway widths, ridge setbacks, array layout on roof plan", "sev": "Life safety", "ahj": 1, "ind": 2, "top": "Yes", "src": "S1, S9, S11", "nec": "None (building and fire code item)", "ca": "Part 2 CBC 3111.3.4; Part 2.5 CRC R329.6", "ref": "Confirmed in source (S1)"}, {"id": "PV-05", "sys": "PV", "d": "Point of interconnection unclear or load-side connection exceeds busbar limits", "chk": "Load-side vs. supply-side clearly shown; 705.12(B)(3) option used and calculated", "sev": "Fire", "ahj": 1, "ind": 1, "top": "Yes", "src": "S1, S9", "nec": "705.12(B)(3)", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S1)"}, {"id": "PV-06", "sys": "PV", "d": "Supply-side connection details incomplete", "chk": "Conductor sizing, OCPD, disconnect, and connection method ahead of service disconnect", "sev": "Fire", "ahj": 0, "ind": 1, "top": "No", "src": "S9", "nec": "705.11", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "PV-07", "sys": "PV", "d": "PV disconnects not located, grouped, or identified as required", "chk": "AC and DC disconnect locations, grouping, AC disconnect within sight of inverter", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "690.13; 690.15; 705.20", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S1)"}, {"id": "PV-08", "sys": "PV", "d": "Required PV labels and power source directory missing", "chk": "Label schedule and directory showing all power sources and disconnect locations", "sev": "Administrative", "ahj": 1, "ind": 1, "top": "Yes", "src": "S1, S9", "nec": "690.13; 690.53; 690.56; 705.10", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S1)"}, {"id": "PV-09", "sys": "PV", "d": "DC arc-fault circuit protection not specified", "chk": "Listed PV arc-fault protection for DC circuits at 80 V or more", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "690.11", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S1)"}, {"id": "PV-10", "sys": "PV", "d": "PV grounding and bonding not detailed", "chk": "Array and racking bonding (e.g., UL 2703 racking), GEC sizing and connection", "sev": "Life safety", "ahj": 1, "ind": 1, "top": "No", "src": "S1, S10", "nec": "690.41; 690.43; 690.47; 250.66", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "PV-11", "sys": "PV", "d": "Wiring methods for exposed or ground-mounted PV conductors not specified", "chk": "Raceway or enclosure, or fencing with bonding, for accessible conductors", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "690.31", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "PV-12", "sys": "PV", "d": "Equipment details mismatched across sheets or cut sheets missing", "chk": "Inverter and module models, specs, and listings match across SLD, schedules, and cut sheets", "sev": "Administrative", "ahj": 1, "ind": 3, "top": "Yes", "src": "S1, S9, S10, S11", "nec": "110.3(B)", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "PV-13", "sys": "PV", "d": "Energy Code PV sizing requirement not met on new construction", "chk": "PV capacity and solar access roof area vs. compliance documents", "sev": "Administrative", "ahj": 2, "ind": 0, "top": "No", "src": "S1, S2", "nec": "None (energy code item)", "ca": "Part 6 Energy Code 150.1(c)14 residential; 140.10 nonresidential (verify)", "ref": "Confirmed in source for 150.1(c)14 (S1, S2)"}, {"id": "ES-01", "sys": "Energy storage", "d": "ESS disconnecting means missing or not located as required", "chk": "Disconnect location, lockability, and emergency shutdown initiation for dwellings", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "706.15", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S1, S12)"}, {"id": "ES-02", "sys": "Energy storage", "d": "ESS installed in a location or quantity not permitted", "chk": "Non-habitable location, aggregate capacity, separation from openings", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "706.10", "ca": "Part 2.5 CRC R328.4; Part 9 CFC 1207", "ref": "Confirmed in source (S1, S16)"}, {"id": "ES-03", "sys": "Energy storage", "d": "Physical damage or vehicle impact protection for ESS not shown", "chk": "Bollards, barriers, or elevation where exposed to vehicles", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "110.27(B)", "ca": "Part 2.5 CRC R328 (verify subsection)", "ref": "Confirmed in source for 110.27(B) (S1)"}, {"id": "ES-04", "sys": "Energy storage", "d": "ESS circuit sizing or overcurrent protection incorrect, including conductors passing through walls", "chk": "Circuit current basis, ampacity, OCPD location where conductors pass through walls or floors", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "706.30; 706.31(F)", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source for 706.31(F) (S1)"}, {"id": "ES-05", "sys": "Energy storage", "d": "ESS or inverter listing not documented", "chk": "UL 9540 system listing, UL 1973 batteries, UL 1741 SA/SB inverters", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "706.5 (verify)", "ca": "Part 2.5 CRC R328.2", "ref": "Confirmed in source for R328.2 (S1)"}, {"id": "ES-06", "sys": "Energy storage", "d": "Power control system listing or settings not documented", "chk": "Listed PCS and configured current limits protecting busbars and conductors", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S1", "nec": "705.13", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S1)"}, {"id": "ES-07", "sys": "Energy storage", "d": "Battery storage or battery-ready requirements not shown for new dwellings", "chk": "BESS provided, or BESS-ready interconnection equipment or raceway, where service exceeds 125 A", "sev": "Administrative", "ahj": 2, "ind": 0, "top": "No", "src": "S1, S2", "nec": "None (energy code item)", "ca": "Part 6 Energy Code 150.0(s)", "ref": "Confirmed in source (S1, S2)"}, {"id": "EM-01", "sys": "Emergency and standby", "d": "Emergency or standby system not classified by article (700, 701, or 702)", "chk": "Each generator and transfer switch labeled with its NEC article on the one-line", "sev": "Administrative", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "700; 701; 702", "ca": "Part 3 CEC: same articles", "ref": "Confirmed in source (S4)"}, {"id": "EM-02", "sys": "Emergency and standby", "d": "Emergency wiring not kept independent of other wiring", "chk": "Separate raceways, boxes, and enclosures for emergency circuits", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "700.10(B)", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S4)"}, {"id": "EM-03", "sys": "Emergency and standby", "d": "Fire protection of emergency feeders not provided where required", "chk": "Feeder protection method in qualifying occupancies", "sev": "Life safety", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "700.10(D)", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "EM-04", "sys": "Emergency and standby", "d": "Selective coordination not demonstrated", "chk": "Coordination study for emergency, legally required, elevator, and health care systems", "sev": "Life safety", "ahj": 1, "ind": 1, "top": "No", "src": "S4, S8", "nec": "700.32; 701.32; 620.62; 517.17", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S4, S8)"}, {"id": "EM-05", "sys": "Emergency and standby", "d": "Emergency source capacity not justified for connected loads", "chk": "Load calculation and source sizing for all connected emergency loads", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S5", "nec": "700.4; 701.4", "ca": "Part 3 CEC: same sections; Part 2 CBC 2702", "ref": "Needs check"}, {"id": "EM-06", "sys": "Emergency and standby", "d": "Optional standby with automatic transfer sized without a load calculation", "chk": "Generator capacity vs. calculated load, or listed load management", "sev": "Equipment", "ahj": 1, "ind": 0, "top": "No", "src": "S5", "nec": "702.4(B)", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "EM-07", "sys": "Emergency and standby", "d": "Transfer equipment or generator disconnecting means not shown", "chk": "Transfer switch listing and arrangement, generator disconnect", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "700.5; 701.5; 702.5; 445.18", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "EM-08", "sys": "Emergency and standby", "d": "Means of egress illumination coverage or source not shown", "chk": "Photometrics or compliance form, unit equipment or generator source, duration", "sev": "Life safety", "ahj": 3, "ind": 0, "top": "No", "src": "S4, S5, S6", "nec": "700.16", "ca": "Part 2 CBC 1008", "ref": "Confirmed in source for CBC/IBC 1008 (S5)"}, {"id": "EM-09", "sys": "Emergency and standby", "d": "Emergency shutdown for dwelling generators not shown", "chk": "Outdoor emergency shutdown initiation for one- and two-family dwelling generators", "sev": "Life safety", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "445.19(C)", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S13)"}, {"id": "EM-10", "sys": "Emergency and standby", "d": "Signs identifying on-site power sources missing", "chk": "Signs at service equipment for emergency and standby sources", "sev": "Administrative", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "700.7; 701.7; 702.7", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "EM-11", "sys": "Emergency and standby", "d": "Emergency equipment not protected from fire, flood, or vandalism", "chk": "Generator room rating, location, and separation of emergency equipment", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "700.12; 701.12", "ca": "Part 2 CBC 2702; NFPA 110", "ref": "Confirmed in source (S4)"}, {"id": "FA-01", "sys": "Fire alarm", "d": "Secondary power (battery) calculations missing or insufficient", "chk": "24-hour standby plus alarm duration, with aging factor", "sev": "Life safety", "ahj": 2, "ind": 0, "top": "No", "src": "S3, S7", "nec": "None (NFPA 72 item)", "ca": "NFPA 72 10.6.7; Part 9 CFC 907", "ref": "Confirmed in source (S3)"}, {"id": "FA-02", "sys": "Fire alarm", "d": "Notification appliance circuit voltage drop calculations missing", "chk": "End-of-line voltage using degraded battery voltage vs. appliance range", "sev": "Life safety", "ahj": 2, "ind": 0, "top": "No", "src": "S3, S7", "nec": "None (NFPA 72 item)", "ca": "NFPA 72 (NAC); Part 9 CFC 907", "ref": "Confirmed in source (S3)"}, {"id": "FA-03", "sys": "Fire alarm", "d": "Fire alarm branch circuit not dedicated, identified, or secured", "chk": "Dedicated circuit, red marking, lockable disconnect, location identified at panel", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S3", "nec": "760.41; 760.121", "ca": "Part 3 CEC: same sections; Part 9 CFC 907", "ref": "Confirmed in source (S3)"}, {"id": "FA-04", "sys": "Fire alarm", "d": "Fire alarm cable types or wire sizes not identified", "chk": "Cable types for plenum and riser spaces; wire gauges on riser diagram", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S7", "nec": "760.135; 760.154", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "FA-05", "sys": "Fire alarm", "d": "Power-limited fire alarm circuits not separated from power circuits", "chk": "Separation or barriers from light, power, and Class 1 circuits", "sev": "Life safety", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "760.136", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "FA-06", "sys": "Fire alarm", "d": "Pathway class or survivability not specified", "chk": "Pathway class designations and survivability for relocation or partial evacuation", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S3", "nec": "728 (where fire-resistive cable used)", "ca": "NFPA 72 Ch. 12 (pathway class and survivability)", "ref": "Confirmed in source for NFPA 72 Ch. 12 (S3)"}, {"id": "SD-01", "sys": "Service and distribution", "d": "Available fault current not shown, or equipment ratings below it", "chk": "Utility fault current letter, fault calcs to all equipment, AIC and SCCR, field marking", "sev": "Life safety", "ahj": 3, "ind": 2, "top": "Yes", "src": "S4, S5, S6, S8, S10", "nec": "110.9; 110.10; 110.24", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S4, S8)"}, {"id": "SD-02", "sys": "Service and distribution", "d": "Working space or dedicated equipment space insufficient", "chk": "Clearances, dedicated space, obstructions, and egress shown on plans", "sev": "Life safety", "ahj": 3, "ind": 0, "top": "No", "src": "S4, S5, S6", "nec": "110.26", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S4, S5)"}, {"id": "SD-03", "sys": "Service and distribution", "d": "Panel schedules incomplete or panelboard rating inadequate", "chk": "Voltage, phase, bus rating, AIC, loads in A or kVA, main protection", "sev": "Fire", "ahj": 3, "ind": 1, "top": "Yes", "src": "S4, S5, S6, S10", "nec": "408.36", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "SD-04", "sys": "Service and distribution", "d": "Conductor ampacity wrong after correction, adjustment, or terminal limits", "chk": "Ampacity table, correction and adjustment factors, terminal temperature, OCPD", "sev": "Fire", "ahj": 2, "ind": 1, "top": "Yes", "src": "S4, S5, S10", "nec": "310.16; 240.4; 110.14(C)", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S5)"}, {"id": "SD-05", "sys": "Service and distribution", "d": "Grounding and bonding details or conductor sizes missing", "chk": "GEC and EGC sizes, electrodes, bonding, separately derived systems", "sev": "Life safety", "ahj": 3, "ind": 2, "top": "No", "src": "S4, S5, S6, S8, S10", "nec": "250.50; 250.52; 250.66; 250.122; 250.30", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S4, S5)"}, {"id": "SD-06", "sys": "Service and distribution", "d": "GFCI or AFCI protection not shown where required", "chk": "Protected locations and device types on power plans and panel schedules", "sev": "Life safety", "ahj": 2, "ind": 0, "top": "No", "src": "S5, S6", "nec": "210.8; 210.12", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source for 210.8 (S5)"}, {"id": "SD-07", "sys": "Service and distribution", "d": "Ground-fault protection of equipment not provided where required", "chk": "GFPE on qualifying services and feeders", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S5", "nec": "230.95; 215.10", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S5)"}, {"id": "SD-08", "sys": "Service and distribution", "d": "Multiple services or building disconnects not permitted or not identified", "chk": "Number of services and disconnects, grouping, and marking", "sev": "Life safety", "ahj": 1, "ind": 0, "top": "No", "src": "S5", "nec": "230.2; 230.70; 230.71; 225.31", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S5)"}, {"id": "SD-09", "sys": "Service and distribution", "d": "Transformer protection or secondary conductor rules not met", "chk": "Primary and secondary OCPD, secondary conductor length and protection", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S6", "nec": "450.3; 240.21(C)", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "SD-10", "sys": "Service and distribution", "d": "Arc energy reduction not provided for large overcurrent devices", "chk": "Arc energy reduction method for devices rated 1200 A and above", "sev": "Life safety", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "240.87", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "SD-11", "sys": "Service and distribution", "d": "Surge protection for dwelling services not shown", "chk": "Type 1 or Type 2 SPD at dwelling service equipment", "sev": "Equipment", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "230.67", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "SD-12", "sys": "Service and distribution", "d": "Outdoor emergency disconnect for one- and two-family dwellings not shown", "chk": "Readily accessible outdoor emergency disconnect and marking", "sev": "Life safety", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "230.85", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "LC-01", "sys": "Load calculations", "d": "Service or feeder load calculation missing or demand factors not shown", "chk": "Article 220 method, demand factor breakdown by load type, resulting service size", "sev": "Fire", "ahj": 3, "ind": 1, "top": "Yes", "src": "S4, S5, S6, S10", "nec": "Article 220; Annex D", "ca": "Part 3 CEC: same", "ref": "Confirmed in source (S4)"}, {"id": "LC-02", "sys": "Load calculations", "d": "Existing load not determined correctly for additions or renovations", "chk": "Existing plus new loads; 12-month demand data or other permitted method", "sev": "Fire", "ahj": 1, "ind": 0, "top": "No", "src": "S4", "nec": "220.87", "ca": "Part 3 CEC: same section", "ref": "Confirmed in source (S4)"}, {"id": "LC-03", "sys": "Load calculations", "d": "Special loads (sign, track, show window) not included", "chk": "Sign circuit and load, track lighting and show window loads", "sev": "Equipment", "ahj": 1, "ind": 0, "top": "No", "src": "S5", "nec": "600.5(A); 220.14(F); 220.46", "ca": "Part 3 CEC: same sections", "ref": "Confirmed in source (S5)"}, {"id": "LC-04", "sys": "Load calculations", "d": "EV charging load omitted or circuit not sized for continuous load", "chk": "EVSE load in calculation, dedicated branch circuit, 125% sizing", "sev": "Fire", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "220.57; 625.40; 625.41", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "LC-05", "sys": "Load calculations", "d": "Energy management system used to reduce load without listing or settings", "chk": "Listed EMS, set points, and how they limit load", "sev": "Fire", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "220.70; 750.30; 625.42", "ca": "Part 3 CEC: same sections", "ref": "Needs check"}, {"id": "LC-06", "sys": "Load calculations", "d": "Multifamily optional calculation misapplied", "chk": "Eligibility conditions and demand factors for the optional method", "sev": "Fire", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "220.84", "ca": "Part 3 CEC: same section", "ref": "Needs check"}, {"id": "LC-07", "sys": "Load calculations", "d": "EV capable or EV ready requirements not shown", "chk": "Required EV spaces, raceways, panel capacity, and circuits", "sev": "Administrative", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "None (green building code item)", "ca": "Part 11 CALGreen 4.106.4 (residential, verify); 5.106.5.3 (nonresidential)", "ref": "Confirmed in source for 5.106.5.3 (S15)"}, {"id": "LC-08", "sys": "Load calculations", "d": "Electric-ready requirements (heat pump, cooktop, dryer) not shown", "chk": "Dedicated circuits, panel space, and labeling for future electric appliances", "sev": "Administrative", "ahj": 0, "ind": 0, "top": "No", "src": "None found", "nec": "None (energy code item)", "ca": "Part 6 Energy Code 150.0 electric-ready provisions (verify subsections)", "ref": "Needs check"}];
-const SOURCES = [{"id": "S1", "t": "Solar PV System Plan Review List (2026 v1.0)", "p": "County of Los Angeles Public Works, Building and Safety", "ty": "AHJ checklist (CA)", "y": "2026", "u": "https://dpw.lacounty.gov/bsd/lib/fp/Building/Solar%20Review/Solar%20PV%20System%20Plan%20Review%20List_2025_v1.0.pdf"}, {"id": "S2", "t": "SFD Energy Correction List (2025 v1.0)", "p": "County of Los Angeles Public Works, Building and Safety", "ty": "AHJ checklist (CA)", "y": "2025", "u": "https://pw.lacounty.gov/bsd/lib/fp/Building/Residential/SFD%20Energy%20Correction%20List_2025_V1.0.pdf"}, {"id": "S3", "t": "PRC-07F Plan Review Checklist: Fire Alarm Systems", "p": "City of Long Beach Development Services", "ty": "AHJ checklist (CA)", "y": "2026", "u": "https://longbeach.gov/globalassets/lbcd/media-library/documents/formsapplications/plan-review-checklists-prc/prc-07f-plan-review-checklist---fire-alarms-systems"}, {"id": "S4", "t": "Electrical Plan Review Requirements (rev. 01-18-2025)", "p": "City of Richmond, Virginia", "ty": "AHJ checklist (VA)", "y": "2025", "u": "https://www.rva.gov/sites/default/files/2025-02/Electrical-Handout_0.pdf"}, {"id": "S5", "t": "Electrical Plan Review Checklist", "p": "City of Phoenix Planning and Development", "ty": "AHJ checklist (AZ)", "y": "n.d.", "u": "https://www.phoenix.gov/content/dam/phoenix/pddsite/documents/trt/external/dsd_trt_pdf_00710.pdf"}, {"id": "S6", "t": "Electrical Plan Review Requirements", "p": "International Code Council", "ty": "National code body checklist", "y": "n.d.", "u": "https://www.iccsafe.org/wp-content/uploads/PR-Elec-Req.pdf"}, {"id": "S7", "t": "Fire Alarm Plan Submittal Guidelines", "p": "Wisconsin Dept. of Safety and Professional Services", "ty": "AHJ checklist (WI)", "y": "n.d.", "u": "https://dsps.wi.gov/Documents/Programs/FireSuppressAlarm/FireAlarmSubmittalGuidelines.pdf"}, {"id": "S8", "t": "Electrical Plan Review (application note)", "p": "Eaton Bussmann", "ty": "Industry technical guide", "y": "n.d.", "u": "https://www.eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/technical-literature/bus-ele-an-3015-electrical-plan-review.pdf"}, {"id": "S9", "t": "A Guide to PV Plan Sets and Critical Mistakes to Avoid", "p": "GreenLancer (plan set provider, 200,000+ projects)", "ty": "Industry article", "y": "n.d.", "u": "https://www.greenlancer.com/post/solar-plan-sets"}, {"id": "S10", "t": "Why Most Electrical Permit Drawings Get Rejected", "p": "MHL Consulting", "ty": "Industry article", "y": "n.d.", "u": "https://www.mhlconsulting.co/post/why-most-electrical-permit-drawings-get-rejected-and-how-to-fix-it"}, {"id": "S11", "t": "Solar Permit Rejections: 12 Reasons AHJs Send Plans Back", "p": "Energyscape Renewables", "ty": "Industry article", "y": "2026", "u": "https://energyscaperenewables.com/post/solar-permit-rejections-2026/"}, {"id": "S12", "t": "2023 NEC Updates for Energy Storage Systems", "p": "Mayfield Renewables", "ty": "Code reference", "y": "n.d.", "u": "https://www.mayfield.energy/technical-articles/2023-nec-updates-for-energy-storage-systems/"}, {"id": "S13", "t": "Emergency Shutdown of Generator Prime Mover", "p": "Leviton Captain Code 2023", "ty": "Code reference", "y": "2023", "u": "https://captaincode2023.leviton.com/node/349"}, {"id": "S14", "t": "California Electrical Code 2025 (based on NFPA 70, 2023)", "p": "UpCodes", "ty": "Code reference", "y": "2025", "u": "https://up.codes/viewer/california/ca-electric-code-2025"}, {"id": "S15", "t": "2025 CALGreen 5.106.5.3 Electric vehicle charging", "p": "International Code Council", "ty": "Code reference", "y": "2025", "u": "https://codes.iccsafe.org/s/CAGBC2025P1/chapter-5-nonresidential-mandatory-measures/CAGBC2025P1-Ch05-SubCh5.1-Sec5.106.5.3"}, {"id": "S16", "t": "706.10 Energy Storage System Locations", "p": "UpCodes", "ty": "Code reference", "y": "2023", "u": "https://up.codes/s/energy-storage-system-locations"}];
-const BYID = Object.fromEntries(ITEMS.map(i => [i.id, i]));
-const SYSTEMS = ["General documentation","PV","Energy storage","Emergency and standby","Fire alarm","Service and distribution","Load calculations"];
-const SEVS = ["Life safety","Fire","Equipment","Administrative"];
-const DEFAULTS = {sevW:{"Life safety":5,"Fire":4,"Equipment":2,"Administrative":1}, t1:16, t2:8, adj:{}};
-const TIER_NAME = {1:"Tier 1: Review first", 2:"Tier 2: Standard", 3:"Tier 3: Spot check"};
-const $ = (s, r) => (r || document).querySelector(s);
-const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmt = (n, d = 1) => Number.isFinite(n) ? (Math.round(n * 10 ** d) / 10 ** d).toLocaleString("en-US", {maximumFractionDigits: d}) : "n/a";
-const num = v => (v === null || v === "" || v === undefined || isNaN(+v)) ? null : +v;
-const deep = o => JSON.parse(JSON.stringify(o));
-const store = {
-  get(k, d){ try{ const v = localStorage.getItem("ohmsight3:" + k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
-  set(k, v){ try{ localStorage.setItem("ohmsight3:" + k, JSON.stringify(v)); }catch(e){} }
-};
-function toast(m){ const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 2200); }
-async function copyText(txt, el){
-  try{ await navigator.clipboard.writeText(txt); toast("Copied"); }
-  catch(e){ if (el){ const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } toast("Text selected. Press Ctrl+C or Cmd+C to copy."); }
-}
+const $=(s,r)=>(r||document).querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store={get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const fmt=(n,d=1)=>Number.isFinite(n)?(Math.round(n*10**d)/10**d).toLocaleString("en-US",{maximumFractionDigits:d}):"n/a";
+function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
+async function copyText(txt,el){try{await navigator.clipboard.writeText(txt);toast("Copied")}catch(e){if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Selected. Press Ctrl+C or Cmd+C to copy")}}
 
-/* ================= Risk model ================= */
-let model = Object.assign(deep(DEFAULTS), store.get("model", {}));
-function evidence(it){
-  const a = it.ahj, i = it.ind, top = it.top === "Yes";
-  if (top && a + i >= 2) return 5;
-  if ((i >= 1 && a >= 1) || a >= 3) return 4;
-  if (a >= 2 || i >= 1) return 3;
-  if (a >= 1) return 2;
-  return 1;
-}
-const tierOf = r => r >= model.t1 ? 1 : r >= model.t2 ? 2 : 3;
-let SC = {}; // scored items by id
-function scoreAll(){
-  const rows = ITEMS.map(it => {
-    const ev = evidence(it), adj = model.adj[it.id] || 0, freq = Math.max(1, Math.min(5, ev + adj)), w = model.sevW[it.sev], risk = w * freq;
-    return Object.assign({}, it, {ev, adj, freq, w, risk, tier: tierOf(risk), key: risk * 1000 + w * 10 + ev});
-  });
-  rows.sort((a, b) => b.key - a.key || a.id.localeCompare(b.id));
-  rows.forEach((r, i) => r.rank = i + 1);
-  SC = Object.fromEntries(rows.map(r => [r.id, r]));
-  return rows;
-}
-const necChips = s => s.startsWith("None") ? "" : s.split(/;\s*/).map(x => `<span class="chip">${esc(x)}</span>`).join(" ");
-
-/* ================= Pre-check engine ================= */
-const RULES = {
-  sld:     {tax:"GD-02", title:"Single-line diagram missing", ref:"Submittal requirement", fix:"Provide a complete single-line diagram showing every source, disconnect, overcurrent device, conductor size and point of connection."},
-  voc:     {tax:"PV-01", title:"Maximum PV DC voltage exceeds the equipment or dwelling limit", ref:"690.7", fix:"Reduce modules per string or select an inverter rated for the corrected open-circuit voltage. Show the calculation on the plans."},
-  pvcond:  {tax:"PV-02", title:"PV DC conductor ampacity below 156% of module Isc", ref:"690.8(A), (B)", fix:"Upsize the DC conductors so ampacity after correction and adjustment is at least 156% of module Isc."},
-  backfeed:{tax:"PV-02", title:"PV breaker below 125% of inverter output current", ref:"690.9; 705.30", fix:"Size the PV breaker at no less than 125% of the inverter's continuous output current."},
-  busbar:  {tax:"PV-05", title:"Load-side connection exceeds the busbar limit", ref:"705.12(B)(3)", fix:"Downsize the main breaker, upgrade the busbar, move to a supply-side connection, or add a power control system. Show the revised busbar calculation."},
-  rsd:     {tax:"PV-03", title:"No rapid shutdown method for a roof-mounted array", ref:"690.12", fix:"Identify the rapid shutdown method and listed equipment, and show the initiation device location and label."},
-  supply:  {tax:"PV-06", title:"Supply-side connection with no tap detail", ref:"705.11", fix:"Detail the supply-side connection: conductor size, overcurrent protection, enclosure and the service equipment it connects to."},
-  ground:  {tax:"PV-10", title:"Grounding and bonding detail missing", ref:"690.41 to 690.47", fix:"Add the equipment grounding and bonding detail, including conductor sizing and the grounding electrode connection."},
-  specs:   {tax:"PV-12", title:"Equipment spec sheets or listings missing", ref:"110.3(B); 690.4(B)", fix:"Include listed spec sheets for the modules, inverter and rapid shutdown equipment."},
-  labels:  {tax:"PV-08", title:"Labels and source directory not shown", ref:"690.56(C); 705.10", fix:"Show the required labels with wording and locations, including the rapid shutdown label and the power source directory."},
-  ess9540: {tax:"ES-05", title:"No UL 9540 listing documented for the battery system", ref:"706.5; IRC/CRC R328", fix:"Provide the UL 9540 listing for the system as installed, with manufacturer documentation."},
-  essunit: {tax:"ES-02", title:"Battery unit larger than 20 kWh at a dwelling", ref:"IRC/CRC R328; NFPA 855", fix:"Select units of 20 kWh or less each, or provide approval under the large-scale storage provisions."},
-  essagg:  {tax:"ES-02", title:"Total battery capacity over the limit for its location", ref:"IRC/CRC R328; NFPA 855", fix:"Reduce total capacity, split units across permitted locations, or move them to a garage, exterior wall or outdoors."},
-  esshab:  {tax:"ES-02", title:"Battery located in habitable space", ref:"IRC/CRC R328; NFPA 855", fix:"Relocate the battery out of habitable space, sleeping rooms and closets that open into them."},
-  essdisc: {tax:"ES-01", title:"No battery disconnecting means on the plans", ref:"706.15", fix:"Show a lockable disconnecting means within sight of the battery system, with its label."},
-  gencap:  {tax:"EM-05", title:"Generator capacity below the calculated load", ref:"700.4; 701.4; 702.4", fix:"Increase the generator rating or add load management, and revise the load calculation to match."},
-  xfer:    {tax:"EM-07", title:"Transfer time over the limit for the system", ref:"700.12; 701.12", fix:"Select transfer equipment and controls that restore power within the limit, and state the transfer time on the plans."},
-  coord:   {tax:"EM-04", title:"No selective coordination study", ref:"700.32; 701.32", fix:"Provide a selective coordination study by a qualified engineer for all emergency or legally required overcurrent devices."},
-  atslist: {tax:"EM-07", title:"Transfer equipment not listed for the system type", ref:"700.5; 701.5; 702.5", fix:"Specify transfer equipment listed for the system type: emergency, legally required or optional standby."},
-  sep:     {tax:"EM-02", title:"Emergency wiring not kept independent of normal wiring", ref:"700.10(B)", fix:"Show emergency circuits in dedicated raceways, boxes and enclosures separate from normal power wiring."},
-  fuel:    {tax:"EM-05", title:"On-site fuel below 2 hours at full demand load", ref:"700.12", fix:"Provide on-site fuel for at least 2 hours at full demand load, with tank size and fuel consumption rate."},
-  loadcalc:{tax:"EM-05", title:"Alternate-source load calculation not provided", ref:"700.4; 701.4; 702.4", fix:"Provide the load calculation for the alternate source, with the loads served and demand factors."}
-};
-const AUTO = new Set(Object.values(RULES).map(r => r.tax).concat(["EM-06"]));
-const OCC = [["R-3","R-3 One- or two-family dwelling"],["R-2","R-2 Multifamily"],["B","B Business"],["M","M Mercantile"],["I-2","I-2 Institutional"],["S-1","S-1 Storage"]];
-const FS = [
- {key:"project", legend:"Project", fields:[
-  {k:"name", l:"Project name", t:"text", w:1}, {k:"occupancy", l:"Occupancy", t:"sel", o:OCC, w:1},
-  {k:"hasPV", l:"Includes solar PV", t:"bool"}, {k:"hasESS", l:"Includes battery storage", t:"bool"}, {k:"hasEM", l:"Includes emergency or standby power", t:"bool", w:1}]},
- {key:"pv", legend:"Solar PV", show:"hasPV", fields:[
-  {k:"pv.dcKw", l:"Array size", t:"num", u:"kW DC"}, {k:"pv.ns", l:"Modules per series string", t:"num", u:"qty"},
-  {k:"pv.voc", l:"Module Voc", t:"num", u:"V"}, {k:"pv.isc", l:"Module Isc", t:"num", u:"A"},
-  {k:"pv.coef", l:"Voc temperature coefficient", t:"num", u:"%/°C"}, {k:"pv.tmin", l:"Design low temperature", t:"num", u:"°C"},
-  {k:"pv.maxDcV", l:"Inverter max DC input", t:"num", u:"V"}, {k:"pv.acA", l:"Inverter max AC output", t:"num", u:"A"},
-  {k:"pv.condA", l:"DC conductor ampacity, corrected", t:"num", u:"A", w:1},
-  {k:"pv.ic", l:"Point of interconnection", t:"sel", o:[["load","Load side (705.12)"],["supply","Supply side (705.11)"]], w:1},
-  {k:"pv.busA", l:"Panel busbar rating", t:"num", u:"A"}, {k:"pv.mainA", l:"Main breaker", t:"num", u:"A"},
-  {k:"pv.brkA", l:"PV breaker", t:"num", u:"A"}, {k:"pv.opp", l:"PV breaker at opposite end from main", t:"bool"},
-  {k:"pv.roof", l:"Roof-mounted array", t:"bool"}, {k:"pv.rsd", l:"Rapid shutdown method shown", t:"bool"},
-  {k:"pv.supplyDetail", l:"Supply-side connection detail shown", t:"bool", w:1}]},
- {key:"ess", legend:"Battery storage", show:"hasESS", fields:[
-  {k:"ess.unitKwh", l:"Largest unit capacity", t:"num", u:"kWh"}, {k:"ess.units", l:"Number of units", t:"num", u:"qty"},
-  {k:"ess.loc", l:"Location", t:"sel", o:[["garage","Attached or detached garage"],["utility","Utility closet, basement or storage space"],["outdoor","Exterior wall or outdoors"],["habitable","Habitable space"]], w:1},
-  {k:"ess.ul9540", l:"Listed to UL 9540", t:"bool"}, {k:"ess.disc", l:"Battery disconnect shown", t:"bool"}]},
- {key:"em", legend:"Emergency or standby power", show:"hasEM", fields:[
-  {k:"em.art", l:"System type", t:"sel", o:[["700","Emergency (Article 700)"],["701","Legally required standby (Article 701)"],["702","Optional standby (Article 702)"]], w:1},
-  {k:"em.genKw", l:"Generator rating", t:"num", u:"kW"}, {k:"em.loadKw", l:"Calculated load", t:"num", u:"kW"},
-  {k:"em.xferS", l:"Transfer time", t:"num", u:"s"}, {k:"em.fuelH", l:"On-site fuel at full load", t:"num", u:"h"},
-  {k:"em.atsListed", l:"Transfer switch listed for this system", t:"bool"}, {k:"em.coord", l:"Selective coordination study", t:"bool"},
-  {k:"em.sep", l:"Wiring separation shown", t:"bool"}, {k:"em.lm", l:"Load management system", t:"bool"}]},
- {key:"docs", legend:"Documents in the package", fields:[
-  {k:"docs.sld", l:"Single-line diagram", t:"bool"}, {k:"docs.specs", l:"Equipment spec sheets", t:"bool"},
-  {k:"docs.ground", l:"Grounding and bonding detail", t:"bool"}, {k:"docs.labels", l:"Labels and directory", t:"bool"},
-  {k:"docs.loadcalc", l:"Load calculation", t:"bool"}]}
+/* ---------- Rule catalog ---------- */
+const RULES=[
+ {id:"GEN-01",sys:"All",title:"Single-line diagram missing or incomplete",ref:"NEC 110.3(B); submittal requirement",base:[4,5]},
+ {id:"PV-01",sys:"PV",title:"Maximum DC voltage exceeds equipment or dwelling limit",ref:"NEC 690.7",base:[5,5]},
+ {id:"PV-02",sys:"PV",title:"DC source-circuit conductor undersized",ref:"NEC 690.8(A),(B)",base:[4,5]},
+ {id:"PV-03",sys:"PV",title:"Busbar rule exceeded at load-side connection",ref:"NEC 705.12(B)(3)",base:[5,5]},
+ {id:"PV-04",sys:"PV",title:"PV backfeed breaker below 125% of inverter output",ref:"NEC 690.9, 705.30",base:[4,5]},
+ {id:"PV-05",sys:"PV",title:"Rapid shutdown method not documented for roof array",ref:"NEC 690.12",base:[5,4]},
+ {id:"PV-06",sys:"PV",title:"Supply-side connection detail missing",ref:"NEC 705.11",base:[4,4]},
+ {id:"PV-07",sys:"PV",title:"Grounding and bonding detail missing",ref:"NEC 690.41 to 690.47",base:[3,4]},
+ {id:"PV-08",sys:"PV",title:"Module and inverter listing or spec sheets missing",ref:"NEC 110.3(B), 690.4(B)",base:[3,4]},
+ {id:"PV-09",sys:"PV",title:"Required labels and directory not shown",ref:"NEC 690.56(C), 705.10",base:[2,4]},
+ {id:"PV-10",sys:"PV",title:"Structural letter missing for roof-mounted array",ref:"Building code; submittal requirement",base:[3,4]},
+ {id:"ES-01",sys:"ESS",title:"ESS not listed to UL 9540",ref:"NEC 706.5; NFPA 855",base:[5,4]},
+ {id:"ES-02",sys:"ESS",title:"Individual ESS unit exceeds 20 kWh at a dwelling",ref:"IRC R328; NFPA 855",base:[4,5]},
+ {id:"ES-03",sys:"ESS",title:"Aggregate ESS capacity exceeds the limit for its location",ref:"IRC R328; NFPA 855",base:[4,5]},
+ {id:"ES-04",sys:"ESS",title:"ESS located in a habitable space or sleeping room",ref:"IRC R328; NFPA 855",base:[5,5]},
+ {id:"ES-05",sys:"ESS",title:"ESS disconnecting means not shown",ref:"NEC 706.15",base:[4,4]},
+ {id:"EM-01",sys:"EM",title:"Generator capacity below calculated load",ref:"NEC 700.4, 701.4, 702.4",base:[5,5]},
+ {id:"EM-02",sys:"EM",title:"Transfer time exceeds the limit for the system",ref:"NEC 700.12, 701.12",base:[5,5]},
+ {id:"EM-03",sys:"EM",title:"Selective coordination study not provided",ref:"NEC 700.32, 701.32",base:[5,4]},
+ {id:"EM-04",sys:"EM",title:"Transfer equipment not listed for the system type",ref:"NEC 700.5, 701.5, 702.5",base:[5,4]},
+ {id:"EM-05",sys:"EM",title:"Emergency wiring separation from normal wiring not shown",ref:"NEC 700.10(B)",base:[4,4]},
+ {id:"EM-06",sys:"EM",title:"On-site fuel below 2 hours at full demand load",ref:"NEC 700.12",base:[4,5]},
+ {id:"EM-07",sys:"EM",title:"Load calculation for the alternate source not provided",ref:"NEC 700.4, 701.4, 702.4",base:[3,4]}
 ];
-const BLANK = () => ({name:"", occupancy:"R-3", hasPV:true, hasESS:false, hasEM:false,
-  pv:{dcKw:null, ns:null, voc:null, isc:null, coef:-0.27, tmin:null, maxDcV:null, acA:null, condA:null, ic:"load", busA:null, mainA:null, brkA:null, opp:true, roof:true, rsd:false, supplyDetail:false},
-  ess:{unitKwh:null, units:1, loc:"garage", ul9540:false, disc:false},
-  em:{art:"700", genKw:null, loadKw:null, xferS:null, fuelH:null, atsListed:false, coord:false, sep:false, lm:false},
-  docs:{sld:false, specs:false, ground:false, labels:false, loadcalc:false}});
-const SAMPLES = [
- {name:"Single-family home: 10.4 kW PV + battery", occupancy:"R-3", hasPV:true, hasESS:true, hasEM:false,
-  pv:{dcKw:10.4, ns:11, voc:49.5, isc:13.9, coef:-0.26, tmin:-2, maxDcV:600, acA:40, condA:30, ic:"load", busA:200, mainA:200, brkA:50, opp:true, roof:true, rsd:true, supplyDetail:false},
-  ess:{unitKwh:13.5, units:2, loc:"garage", ul9540:true, disc:false},
-  em:BLANK().em, docs:{sld:true, specs:true, ground:true, labels:false, loadcalc:false}},
- {name:"Office building: 98 kW rooftop PV", occupancy:"B", hasPV:true, hasESS:false, hasEM:false,
-  pv:{dcKw:98, ns:16, voc:41.2, isc:13.1, coef:-0.29, tmin:-5, maxDcV:1000, acA:120, condA:20, ic:"supply", busA:800, mainA:800, brkA:150, opp:false, roof:true, rsd:false, supplyDetail:true},
-  ess:BLANK().ess, em:BLANK().em, docs:{sld:true, specs:true, ground:false, labels:true, loadcalc:false}},
- {name:"14-story office: 500 kW emergency generator", occupancy:"B", hasPV:false, hasESS:false, hasEM:true,
-  pv:BLANK().pv, ess:BLANK().ess,
-  em:{art:"700", genKw:500, loadKw:468, xferS:10, fuelH:1.5, atsListed:true, coord:false, sep:false, lm:false},
-  docs:{sld:true, specs:true, ground:true, labels:true, loadcalc:true}},
- {name:"Single-family home: 6.8 kW PV, complete set", occupancy:"R-3", hasPV:true, hasESS:false, hasEM:false,
-  pv:{dcKw:6.8, ns:10, voc:45.1, isc:11.4, coef:-0.27, tmin:0, maxDcV:600, acA:28, condA:30, ic:"load", busA:225, mainA:200, brkA:35, opp:true, roof:true, rsd:true, supplyDetail:false},
-  ess:BLANK().ess, em:BLANK().em, docs:{sld:true, specs:true, ground:true, labels:true, loadcalc:false}}
-];
-const getP = (o, p) => p.split(".").reduce((a, k) => a == null ? a : a[k], o);
-const setP = (o, p, v) => { const ks = p.split("."); let a = o; ks.slice(0, -1).forEach(k => { if (a[k] == null || typeof a[k] !== "object") a[k] = {}; a = a[k]; }); a[ks[ks.length - 1]] = v; };
-function merge(base, src){ for (const k in src){ if (src[k] && typeof src[k] === "object" && !Array.isArray(src[k])){ if (!base[k] || typeof base[k] !== "object") base[k] = {}; merge(base[k], src[k]); } else base[k] = src[k]; } return base; }
+const R=Object.fromEntries(RULES.map(r=>[r.id,r]));
+const FIX={
+ "GEN-01":"Provide a complete single-line diagram showing every source, disconnect, OCPD, conductor size and point of connection.",
+ "PV-01":"Reduce modules per string or select an inverter rated for the corrected open-circuit voltage. Show the calculation on the plans.",
+ "PV-02":"Upsize the DC conductors so ampacity after correction and adjustment is at least 156% of module Isc.",
+ "PV-03":"Downsize the main breaker, upgrade the busbar, move to a supply-side connection, or add a power control system. Show the revised busbar calculation.",
+ "PV-04":"Size the PV backfeed breaker at no less than 125% of inverter continuous output current.",
+ "PV-05":"Identify the rapid shutdown method and listed equipment, and show the initiation device location and label.",
+ "PV-06":"Detail the supply-side tap: conductor size, OCPD, enclosure, and the service equipment it connects to.",
+ "PV-07":"Add the equipment grounding and bonding detail, including EGC sizing and grounding electrode connection.",
+ "PV-08":"Include listed equipment spec sheets for the modules, inverter and rapid shutdown devices.",
+ "PV-09":"Show the required labels with wording and locations, including the rapid shutdown label and the source directory.",
+ "PV-10":"Provide a structural letter or calculation for the roof framing under the added array load.",
+ "ES-01":"Provide the UL 9540 listing for the ESS as installed, with manufacturer documentation.",
+ "ES-02":"Select ESS units of 20 kWh or less each, or provide approval under the large-scale ESS provisions.",
+ "ES-03":"Reduce aggregate capacity, split units across permitted locations, or relocate to an exterior wall or outdoors.",
+ "ES-04":"Relocate the ESS out of habitable space, sleeping rooms and closets that open into them.",
+ "ES-05":"Show a lockable ESS disconnecting means within sight of the ESS, with its label.",
+ "EM-01":"Increase generator rating or add load management. Revise the load calculation to match.",
+ "EM-02":"Select transfer equipment and controls that restore power within the system limit, and state the transfer time on the plans.",
+ "EM-03":"Provide a selective coordination study by a qualified engineer for all emergency or legally required OCPDs.",
+ "EM-04":"Specify transfer equipment listed for the system type (emergency, legally required or optional standby).",
+ "EM-05":"Show emergency circuits in dedicated raceways, boxes and cabinets separate from normal power wiring.",
+ "EM-06":"Provide on-site fuel for at least 2 hours at full demand load, with tank size and burn rate.",
+ "EM-07":"Provide the alternate-source load calculation, with the loads served and demand factors."
+};
+const BAND=s=>s>=20?{k:"crit",n:"Critical",i:"▲"}:s>=12?{k:"high",n:"High",i:"◆"}:s>=6?{k:"med",n:"Medium",i:"●"}:{k:"low",n:"Low",i:"○"};
 
+/* ---------- Form schema ---------- */
+const OCC=[["R-3","R-3 One- or two-family dwelling"],["R-2","R-2 Multifamily"],["B","B Business"],["M","M Mercantile"],["I-2","I-2 Institutional"],["S-1","S-1 Storage"]];
+const FS=[
+ {key:"project",legend:"Project",fields:[
+  {k:"name",l:"Project name",t:"text",w:1},{k:"address",l:"Address",t:"text",w:1},
+  {k:"occupancy",l:"Occupancy",t:"sel",o:OCC},{k:"code",l:"Code basis",t:"sel",o:[["NEC 2023","NEC 2023"],["NEC 2020","NEC 2020"]]},
+  {k:"hasPV",l:"Includes PV",t:"bool"},{k:"hasESS",l:"Includes energy storage",t:"bool"},{k:"hasEM",l:"Includes emergency or standby power",t:"bool",w:1}]},
+ {key:"pv",legend:"PV system",show:"hasPV",fields:[
+  {k:"pv.dcKw",l:"Array size",t:"num",u:"kW DC"},{k:"pv.ns",l:"Modules per series string",t:"num",u:"qty"},
+  {k:"pv.voc",l:"Module Voc",t:"num",u:"V"},{k:"pv.isc",l:"Module Isc",t:"num",u:"A"},
+  {k:"pv.coef",l:"Voc temperature coefficient",t:"num",u:"%/°C"},{k:"pv.tmin",l:"Design low temperature",t:"num",u:"°C"},
+  {k:"pv.maxDcV",l:"Inverter max DC input",t:"num",u:"V"},{k:"pv.acA",l:"Inverter max AC output",t:"num",u:"A"},
+  {k:"pv.condA",l:"DC conductor ampacity, corrected",t:"num",u:"A",w:1},
+  {k:"pv.ic",l:"Interconnection",t:"sel",o:[["load","Load side (705.12)"],["supply","Supply side (705.11)"]],w:1},
+  {k:"pv.busA",l:"Panel busbar rating",t:"num",u:"A"},{k:"pv.mainA",l:"Main OCPD",t:"num",u:"A"},
+  {k:"pv.brkA",l:"PV backfeed breaker",t:"num",u:"A"},{k:"pv.opp",l:"PV breaker at opposite end from main",t:"bool"},
+  {k:"pv.roof",l:"Roof-mounted array",t:"bool"},{k:"pv.rsd",l:"Rapid shutdown method documented",t:"bool"},
+  {k:"pv.supplyDetail",l:"Supply-side tap detail shown",t:"bool",w:1}]},
+ {key:"ess",legend:"Energy storage",show:"hasESS",fields:[
+  {k:"ess.unitKwh",l:"Largest unit capacity",t:"num",u:"kWh"},{k:"ess.units",l:"Number of units",t:"num",u:"qty"},
+  {k:"ess.loc",l:"Location",t:"sel",o:[["garage","Attached garage"],["utility","Utility closet or basement"],["outdoor","Exterior wall or outdoors"],["habitable","Habitable space"]],w:1},
+  {k:"ess.ul9540",l:"Listed to UL 9540",t:"bool"},{k:"ess.disc",l:"ESS disconnect shown",t:"bool"}]},
+ {key:"em",legend:"Emergency or standby power",show:"hasEM",fields:[
+  {k:"em.art",l:"System type",t:"sel",o:[["700","Emergency (Art. 700)"],["701","Legally required standby (Art. 701)"],["702","Optional standby (Art. 702)"]],w:1},
+  {k:"em.genKw",l:"Generator rating",t:"num",u:"kW"},{k:"em.loadKw",l:"Calculated load",t:"num",u:"kW"},
+  {k:"em.xferS",l:"Transfer time",t:"num",u:"s"},{k:"em.fuelH",l:"On-site fuel at full load",t:"num",u:"h"},
+  {k:"em.atsListed",l:"Transfer switch listed for this system",t:"bool"},{k:"em.coord",l:"Selective coordination study",t:"bool"},
+  {k:"em.sep",l:"Wiring separation shown",t:"bool"},{k:"em.lm",l:"Load management system",t:"bool"}]},
+ {key:"docs",legend:"Documents in the package",fields:[
+  {k:"docs.sld",l:"Single-line diagram",t:"bool"},{k:"docs.specs",l:"Equipment spec sheets",t:"bool"},
+  {k:"docs.ground",l:"Grounding and bonding detail",t:"bool"},{k:"docs.labels",l:"Labels and directory",t:"bool"},
+  {k:"docs.struct",l:"Structural letter",t:"bool"},{k:"docs.loadcalc",l:"Load calculation",t:"bool"}]}
+];
+
+const BLANK=()=>({name:"",address:"",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
+ pv:{dcKw:null,ns:null,voc:null,isc:null,coef:-0.27,tmin:null,maxDcV:null,acA:null,condA:null,ic:"load",busA:null,mainA:null,brkA:null,opp:true,roof:true,rsd:false,supplyDetail:false},
+ ess:{unitKwh:null,units:1,loc:"garage",ul9540:false,disc:false},
+ em:{art:"700",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
+ docs:{sld:false,specs:false,ground:false,labels:false,struct:false,loadcalc:false}});
+
+const SAMPLES=[
+ {name:"Residential PV + battery, 10.4 kW",address:"Sample: single-family dwelling, Los Angeles",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:true,hasEM:false,
+  pv:{dcKw:10.4,ns:11,voc:49.5,isc:13.9,coef:-0.26,tmin:-2,maxDcV:600,acA:40,condA:30,ic:"load",busA:200,mainA:200,brkA:50,opp:true,roof:true,rsd:true,supplyDetail:false},
+  ess:{unitKwh:13.5,units:2,loc:"garage",ul9540:true,disc:false},
+  em:{art:"702",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
+  docs:{sld:true,specs:true,ground:true,labels:false,struct:false,loadcalc:false}},
+ {name:"Commercial rooftop PV, 98 kW",address:"Sample: two-story office building",occupancy:"B",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
+  pv:{dcKw:98,ns:16,voc:41.2,isc:13.1,coef:-0.29,tmin:-5,maxDcV:1000,acA:120,condA:20,ic:"supply",busA:800,mainA:800,brkA:150,opp:false,roof:true,rsd:false,supplyDetail:true},
+  ess:{unitKwh:null,units:1,loc:"outdoor",ul9540:false,disc:false},
+  em:{art:"702",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
+  docs:{sld:true,specs:true,ground:false,labels:true,struct:true,loadcalc:false}},
+ {name:"Office tower emergency generator, 500 kW",address:"Sample: 14-story office building",occupancy:"B",code:"NEC 2023",hasPV:false,hasESS:false,hasEM:true,
+  pv:BLANK().pv,ess:BLANK().ess,
+  em:{art:"700",genKw:500,loadKw:468,xferS:10,fuelH:1.5,atsListed:true,coord:false,sep:false,lm:false},
+  docs:{sld:true,specs:true,ground:true,labels:true,struct:false,loadcalc:true}},
+ {name:"Clean residential PV, 6.8 kW",address:"Sample: single-family dwelling",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
+  pv:{dcKw:6.8,ns:10,voc:45.1,isc:11.4,coef:-0.27,tmin:0,maxDcV:600,acA:28,condA:30,ic:"load",busA:225,mainA:200,brkA:35,opp:true,roof:true,rsd:true,supplyDetail:false},
+  ess:BLANK().ess,em:BLANK().em,
+  docs:{sld:true,specs:true,ground:true,labels:true,struct:true,loadcalc:false}}
+];
+
+const getP=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);
+const setP=(o,p,v)=>{const ks=p.split(".");let a=o;ks.slice(0,-1).forEach(k=>{if(a[k]==null||typeof a[k]!=="object")a[k]={};a=a[k]});a[ks[ks.length-1]]=v};
+const deep=o=>JSON.parse(JSON.stringify(o));
+function merge(base,src){for(const k in src){if(src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])){if(!base[k]||typeof base[k]!=="object")base[k]={};merge(base[k],src[k])}else base[k]=src[k]}return base}
+const num=v=>(v===null||v===""||v===undefined||isNaN(+v))?null:+v;
+
+/* ---------- Engine ---------- */
 function run(d){
-  const out = [], dwell = d.occupancy === "R-3";
-  const add = (key, status, kind, detail, tax) => out.push({key, status, kind, detail, rule: RULES[key], tax: tax || RULES[key].tax});
-  const pass = (key, detail, tax) => add(key, "pass", "", detail, tax);
-  const need = (key, detail, tax) => add(key, "data", "", detail, tax);
-  const doc = (key, ok, okText, failText, tax) => ok ? pass(key, okText, tax) : add(key, "fail", "doc", failText, tax);
-  doc("sld", d.docs.sld, "Single-line diagram included.", "No single-line diagram in the package.");
-  if (d.hasPV){
-    const p = d.pv, ns = num(p.ns), voc = num(p.voc), coef = num(p.coef), tmin = num(p.tmin), maxV = num(p.maxDcV);
-    if ([ns, voc, coef, tmin, maxV].some(v => v == null)) need("voc", "Needs modules per string, Voc, temperature coefficient, design low temperature and inverter max DC input.");
-    else {
-      const k = 1 + (tmin - 25) * coef / 100, v = ns * voc * k; let lim = maxV, why = "inverter max DC input";
-      if (dwell && lim > 600){ lim = 600; why = "600 V limit for one- and two-family dwellings"; }
-      const det = `${ns} × ${fmt(voc,1)} V × ${fmt(k,3)} = ${fmt(v,1)} V at ${fmt(tmin,0)} °C vs ${fmt(lim,0)} V ${why}`;
-      v > lim ? add("voc", "fail", "calc", det) : v > 0.97 * lim ? add("voc", "warn", "warn", det + ` (${fmt(v / lim * 100, 1)}% of limit)`) : pass("voc", det);
-    }
-    const isc = num(p.isc), cA = num(p.condA);
-    if (isc == null || cA == null) need("pvcond", "Needs module Isc and corrected conductor ampacity.");
-    else { const req = isc * 1.5625, det = `Required ${fmt(isc,1)} A × 1.25 × 1.25 = ${fmt(req,1)} A vs ${fmt(cA,0)} A provided`; req > cA ? add("pvcond", "fail", "calc", det) : pass("pvcond", det); }
-    const ac = num(p.acA), bus = num(p.busA), main = num(p.mainA), brk = num(p.brkA);
-    if (p.ic === "load"){
-      if ([ac, bus, main].some(v => v == null)) need("busbar", "Needs inverter AC output, busbar rating and main breaker.");
-      else {
-        const pvA = 1.25 * ac, sum = main + pvA, lim = p.opp ? 1.2 * bus : bus;
-        const det = `${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${fmt(ac,1)} A) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp ? "120%" : "100%"} of ${fmt(bus,0)} A busbar)`;
-        sum > lim ? add("busbar", "fail", "calc", det) : sum > 0.97 * lim ? add("busbar", "warn", "warn", det) : pass("busbar", det);
-      }
-    }
-    if (ac != null && brk != null){ const req = 1.25 * ac, det = `Breaker ${fmt(brk,0)} A vs ${fmt(req,1)} A minimum (125% of ${fmt(ac,1)} A)`; brk < req ? add("backfeed", "fail", "calc", det) : pass("backfeed", det); }
-    else need("backfeed", "Needs inverter AC output and PV breaker size.");
-    if (p.roof) doc("rsd", p.rsd, "Rapid shutdown method shown.", "Roof-mounted array with no rapid shutdown method identified.");
-    if (p.ic === "supply") doc("supply", p.supplyDetail, "Supply-side connection detail included.", "Supply-side connection with no tap detail.");
-    doc("ground", d.docs.ground, "Grounding detail included.", "No grounding and bonding detail in the package.");
-    doc("specs", d.docs.specs, "Spec sheets included.", "Equipment spec sheets not provided.");
-    doc("labels", d.docs.labels, "Labels and directory shown.", "Label schedule and power source directory not shown.");
+ const out=[];const dwell=d.occupancy==="R-3";
+ const add=(id,status,detail,sl)=>{const r=R[id];const [s,l]=sl||r.base;out.push({id,status,detail,sev:s,lik:l,score:s*l,rule:r})};
+ const pass=(id,detail)=>out.push({id,status:"pass",detail,sev:0,lik:0,score:0,rule:R[id]});
+ const need=(id,detail)=>out.push({id,status:"data",detail,sev:0,lik:0,score:0,rule:R[id]});
+ // general
+ d.docs.sld?pass("GEN-01","Single-line diagram included."):add("GEN-01","fail","No single-line diagram in the package.");
+ if(d.hasPV){
+  const p=d.pv;const ns=num(p.ns),voc=num(p.voc),coef=num(p.coef),tmin=num(p.tmin),maxV=num(p.maxDcV);
+  if([ns,voc,coef,tmin,maxV].some(v=>v==null))need("PV-01","Needs modules per string, Voc, temperature coefficient, design low temperature and inverter max DC input.");
+  else{const k=1+(tmin-25)*coef/100;const v=ns*voc*k;let lim=maxV,why="inverter max DC input";if(dwell&&600<lim){lim=600;why="600 V limit for one- and two-family dwellings"}
+   const det=`${ns} x ${fmt(voc,1)} V x ${fmt(k,3)} = ${fmt(v,1)} V at ${fmt(tmin,0)} °C vs ${fmt(lim,0)} V ${why}`;
+   if(v>lim)add("PV-01","fail",det);else if(v>0.97*lim)add("PV-01","warn",det+` (${fmt(v/lim*100,1)}% of limit)`,[3,3]);else pass("PV-01",det);}
+  const isc=num(p.isc),cA=num(p.condA);
+  if(isc==null||cA==null)need("PV-02","Needs module Isc and corrected conductor ampacity.");
+  else{const req=isc*1.5625;const det=`Required ${fmt(isc,1)} A x 1.25 x 1.25 = ${fmt(req,1)} A vs ${fmt(cA,0)} A provided`;req>cA?add("PV-02","fail",det):pass("PV-02",det)}
+  const ac=num(p.acA),bus=num(p.busA),main=num(p.mainA),brk=num(p.brkA);
+  if(p.ic==="load"){
+   if([ac,bus,main].some(v=>v==null))need("PV-03","Needs inverter AC output, busbar rating and main OCPD.");
+   else{const pvA=1.25*ac,sum=main+pvA;const lim=p.opp?1.2*bus:bus;const det=`${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${fmt(ac,1)} A) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp?"120% of":"100% of"} ${fmt(bus,0)} A busbar)`;
+    sum>lim?add("PV-03","fail",det):(sum>0.97*lim?add("PV-03","warn",det,[3,3]):pass("PV-03",det))}
   }
-  if (d.hasESS){
-    const e = d.ess;
-    doc("ess9540", e.ul9540, "UL 9540 listing documented.", "No UL 9540 listing documented for the battery system.");
-    const u = num(e.unitKwh), n = num(e.units) || 1;
-    const nm = {garage:"a garage", utility:"a utility closet, basement or storage space", outdoor:"on an exterior wall or outdoors", habitable:"habitable space"}[e.loc];
-    if (dwell){
-      if (u == null) need("essunit", "Needs unit capacity.");
-      else { const det = `Largest unit ${fmt(u,1)} kWh vs 20 kWh per unit`; u > 20 ? add("essunit", "fail", "calc", det) : pass("essunit", det); }
-      const LIM = {garage:80, utility:40, outdoor:80};
-      if (u != null && e.loc !== "habitable"){
-        const agg = u * n, lim = LIM[e.loc], det = `${n} × ${fmt(u,1)} kWh = ${fmt(agg,1)} kWh vs ${lim} kWh allowed in ${nm}`;
-        agg > lim ? add("essagg", "fail", "calc", det) : agg > 0.9 * lim ? add("essagg", "warn", "warn", det + " (within 10% of limit)") : pass("essagg", det);
-      }
-      e.loc === "habitable" ? add("esshab", "fail", "calc", "Battery shown inside habitable space.") : pass("esshab", `Located in ${nm}.`);
-    }
-    doc("essdisc", e.disc, "Battery disconnect shown.", "No battery disconnecting means on the plans.");
+  if(ac!=null&&brk!=null){const req=1.25*ac;const det=`Breaker ${fmt(brk,0)} A vs ${fmt(req,1)} A minimum (125% of ${fmt(ac,1)} A)`;brk<req?add("PV-04","fail",det):pass("PV-04",det)}
+  else need("PV-04","Needs inverter AC output and PV breaker size.");
+  if(p.roof){p.rsd?pass("PV-05","Rapid shutdown method documented."):add("PV-05","fail","Roof-mounted array with no rapid shutdown method identified.")}
+  if(p.ic==="supply"){p.supplyDetail?pass("PV-06","Supply-side tap detail included."):add("PV-06","fail","Supply-side connection with no tap detail.")}
+  d.docs.ground?pass("PV-07","Grounding detail included."):add("PV-07","fail","No grounding and bonding detail in the package.");
+  d.docs.specs?pass("PV-08","Spec sheets included."):add("PV-08","fail","Equipment spec sheets not provided.");
+  d.docs.labels?pass("PV-09","Labels and directory shown."):add("PV-09","fail","Label schedule and source directory not shown.");
+  if(p.roof)d.docs.struct?pass("PV-10","Structural letter included."):add("PV-10","fail","Roof-mounted array with no structural letter or calculation.");
+ }
+ if(d.hasESS){
+  const e=d.ess;e.ul9540?pass("ES-01","UL 9540 listing documented."):add("ES-01","fail","No UL 9540 listing documented for the ESS.");
+  const u=num(e.unitKwh),n=num(e.units)||1;
+  if(dwell){
+   if(u==null)need("ES-02","Needs unit capacity.");else{const det=`Largest unit ${fmt(u,1)} kWh vs 20 kWh per unit`;u>20?add("ES-02","fail",det):pass("ES-02",det)}
+   const LIM={garage:40,utility:40,outdoor:80,habitable:0};const nm={garage:"attached garage",utility:"utility closet or basement",outdoor:"exterior wall or outdoors",habitable:"habitable space"}[e.loc];
+   if(u!=null&&e.loc!=="habitable"){const agg=u*n,lim=LIM[e.loc];const det=`${n} x ${fmt(u,1)} kWh = ${fmt(agg,1)} kWh vs ${lim} kWh in ${nm}`;agg>lim?add("ES-03","fail",det):(agg>0.9*lim?add("ES-03","warn",det+" (within 10% of limit)",[3,3]):pass("ES-03",det))}
+   e.loc==="habitable"?add("ES-04","fail","ESS shown inside habitable space."):pass("ES-04",`Located in ${nm}.`);
   }
-  if (d.hasEM){
-    const m = d.em, art = m.art, capTax = art === "702" ? "EM-06" : "EM-05", g = num(m.genKw), ld = num(m.loadKw);
-    if (art === "702" && m.lm) pass("gencap", "Optional standby with load management; generator may be sized to the managed load.", capTax);
-    else if (g == null || ld == null) need("gencap", "Needs generator rating and calculated load.", capTax);
-    else { const det = `Calculated ${fmt(ld,1)} kW vs ${fmt(g,1)} kW rating (${fmt(ld / g * 100,1)}% loaded)`; ld > g ? add("gencap", "fail", "calc", det, capTax) : ld > 0.9 * g ? add("gencap", "warn", "warn", det + "; little margin for future load", capTax) : pass("gencap", det, capTax); }
-    const lim = {"700":10, "701":60}[art], x = num(m.xferS);
-    if (lim){ if (x == null) need("xfer", "Needs transfer time."); else { const det = `${fmt(x,0)} s vs ${lim} s maximum for Article ${art}`; x > lim ? add("xfer", "fail", "calc", det) : pass("xfer", det); } }
-    if (art !== "702") doc("coord", m.coord, "Coordination study provided.", `Article ${art} system with no selective coordination study.`);
-    doc("atslist", m.atsListed, "Transfer equipment listing matches the system type.", `Transfer equipment not shown as listed for Article ${art} use.`);
-    if (art === "700"){
-      doc("sep", m.sep, "Separation shown.", "Plans do not show emergency wiring kept independent of normal wiring.");
-      const f = num(m.fuelH);
-      if (f == null) need("fuel", "Needs on-site fuel duration.");
-      else { const det = `${fmt(f,1)} h on site vs 2 h minimum`; f < 2 ? add("fuel", "fail", "calc", det) : pass("fuel", det); }
-    }
-    doc("loadcalc", d.docs.loadcalc, "Load calculation provided.", "No alternate-source load calculation in the package.", capTax);
-  }
-  const CR = {calc:3, doc:2, warn:1};
-  out.forEach(f => { const s = SC[f.tax]; f.risk = s.risk; f.tier = s.tier; f.item = s; });
-  const findings = out.filter(f => f.status === "fail" || f.status === "warn").sort((a, b) => b.risk - a.risk || CR[b.kind] - CR[a.kind] || a.tax.localeCompare(b.tax));
-  return {findings, passed: out.filter(f => f.status === "pass"), missing: out.filter(f => f.status === "data")};
+  e.disc?pass("ES-05","ESS disconnect shown."):add("ES-05","fail","No ESS disconnecting means on the plans.");
+ }
+ if(d.hasEM){
+  const m=d.em;const art=m.art;const g=num(m.genKw),ld=num(m.loadKw);
+  if(art==="702"&&m.lm)pass("EM-01","Optional standby with load management; generator may be sized to managed load.");
+  else if(g==null||ld==null)need("EM-01","Needs generator rating and calculated load.");
+  else{const det=`Calculated ${fmt(ld,1)} kW vs ${fmt(g,1)} kW rating (${fmt(ld/g*100,1)}% loaded)`;ld>g?add("EM-01","fail",det):(ld>0.9*g?add("EM-01","warn",det+"; little margin for future load",[3,3]):pass("EM-01",det))}
+  const lim={"700":10,"701":60}[art];const x=num(m.xferS);
+  if(lim){if(x==null)need("EM-02","Needs transfer time.");else{const det=`${fmt(x,0)} s vs ${lim} s maximum for Article ${art}`;x>lim?add("EM-02","fail",det):pass("EM-02",det)}}
+  if(art!=="702")m.coord?pass("EM-03","Coordination study provided."):add("EM-03","fail",`Article ${art} system with no selective coordination study.`);
+  m.atsListed?pass("EM-04","Transfer equipment listing matches system type."):add("EM-04","fail",`Transfer equipment not shown as listed for Article ${art} use.`);
+  if(art==="700")m.sep?pass("EM-05","Separation shown."):add("EM-05","fail","Plans do not show emergency wiring kept independent of normal wiring.");
+  if(art==="700"){const f=num(m.fuelH);if(f==null)need("EM-06","Needs on-site fuel duration.");else{const det=`${fmt(f,1)} h on site vs 2 h minimum`;f<2?add("EM-06","fail",det):pass("EM-06",det)}}
+  d.docs.loadcalc?pass("EM-07","Load calculation provided."):add("EM-07","fail","No alternate-source load calculation in the package.");
+ }
+ const findings=out.filter(f=>f.status==="fail"||f.status==="warn").sort((a,b)=>b.score-a.score||b.sev-a.sev||a.id.localeCompare(b.id));
+ return {findings,passed:out.filter(f=>f.status==="pass"),missing:out.filter(f=>f.status==="data"),all:out};
 }
-const CERT = {calc:"Calculated", doc:"Missing from package", warn:"Near limit"};
 
-let data = merge(BLANK(), deep(SAMPLES[0]));
-const savedProj = store.get("project", null);
-if (savedProj && savedProj.name !== undefined) data = merge(BLANK(), savedProj);
-let result = null;
+/* ---------- State ---------- */
+let data=deep(SAMPLES[0]);let result=run(data);
+const saved=store.get("ohm.project");if(saved&&saved.name!==undefined){data=merge(BLANK(),saved);result=run(data)}
 
+/* ---------- Form render ---------- */
 function fieldHTML(f){
-  const id = "f_" + f.k.replace(/\./g, "_"), v = getP(data, f.k), cls = "f" + (f.w ? " wide" : "");
-  if (f.t === "bool") return `<div class="${cls}"><label class="chk" for="${id}"><input type="checkbox" id="${id}" data-k="${f.k}" data-t="bool" ${v ? "checked" : ""}><span>${esc(f.l)}</span></label></div>`;
-  if (f.t === "sel") return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><select class="ctl" id="${id}" data-k="${f.k}" data-t="sel">${f.o.map(([val, lab]) => `<option value="${esc(val)}" ${String(v) === val ? "selected" : ""}>${esc(lab)}</option>`).join("")}</select></div>`;
-  if (f.t === "num") return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><div class="unitwrap"><input class="ctl" id="${id}" data-k="${f.k}" data-t="num" type="number" step="any" inputmode="decimal" value="${v == null ? "" : esc(v)}"><span class="unit">${esc(f.u || "")}</span></div></div>`;
-  return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><input class="ctl" id="${id}" data-k="${f.k}" data-t="text" type="text" value="${esc(v)}"></div>`;
+ const id="f_"+f.k.replace(/\./g,"_");const v=getP(data,f.k);const cls="f"+(f.w?" wide":"");
+ if(f.t==="bool")return `<div class="${cls}"><label class="chk" for="${id}"><input type="checkbox" id="${id}" data-k="${f.k}" data-t="bool" ${v?"checked":""}><span>${esc(f.l)}</span></label></div>`;
+ if(f.t==="sel")return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><select class="ctl" style="width:100%" id="${id}" data-k="${f.k}" data-t="sel">${f.o.map(([val,lab])=>`<option value="${esc(val)}" ${String(v)===val?"selected":""}>${esc(lab)}</option>`).join("")}</select></div>`;
+ if(f.t==="num")return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><div class="unitwrap"><input class="ctl" id="${id}" data-k="${f.k}" data-t="num" type="number" step="any" inputmode="decimal" value="${v==null?"":esc(v)}"><span class="unit">${esc(f.u||"")}</span></div></div>`;
+ return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><input class="ctl" id="${id}" data-k="${f.k}" data-t="text" type="text" value="${esc(v)}"></div>`;
 }
 function renderForm(){
-  $("#form").innerHTML = FS.map(s => `<fieldset data-sec="${s.key}" ${s.show && !data[s.show] ? "hidden" : ""}><legend>${esc(s.legend)}</legend><div class="fgrid">${s.fields.map(fieldHTML).join("")}</div></fieldset>`).join("");
+ $("#form").innerHTML=FS.map(s=>`<fieldset data-sec="${s.key}" ${s.show&&!data[s.show]?"hidden":""}><legend>${esc(s.legend)}</legend><div class="fgrid">${s.fields.map(fieldHTML).join("")}</div></fieldset>`).join("");
 }
-function syncSections(){ FS.forEach(s => { if (s.show) $(`fieldset[data-sec="${s.key}"]`).hidden = !data[s.show]; }); }
+function syncSections(){FS.forEach(s=>{if(s.show){$(`fieldset[data-sec="${s.key}"]`).hidden=!data[s.show]}})}
 let rt;
-$("#form").addEventListener("input", e => {
-  const el = e.target; if (!el.dataset.k) return;
-  const t = el.dataset.t, v = t === "bool" ? el.checked : t === "num" ? num(el.value) : el.value;
-  setP(data, el.dataset.k, v);
-  if (["hasPV","hasESS","hasEM"].includes(el.dataset.k)) syncSections();
-  clearTimeout(rt); rt = setTimeout(() => { store.set("project", data); renderAll(); }, 120);
+$("#form").addEventListener("input",e=>{
+ const el=e.target;if(!el.dataset.k)return;
+ const t=el.dataset.t;const v=t==="bool"?el.checked:t==="num"?num(el.value):el.value;setP(data,el.dataset.k,v);
+ if(["hasPV","hasESS","hasEM"].includes(el.dataset.k))syncSections();
+ clearTimeout(rt);rt=setTimeout(update,120);
 });
-$("#form").addEventListener("change", e => { if (e.target.tagName === "SELECT"){ setP(data, e.target.dataset.k, e.target.value); store.set("project", data); renderAll(); } });
-$("#form").addEventListener("submit", e => e.preventDefault());
+$("#form").addEventListener("change",e=>{if(e.target.tagName==="SELECT"){setP(data,e.target.dataset.k,e.target.value);update()}});
+$("#form").addEventListener("submit",e=>e.preventDefault());
 
-function scoreBox(f){ return `<div class="scorebox t${f.tier}" aria-label="Risk ${f.risk}, ${TIER_NAME[f.tier]}">${f.risk}<small>${f.tier === 1 ? "FIRST" : "TIER " + f.tier}</small></div>`; }
-function renderPrecheck(){
-  const F = result.findings;
-  $("#pc-t1").textContent = F.filter(f => f.tier === 1).length;
-  $("#pc-all").textContent = F.length;
-  $("#pc-pass").textContent = result.passed.length;
-  let h = F.length ? "" : `<div class="empty" style="margin:14px;border-style:solid"><b style="color:var(--ink)">No likely deficiencies found.</b> The checks below passed on the data entered. A reviewer still confirms the plans match these values.</div>`;
-  h += F.map(f => `<div class="find">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4>
-    <div class="meta"><span class="cert ${f.kind}">${CERT[f.kind]}</span><span class="tier t${f.tier}">${TIER_NAME[f.tier].split(":")[0]}</span><span class="chip">${esc(f.tax)}</span><span class="chip">${esc(f.rule.ref)}</span><span class="sev" data-s="${f.item.sev}">${f.item.sev}</span></div>
-    <div class="det">${esc(f.detail)}</div><div class="fix"><b>Fix:</b> ${esc(f.rule.fix)}</div></div></div>`).join("");
-  if (result.missing.length) h += `<div class="minor"><details open><summary>${result.missing.length} check${result.missing.length > 1 ? "s" : ""} need more data</summary><ul>${result.missing.map(f => `<li><span class="mono">${f.tax}</span><span>${esc(f.rule.title)}: ${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
-  if (result.passed.length) h += `<div class="minor"><details><summary>${result.passed.length} check${result.passed.length > 1 ? "s" : ""} passed</summary><ul>${result.passed.map(f => `<li><span class="mono">${f.tax}</span><span>${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
-  $("#out").innerHTML = h;
-  // hero card on About
-  $("#hero-name").textContent = data.name || "Untitled project";
-  $("#hero-count").textContent = `${F.length} finding${F.length === 1 ? "" : "s"}`;
-  $("#hero-list").innerHTML = F.slice(0, 4).map(f => `<div class="r"><div class="s scorebox t${f.tier}">${f.risk}</div><div style="min-width:0"><div class="t">${esc(f.rule.title)}</div><div class="m">${esc(f.tax)} · ${CERT[f.kind]} · NEC ${esc(f.rule.ref)}</div></div></div>`).join("") || `<div class="r"><div></div><div class="t">No likely deficiencies on this project.</div></div>`;
+/* ---------- Output render ---------- */
+function scoreBox(f){if(f.status==="pass")return `<div class="score b-pass" aria-label="Passed">OK</div>`;const b=BAND(f.score);return `<div class="score b-${b.k}" aria-label="${b.n} risk, score ${f.score}">${f.score}<small>${b.n.slice(0,4).toUpperCase()}</small></div>`}
+function bandPill(f){const b=BAND(f.score);return `<span class="pill b-${b.k}">${b.i} ${b.n}</span>`}
+function renderOut(){
+ const F=result.findings;const c={crit:0,high:0,med:0,low:0};F.forEach(f=>c[BAND(f.score).k]++);
+ $("#sum").innerHTML=[["crit","Critical"],["high","High"],["med","Medium"],["low","Low"]].map(([k,n])=>`<div><span class="label">${n}</span><b class="${c[k]?"":""}" style="color:${c[k]?`var(--${k})`:"var(--muted)"}">${c[k]}</b><span class="bar b-${k}" style="background:${c[k]?`var(--${k})`:"var(--grid)"}"></span></div>`).join("");
+ let h="";
+ if(!F.length)h+=`<div class="empty"><b style="color:var(--ink)">No likely deficiencies found.</b> The checks below passed on the data entered. A reviewer still confirms the plans match these values.</div>`;
+ h+=F.map(f=>`<div class="find">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4><div class="meta">${bandPill(f)}<span class="label">${esc(f.id)} &middot; ${esc(f.rule.ref)}</span><span class="label">S${f.sev} x L${f.lik}</span></div><div class="det">${esc(f.detail)}</div><div class="fix"><b>Fix:</b> ${esc(FIX[f.id])}</div></div></div>`).join("");
+ if(result.missing.length)h+=`<div class="passed"><details open><summary>${result.missing.length} check${result.missing.length>1?"s":""} need more data</summary><ul>${result.missing.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
+ if(result.passed.length)h+=`<div class="passed"><details><summary>${result.passed.length} check${result.passed.length>1?"s":""} passed</summary><ul>${result.passed.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.rule.title.replace(/ (missing|not shown|not documented|not provided|exceeds|undersized|below).*$/,""))}: ${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
+ $("#out").innerHTML=h;
 }
-$("#sample").innerHTML = `<option value="">Choose a sample</option>` + SAMPLES.map((s, i) => `<option value="${i}">${esc(s.name)}</option>`).join("");
-$("#sample").addEventListener("change", e => { if (e.target.value === "") return; data = merge(BLANK(), deep(SAMPLES[+e.target.value])); store.set("project", data); renderForm(); renderAll(); $("#up-msg").textContent = ""; toast("Sample loaded"); });
-$("#blank").addEventListener("click", () => { data = BLANK(); data.name = "New project"; store.set("project", data); renderForm(); renderAll(); $("#sample").value = ""; toast("Blank project"); });
-$("#copy-json").addEventListener("click", () => copyText(JSON.stringify(data, null, 2)));
-$("#upload").addEventListener("change", e => {
-  const file = e.target.files[0]; if (!file) return;
-  const rd = new FileReader();
-  rd.onload = () => {
-    try{
-      let obj; const txt = String(rd.result);
-      if (/\.csv$/i.test(file.name) || !/^\s*[{[]/.test(txt)){
-        obj = {};
-        txt.split(/\r?\n/).forEach((line, i) => { const m = line.split(","); if (m.length < 2) return; const k = m[0].trim(), raw = m.slice(1).join(",").trim(); if (!k || (i === 0 && /^key$/i.test(k))) return; let v = raw; if (/^(true|yes)$/i.test(raw)) v = true; else if (/^(false|no)$/i.test(raw)) v = false; else if (raw !== "" && !isNaN(+raw)) v = +raw; setP(obj, k, v); });
-      } else obj = JSON.parse(txt);
-      if (Array.isArray(obj)) obj = obj[0];
-      data = merge(BLANK(), obj); store.set("project", data); renderForm(); renderAll(); $("#sample").value = ""; $("#up-msg").textContent = "Loaded " + file.name; toast("Loaded " + file.name);
-    }catch(err){ toast("Could not read that file. Use JSON from Copy as JSON, or a CSV of key,value rows."); }
-    e.target.value = "";
-  };
-  rd.readAsText(file);
+function update(){result=run(data);renderOut();renderReviewer();store.set("ohm.project",data)}
+
+/* Samples, upload, copy */
+$("#sample").innerHTML=`<option value="">Choose a sample</option>`+SAMPLES.map((s,i)=>`<option value="${i}">${esc(s.name)}</option>`).join("");
+$("#sample").addEventListener("change",e=>{if(e.target.value==="")return;data=merge(BLANK(),deep(SAMPLES[+e.target.value]));renderForm();update();$("#upMsg").textContent="";toast("Loaded sample")});
+$("#clearForm").addEventListener("click",()=>{data=BLANK();data.name="New project";renderForm();update();$("#sample").value="";toast("Blank project")});
+$("#copyJson").addEventListener("click",()=>copyText(JSON.stringify(data,null,2)));
+$("#upload").addEventListener("change",e=>{
+ const file=e.target.files[0];if(!file)return;const rd=new FileReader();
+ rd.onload=()=>{try{
+   let obj;const txt=String(rd.result);
+   if(/\.csv$/i.test(file.name)||!/^\s*[{[]/.test(txt)){obj={};txt.split(/\r?\n/).forEach((line,i)=>{const m=line.split(",");if(m.length<2)return;const k=m[0].trim(),raw=m.slice(1).join(",").trim();if(!k||(i===0&&/^key$/i.test(k)))return;let v=raw;if(/^(true|yes)$/i.test(raw))v=true;else if(/^(false|no)$/i.test(raw))v=false;else if(raw!==""&&!isNaN(+raw))v=+raw;setP(obj,k,v)})}
+   else obj=JSON.parse(txt);
+   if(Array.isArray(obj))obj=obj[0];
+   data=merge(BLANK(),obj);renderForm();update();$("#sample").value="";$("#upMsg").textContent="Loaded "+file.name;toast("Loaded "+file.name);
+  }catch(err){toast("Could not read that file. Use JSON from Copy as JSON, or a CSV of key,value rows.")}
+  e.target.value=""};
+ rd.readAsText(file);
 });
 
-/* ================= Review checklist ================= */
-const EXAMPLE_SCOPE = {occ:"dwelling", newc:false, addition:false, pv:true, ess:true, gen:false, emerg:false, fa:false, ev:false, service:true, large:false, showCA:true};
-let scope = Object.assign({}, EXAMPLE_SCOPE, store.get("scope", {}));
-let dec = store.get("dec", {});
-const A = s => s.occ === "dwelling", M = s => s.occ === "multifamily", NR = s => s.occ === "nonres";
-const APPLIES = {
-  "PV-13": s => s.newc, "ES-07": s => s.newc && A(s),
-  "EM-01": s => s.gen || s.emerg, "EM-02": s => s.emerg, "EM-03": s => s.emerg, "EM-04": s => s.emerg, "EM-05": s => s.emerg,
-  "EM-06": s => s.gen, "EM-07": s => s.gen || s.emerg, "EM-08": s => M(s) || NR(s), "EM-09": s => s.gen && A(s), "EM-10": s => s.gen || s.emerg, "EM-11": s => s.emerg,
-  "SD-01": s => s.service || s.large || M(s) || NR(s), "SD-07": s => s.large, "SD-08": s => s.service, "SD-09": s => M(s) || NR(s),
-  "SD-10": s => s.large, "SD-11": s => A(s) && s.service, "SD-12": s => A(s) && s.service,
-  "LC-02": s => s.addition, "LC-03": s => NR(s), "LC-04": s => s.ev, "LC-05": s => s.ev || s.ess || s.addition,
-  "LC-06": s => M(s), "LC-07": s => s.newc, "LC-08": s => s.newc && (A(s) || M(s))
-};
-function applies(it, s){
-  if (APPLIES[it.id]) return APPLIES[it.id](s);
-  const p = it.id.slice(0, 2);
-  if (p === "PV") return s.pv; if (p === "ES") return s.ess; if (p === "FA") return s.fa;
-  return true;
+/* ---------- Reviewer ---------- */
+const decKey=()=>"ohm.dec."+(data.name||"untitled");
+let dec=store.get(decKey())||{};
+function reviewItems(){
+ const flagged=result.findings.map(f=>({...f,flag:true}));
+ const verify=result.passed.map(f=>({...f,flag:false,vscore:f.rule.base[0]*f.rule.base[1]})).sort((a,b)=>b.vscore-a.vscore);
+ return {flagged,verify};
 }
-function scopeFromProject(d){
-  return Object.assign({}, scope, {
-    occ: d.occupancy === "R-3" ? "dwelling" : d.occupancy === "R-2" ? "multifamily" : "nonres",
-    pv: !!d.hasPV, ess: !!d.hasESS, gen: !!d.hasEM && d.em.art === "702", emerg: !!d.hasEM && d.em.art !== "702"
-  });
+function ckHTML(f){
+ const d=dec[f.id]||{};const done=!!d.d;
+ return `<div class="ck ${done?"done":""}" data-id="${f.id}">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4><div class="meta">${f.flag?bandPill(f):`<span class="pill b-pass">Verify on plans</span>`}<span class="label">${esc(f.id)} &middot; ${esc(f.rule.ref)}</span></div><div class="det">${esc(f.detail)}</div>
+ <div class="seg" role="group" aria-label="Disposition for ${f.id}"><button type="button" data-d="def" aria-pressed="${d.d==="def"}">Deficiency</button><button type="button" data-d="clr" aria-pressed="${d.d==="clr"}">Cleared</button><button type="button" data-d="na" aria-pressed="${d.d==="na"}">N/A</button></div>
+ <textarea class="ctl" id="note_${f.id}" placeholder="Reviewer note (sheet, detail, comment)" aria-label="Note for ${f.id}">${esc(d.note||"")}</textarea></div></div>`;
 }
-function scopeMatches(){ const p = scopeFromProject(data); return ["occ","pv","ess","gen","emerg"].every(k => p[k] === scope[k]); }
-function writeScope(){
-  document.getElementById("occ-" + scope.occ).checked = true;
-  document.querySelectorAll("#scope input[data-k]").forEach(i => i.checked = !!scope[i.dataset.k]);
-  $("#show-ca").checked = !!scope.showCA;
+function renderReviewer(){
+ dec=store.get(decKey())||{};
+ const {flagged,verify}=reviewItems();const all=[...flagged,...verify];
+ $("#rvProj").textContent=data.name||"Untitled project";
+ let h="";
+ h+=`<div class="group-h label">Flagged by pre-check &middot; ${flagged.length}</div>`+(flagged.length?flagged.map(ckHTML).join(""):`<div class="empty">No flagged items.</div>`);
+ if(verify.length)h+=`<div class="group-h label">Passed pre-check, verify on plans &middot; ${verify.length}</div>`+verify.map(ckHTML).join("");
+ $("#rvList").innerHTML=h;
+ updateProgress(all);renderNotice(all);
 }
-function readScope(){
-  scope.occ = document.querySelector('input[name="occ"]:checked')?.value || "dwelling";
-  document.querySelectorAll("#scope input[data-k]").forEach(i => scope[i.dataset.k] = i.checked);
-  scope.showCA = $("#show-ca").checked;
-  store.set("scope", scope);
+function updateProgress(all){all=all||[...reviewItems().flagged,...reviewItems().verify];const n=all.filter(f=>dec[f.id]&&dec[f.id].d).length;$("#rvCount").textContent=`${n} of ${all.length} dispositioned`;$("#rvBar").style.width=(all.length?n/all.length*100:0)+"%"}
+function renderNotice(all){
+ all=all||[...reviewItems().flagged,...reviewItems().verify];
+ const defs=all.filter(f=>dec[f.id]&&dec[f.id].d==="def").sort((a,b)=>(b.score||b.rule.base[0]*b.rule.base[1])-(a.score||a.rule.base[0]*a.rule.base[1]));
+ let t=`CORRECTION LIST\n${data.name||"Untitled project"}\n${data.address?data.address+"\n":""}Code basis: ${data.code}\n\n`;
+ if(!defs.length)t+="No items marked as deficiencies yet.";
+ else t+=defs.map((f,i)=>{const n=(dec[f.id].note||"").trim();return `${i+1}. [${f.rule.ref}] ${f.rule.title}.\n   Finding: ${f.detail}\n   Required: ${FIX[f.id]}${n?`\n   Reviewer note: ${n}`:""}`}).join("\n\n");
+ $("#notice").textContent=t;
 }
-$("#scope").addEventListener("change", () => { readScope(); renderReview(); });
-$("#from-pc").addEventListener("click", () => { scope = scopeFromProject(data); store.set("scope", scope); writeScope(); renderReview(); toast("Checklist matched to the pre-check project"); });
-$("#to-review").addEventListener("click", () => { scope = scopeFromProject(data); store.set("scope", scope); writeScope(); renderReview(); show("review"); });
+$("#rvList").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;const id=b.closest(".ck").dataset.id;dec[id]=dec[id]||{};dec[id].d=dec[id].d===b.dataset.d?null:b.dataset.d;store.set(decKey(),dec);
+ const ck=b.closest(".ck");ck.querySelectorAll("button[data-d]").forEach(x=>x.setAttribute("aria-pressed",String(dec[id].d===x.dataset.d)));ck.classList.toggle("done",!!dec[id].d);updateProgress();renderNotice()});
+$("#rvList").addEventListener("input",e=>{if(e.target.tagName!=="TEXTAREA")return;const id=e.target.closest(".ck").dataset.id;dec[id]=dec[id]||{};dec[id].note=e.target.value;store.set(decKey(),dec);renderNotice()});
+$("#rvAccept").addEventListener("click",()=>{result.findings.forEach(f=>{dec[f.id]=dec[f.id]||{};dec[f.id].d="def"});store.set(decKey(),dec);renderReviewer();toast("Flagged items confirmed")});
+$("#rvReset").addEventListener("click",()=>{dec={};store.set(decKey(),dec);renderReviewer();toast("Dispositions cleared")});
+$("#copyNotice").addEventListener("click",()=>copyText($("#notice").textContent,$("#notice")));
+$("#toReview").addEventListener("click",()=>selectTab("t-rev"));
 
-function flagsByTax(){ const m = {}; result.findings.forEach(f => (m[f.tax] = m[f.tax] || []).push(f)); return m; }
-function checklistRows(){ return Object.values(SC).filter(r => applies(r, scope)).sort((a, b) => a.rank - b.rank); }
-function renderReview(){
-  const rows = checklistRows(), flags = scopeMatches() ? flagsByTax() : {};
-  const linked = scopeMatches();
-  $("#scope-note").innerHTML = linked
-    ? `Matched to the pre-check project <b>${esc(data.name || "Untitled")}</b>. Its flagged items are marked below.`
-    : `This scope differs from the pre-check project, so pre-check flags are not shown. Use <b>Match the pre-check project</b> to link them.`;
-  const done = rows.filter(r => dec[r.id] && dec[r.id].d).length;
-  $("#st-total").textContent = rows.length;
-  $("#st-t1").textContent = rows.filter(r => r.tier === 1).length;
-  $("#st-done").textContent = done;
-  $("#st-bar").style.width = rows.length ? (100 * done / rows.length) + "%" : "0";
-  $("#accept-flags").disabled = !Object.keys(flags).length;
-  const el = $("#checklist");
-  if (!rows.length){ el.innerHTML = `<div class="empty">No items apply. Choose an occupancy and at least one system.</div>`; renderCorr(rows, flags); return; }
-  el.innerHTML = [1, 2, 3].map(t => {
-    const g = rows.filter(r => r.tier === t); if (!g.length) return "";
-    return `<div class="tier-group"><h3><span class="tier t${t}">${TIER_NAME[t]}</span><span class="cnt">${g.length} item${g.length > 1 ? "s" : ""}</span></h3>` + g.map(r => {
-      const d = dec[r.id] || {}, fl = flags[r.id];
-      return `<div class="ci t${t}${d.d ? " d-" + d.d : ""}" data-id="${r.id}">
-        <div style="min-width:0"><div class="title"><span class="mono">${r.id}</span>${esc(r.d)}</div>
-          <div class="what">${esc(r.chk)}</div>
-          <div class="refs">${fl ? `<span class="flag">Flagged by pre-check</span>` : ""}<span class="sev" data-s="${r.sev}">${r.sev}</span>${necChips(r.nec)}${scope.showCA ? `<span class="ca">${esc(r.ca)}</span>` : ""}</div></div>
-        <div class="score"><div class="r">${r.risk}</div><div class="f">${r.w} × ${r.freq}</div></div>
-        ${fl ? `<div class="pf">${fl.map(f => `<div class="det" style="margin-top:4px">${esc(f.rule.title)}: ${esc(f.detail)}</div>`).join("")}</div>` : ""}
-        <div class="act"><div class="seg" role="group" aria-label="Record ${r.id}">
-          <button type="button" data-d="def" aria-pressed="${d.d === "def"}">Deficiency</button><button type="button" data-d="clr" aria-pressed="${d.d === "clr"}">Cleared</button><button type="button" data-d="na" aria-pressed="${d.d === "na"}">N/A</button></div>
-          <textarea class="ctl" id="note-${r.id}" placeholder="Note: sheet, detail or comment" aria-label="Note for ${r.id}">${esc(d.note || "")}</textarea></div>
-      </div>`;
-    }).join("") + `</div>`;
-  }).join("");
-  renderCorr(rows, flags);
-}
-function renderCorr(rows, flags){
-  rows = rows || checklistRows(); flags = flags || (scopeMatches() ? flagsByTax() : {});
-  const defs = rows.filter(r => dec[r.id] && dec[r.id].d === "def");
-  const occ = {dwelling:"One- or two-family dwelling", multifamily:"Multifamily", nonres:"Nonresidential"}[scope.occ];
-  let t = `ELECTRICAL PLAN REVIEW CORRECTIONS\n${scopeMatches() && data.name ? data.name + "\n" : ""}${occ}\nCode basis: NEC 2023${scope.showCA ? " / California Title 24 (2025)" : ""}\n\n`;
-  if (!defs.length) t += "No items recorded as deficiencies yet. Mark items as Deficiency in the checklist above.";
-  else t += defs.map((r, i) => {
-    const note = (dec[r.id].note || "").trim(), fl = flags[r.id] || [];
-    const refs = r.nec.startsWith("None") ? r.ca : "NEC " + r.nec + (scope.showCA ? "; " + r.ca : "");
-    let s = `${i + 1}. ${r.d}. [${refs}]`;
-    fl.forEach(f => s += `\n   Finding: ${f.detail}\n   Required: ${f.rule.fix}`);
-    if (!fl.length) s += `\n   Show on the plans: ${r.chk}.`;
-    if (note) s += `\n   Reviewer note: ${note}`;
-    return s;
-  }).join("\n\n");
-  $("#corr").textContent = t;
-}
-$("#checklist").addEventListener("click", e => {
-  const b = e.target.closest("button[data-d]"); if (!b) return;
-  const id = b.closest(".ci").dataset.id; dec[id] = dec[id] || {};
-  dec[id].d = dec[id].d === b.dataset.d ? null : b.dataset.d; store.set("dec", dec); renderReview();
-});
-$("#checklist").addEventListener("input", e => {
-  if (e.target.tagName !== "TEXTAREA") return;
-  const id = e.target.closest(".ci").dataset.id; dec[id] = dec[id] || {}; dec[id].note = e.target.value; store.set("dec", dec); renderCorr();
-});
-$("#accept-flags").addEventListener("click", () => { const fl = flagsByTax(); Object.keys(fl).forEach(id => { dec[id] = dec[id] || {}; dec[id].d = "def"; }); store.set("dec", dec); renderReview(); toast("Pre-check flags recorded as deficiencies"); });
-$("#clear-dec").addEventListener("click", () => { dec = {}; store.set("dec", dec); renderReview(); toast("Checklist cleared"); });
-$("#copy-corr").addEventListener("click", () => copyText($("#corr").textContent, $("#corr")));
+/* ---------- Tabs ---------- */
+const TABS=["t-pre","t-rev","t-an"];
+function selectTab(id){TABS.forEach(t=>{const on=t===id;$("#"+t).setAttribute("aria-selected",on);$("#"+$("#"+t).getAttribute("aria-controls")).hidden=!on});if(id==="t-an")renderAnalytics();store.set("ohm.tab",id)}
+TABS.forEach(t=>$("#"+t).addEventListener("click",()=>selectTab(t)));
+$(".tabs").addEventListener("keydown",e=>{const i=TABS.indexOf(document.activeElement.id);if(i<0)return;let j=null;if(e.key==="ArrowRight")j=(i+1)%3;if(e.key==="ArrowLeft")j=(i+2)%3;if(j!=null){e.preventDefault();$("#"+TABS[j]).focus();selectTab(TABS[j])}});
 
-/* ================= Taxonomy ================= */
-const fSys = $("#f-sys");
-SYSTEMS.forEach(s => fSys.insertAdjacentHTML("beforeend", `<option>${s}</option>`));
-let openRow = null, sortBy = "rank", sortDir = 1;
-function srcLinks(ids){
-  if (!ids || ids === "None found") return `<span class="muted">No published frequency source found</span>`;
-  return ids.split(/,\s*/).map(id => { const s = SOURCES.find(x => x.id === id); return s ? `<a href="${esc(s.u)}" target="_blank" rel="noopener">${id}</a> <span class="muted">${esc(s.p)}</span>` : id; }).join("<br>");
+/* ---------- Analytics (synthetic) ---------- */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const P={"GEN-01":.05,"PV-01":.06,"PV-02":.08,"PV-03":.22,"PV-04":.07,"PV-05":.14,"PV-06":.05,"PV-07":.18,"PV-08":.2,"PV-09":.3,"PV-10":.16,"ES-01":.06,"ES-02":.04,"ES-03":.1,"ES-04":.03,"ES-05":.24,"EM-01":.12,"EM-02":.05,"EM-03":.36,"EM-04":.08,"EM-05":.21,"EM-06":.12,"EM-07":.16};
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
+const DATA=(function(){const rnd=mulberry(20261005);const rows=[];
+ MONTHS.forEach((m,mi)=>{const n=22+Math.floor(rnd()*9);for(let i=0;i<n;i++){const u=rnd();const g=u<.55?"PV":u<.8?"ESS":"EM";
+  const ids=RULES.filter(r=>r.id==="GEN-01"||(g==="EM"?r.sys==="EM":r.sys==="PV"||(g==="ESS"&&r.sys==="ESS"))).map(r=>r.id);
+  const drift=1-0.03*mi;const f=ids.filter(id=>rnd()<P[id]*drift*(g==="EM"&&id==="EM-03"&&mi>5?0.8:1));rows.push({m:mi,g,f})}});
+ return rows})();
+const GROUPS=[{k:"PV",n:"PV only",c:"--s1"},{k:"ESS",n:"PV with storage",c:"--s2"},{k:"EM",n:"Emergency and standby",c:"--s3"}];
+const cssv=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function niceMax(v){if(v<=0)return 1;const p=10**Math.floor(Math.log10(v));const n=v/p;return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p}
+function renderAnalytics(){
+ const g=$("#anGroup").value;const rows=DATA.filter(r=>g==="all"||r.g===g);
+ const tot=rows.length,fc=rows.reduce((a,r)=>a+r.f.length,0);
+ const ready=rows.filter(r=>r.f.every(id=>R[id].base[0]*R[id].base[1]<12)).length;
+ const cnt={};rows.forEach(r=>r.f.forEach(id=>cnt[id]=(cnt[id]||0)+1));
+ const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+ $("#kpis").innerHTML=[
+  ["Submittals reviewed",tot.toLocaleString("en-US"),"Jan to Sep 2026"],
+  ["Deficiencies per submittal",fmt(fc/tot,2),`${fc} findings in total`],
+  ["Ready on first pass",fmt(ready/tot*100,0)+"%","No critical or high findings"],
+  ["Most frequent",top[0]?top[0][0]:"n/a",top[0]?`${R[top[0][0]].title}, ${fmt(top[0][1]/tot*100,0)}% of submittals`:""]
+ ].map(([l,v,s])=>`<div><span class="label">${l}</span><b>${esc(v)}</b><span class="s">${esc(s)}</span></div>`).join("");
+ // line
+ const gs=GROUPS.filter(x=>g==="all"||x.k===g);
+ const series=gs.map(x=>({...x,vals:MONTHS.map((_,mi)=>{const rr=DATA.filter(r=>r.g===x.k&&r.m===mi);return rr.length?rr.reduce((a,r)=>a+r.f.length,0)/rr.length:null}),ns:MONTHS.map((_,mi)=>DATA.filter(r=>r.g===x.k&&r.m===mi).length)}));
+ $("#lgLine").innerHTML=gs.length>1?series.map(s=>`<span><i style="background:var(${s.c})"></i>${s.n}</span>`).join(""):"";
+ lineChart($("#chLine"),series);
+ $("#tbLine").innerHTML=`<table><tr><th>Month</th>${series.map(s=>`<th>${s.n}</th>`).join("")}</tr>${MONTHS.map((m,i)=>`<tr><td>${m}</td>${series.map(s=>`<td>${fmt(s.vals[i],2)} (n=${s.ns[i]})</td>`).join("")}</tr>`).join("")}</table>`;
+ // bars
+ const t8=top.slice(0,8);const mx=t8.length?t8[0][1]:1;
+ $("#chBars").innerHTML=t8.map(([id,c])=>{const r=R[id];const b=BAND(r.base[0]*r.base[1]);return `<div class="hb" tabindex="0" data-tip="${esc(`${id}: ${c} submittals, ${fmt(c/tot*100,1)}%|${r.title}|Typical band: ${b.n}`)}"><div class="lab"><span class="pill b-${b.k}" title="${b.n}">${b.i} ${id}</span><span>${esc(r.title)}</span></div><div class="trk"><div class="fil" style="width:${c/mx*100}%"></div></div><div class="v">${c}</div></div>`}).join("")+`<div class="tip" hidden></div>`;
+ bindBarTips($("#chBars"));
+ // column
+ const share=MONTHS.map((_,mi)=>{const rr=rows.filter(r=>r.m===mi);const k=rr.filter(r=>r.f.some(id=>R[id].base[0]*R[id].base[1]>=20)).length;return {v:rr.length?k/rr.length*100:0,k,n:rr.length}});
+ colChart($("#chCol"),share);
+ $("#tbCol").innerHTML=`<table><tr><th>Month</th><th>With critical</th><th>Submittals</th><th>Share</th></tr>${MONTHS.map((m,i)=>`<tr><td>${m}</td><td>${share[i].k}</td><td>${share[i].n}</td><td>${fmt(share[i].v,1)}%</td></tr>`).join("")}</table>`;
 }
-function renderTax(){
-  const f = {q: $("#f-q").value.trim().toLowerCase(), sys: fSys.value, sev: $("#f-sev").value, tier: $("#f-tier").value, freq: $("#f-freq").value};
-  let rows = Object.values(SC).filter(r =>
-    (!f.q || (r.id + " " + r.d + " " + r.chk + " " + r.nec + " " + r.ca).toLowerCase().includes(f.q)) &&
-    (!f.sys || r.sys === f.sys) && (!f.sev || r.sev === f.sev) && (!f.tier || r.tier === +f.tier) && (!f.freq || r.freq === +f.freq));
-  const cmp = {rank:(a,b)=>a.rank-b.rank, id:(a,b)=>a.id.localeCompare(b.id), sys:(a,b)=>SYSTEMS.indexOf(a.sys)-SYSTEMS.indexOf(b.sys)||a.rank-b.rank, freq:(a,b)=>b.freq-a.freq||a.rank-b.rank, risk:(a,b)=>b.risk-a.risk||a.rank-b.rank}[sortBy];
-  rows.sort((a, b) => cmp(a, b) * sortDir);
-  $("#tax-body").innerHTML = rows.map(r => `
-    <tr class="row" data-id="${r.id}" tabindex="0" aria-expanded="${openRow === r.id}">
-      <td class="num">${r.rank}</td><td class="mono" style="white-space:nowrap">${r.id}</td><td style="min-width:240px">${esc(r.d)} ${AUTO.has(r.id) ? `<span class="auto">Auto</span>` : ""}</td><td style="white-space:nowrap">${r.sys}</td>
-      <td><span class="sev" data-s="${r.sev}">${r.sev}</span></td><td class="num">${r.freq}</td><td class="num"><b>${r.risk}</b></td>
-      <td><span class="tier t${r.tier}">${TIER_NAME[r.tier].split(":")[0]}</span></td><td style="min-width:150px">${r.nec.startsWith("None") ? `<span class="muted">${esc(r.nec)}</span>` : necChips(r.nec)}</td>
-    </tr>` + (openRow === r.id ? `<tr class="detail"><td colspan="9"><div class="dgrid">
-      <div><h4>What the reviewer checks</h4><p>${esc(r.chk)}</p>${AUTO.has(r.id) ? `<p class="muted" style="margin-top:4px;font-size:13px">Also checked automatically by the pre-check.</p>` : ""}</div>
-      <div><h4>California Title 24 / other</h4><p>${esc(r.ca)}</p><p class="muted" style="margin-top:4px;font-size:13px">Reference check: ${esc(r.ref)}</p></div>
-      <div><h4>Frequency evidence</h4><p class="mono" style="font-size:13px">${r.ahj} checklist${r.ahj === 1 ? "" : "s"} · ${r.ind} industry · top problem: ${r.top}</p><p style="font-size:13px;margin-top:4px">${srcLinks(r.src)}</p></div>
-      <div><h4>Score</h4><p class="mono" style="font-size:13px">Evidence ${r.ev} ${r.adj >= 0 ? "+" : "−"} adj. ${Math.abs(r.adj)} = freq. ${r.freq}<br>Severity ${r.w} × freq. ${r.freq} = risk ${r.risk}</p>
-        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;font-size:13px"><span>Field adjustment</span>
-        <span class="stepper"><button type="button" data-adj="-1" data-id="${r.id}" aria-label="Decrease field adjustment">−</button><span>${r.adj > 0 ? "+" : ""}${r.adj}</span><button type="button" data-adj="1" data-id="${r.id}" aria-label="Increase field adjustment">+</button></span></div></div>
-    </div></td></tr>` : "")).join("") || `<tr><td colspan="9"><div class="empty">No deficiencies match these filters.</div></td></tr>`;
-  $("#tax-count").textContent = `Showing ${rows.length} of ${ITEMS.length} deficiencies. Ranks reflect the current model settings.`;
+function bindBarTips(el){const tip=el.querySelector(".tip");el.querySelectorAll(".hb").forEach(row=>{const show=()=>{const [a,b,c]=row.dataset.tip.split("|");tip.innerHTML=`<b>${esc(a)}</b><br>${esc(b)}<br>${esc(c)}`;tip.hidden=false;const er=el.getBoundingClientRect(),rr=row.getBoundingClientRect();tip.style.left=Math.min(Math.max(rr.left-er.left+rr.width/2,120),er.width-120)+"px";tip.style.top=(rr.top-er.top)+"px"};row.addEventListener("mouseenter",show);row.addEventListener("focus",show);row.addEventListener("mouseleave",()=>tip.hidden=true);row.addEventListener("blur",()=>tip.hidden=true)})}
+function lineChart(el,series){
+ const W=Math.max(el.clientWidth,280),H=240,m={l:38,r:14,t:14,b:26};const iw=W-m.l-m.r,ih=H-m.t-m.b;
+ const all=series.flatMap(s=>s.vals.filter(v=>v!=null));const ymax=niceMax(Math.max(...all,0.5)*1.1);
+ const x=i=>m.l+iw*(i/(MONTHS.length-1)),y=v=>m.t+ih*(1-v/ymax);
+ let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Line chart of deficiencies per submittal by month">`;
+ for(let i=0;i<=4;i++){const v=ymax*i/4,yy=y(v);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yy}" y2="${yy}" stroke="var(--grid)" stroke-width="1"/><text x="${m.l-6}" y="${yy+4}" text-anchor="end">${fmt(v,v<10?1:0)}</text>`}
+ MONTHS.forEach((mo,i)=>{if(W<420&&i%2)return;s+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${mo}</text>`});
+ series.forEach(se=>{const pts=se.vals.map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean);
+  if(series.length===1){s+=`<path d="M${pts.map(p=>p.join(",")).join("L")}L${pts[pts.length-1][0]},${y(0)}L${pts[0][0]},${y(0)}Z" fill="var(${se.c})" fill-opacity=".12"/>`}
+  s+=`<path d="M${pts.map(p=>p.join(",")).join("L")}" fill="none" stroke="var(${se.c})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  const e=pts[pts.length-1];s+=`<circle cx="${e[0]}" cy="${e[1]}" r="4.5" fill="var(${se.c})" stroke="var(--sheet)" stroke-width="2"/>`});
+ s+=`<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t+ih}" stroke="var(--ink-2)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/><g id="dots"></g><rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent" id="hit"/></svg><div class="tip" hidden></div>`;
+ el.innerHTML=s;
+ const svg=el.querySelector("svg"),tip=el.querySelector(".tip"),xh=el.querySelector("#xh"),dots=el.querySelector("#dots");
+ const move=ev=>{const r=svg.getBoundingClientRect();const px=(ev.clientX-r.left)*(W/r.width);const i=Math.max(0,Math.min(MONTHS.length-1,Math.round((px-m.l)/iw*(MONTHS.length-1))));
+  xh.setAttribute("x1",x(i));xh.setAttribute("x2",x(i));xh.setAttribute("visibility","visible");
+  dots.innerHTML=series.map(se=>se.vals[i]==null?"":`<circle cx="${x(i)}" cy="${y(se.vals[i])}" r="4.5" fill="var(${se.c})" stroke="var(--sheet)" stroke-width="2"/>`).join("");
+  tip.innerHTML=`<b>${MONTHS[i]} 2026</b>`+series.map(se=>`<br>${esc(se.n)}: ${fmt(se.vals[i],2)} (n=${se.ns[i]})`).join("");tip.hidden=false;
+  tip.style.left=Math.min(Math.max(x(i)*r.width/W,110),r.width-110)+"px";tip.style.top=(m.t+10)+"px"};
+ const hide=()=>{tip.hidden=true;xh.setAttribute("visibility","hidden");dots.innerHTML=""};
+ el.querySelector("#hit").addEventListener("pointermove",move);el.querySelector("#hit").addEventListener("pointerleave",hide);
 }
-document.querySelector(".filters").addEventListener("input", renderTax);
-$("#f-reset").addEventListener("click", () => { ["f-q","f-sys","f-sev","f-tier","f-freq"].forEach(id => document.getElementById(id).value = ""); renderTax(); });
-document.querySelectorAll("th button[data-sort]").forEach(b => b.addEventListener("click", () => { const k = b.dataset.sort; sortDir = sortBy === k ? -sortDir : 1; sortBy = k; renderTax(); }));
-$("#tax-body").addEventListener("click", e => {
-  const a = e.target.closest("button[data-adj]");
-  if (a){ const id = a.dataset.id, v = Math.max(-2, Math.min(2, (model.adj[id] || 0) + +a.dataset.adj)); if (v) model.adj[id] = v; else delete model.adj[id]; saveModel(); return; }
-  if (e.target.closest("a")) return;
-  const tr = e.target.closest("tr.row"); if (!tr) return;
-  openRow = openRow === tr.dataset.id ? null : tr.dataset.id; renderTax();
-});
-$("#tax-body").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches("tr.row")){ e.preventDefault(); e.target.click(); } });
+function colChart(el,share){
+ const W=Math.max(el.clientWidth,280),H=200,m={l:38,r:10,t:18,b:26};const iw=W-m.l-m.r,ih=H-m.t-m.b;
+ const ymax=niceMax(Math.max(...share.map(d=>d.v),5)*1.1);const bw=iw/share.length;const y=v=>m.t+ih*(1-v/ymax);
+ let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Column chart of share of submittals with a critical finding">`;
+ for(let i=0;i<=4;i++){const v=ymax*i/4,yy=y(v);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yy}" y2="${yy}" stroke="var(--grid)"/><text x="${m.l-6}" y="${yy+4}" text-anchor="end">${fmt(v,0)}%</text>`}
+ const maxI=share.reduce((a,d,i)=>d.v>share[a].v?i:a,0),lastI=share.length-1;
+ share.forEach((d,i)=>{const w=Math.min(bw-6,44),x0=m.l+bw*i+(bw-w)/2,y0=y(d.v),h=Math.max(y(0)-y0,0),r=Math.min(4,h);
+  s+=`<path d="M${x0},${y(0)}V${y0+r}Q${x0},${y0} ${x0+r},${y0}H${x0+w-r}Q${x0+w},${y0} ${x0+w},${y0+r}V${y(0)}Z" fill="var(--accent)" data-i="${i}" class="col"/>`;
+  if(i===maxI||i===lastI)s+=`<text x="${x0+w/2}" y="${y0-5}" text-anchor="middle" style="fill:var(--ink)">${fmt(d.v,0)}%</text>`;
+  if(!(W<420&&i%2))s+=`<text x="${x0+w/2}" y="${H-6}" text-anchor="middle">${MONTHS[i]}</text>`;
+  s+=`<rect x="${m.l+bw*i}" y="${m.t}" width="${bw}" height="${ih}" fill="transparent" data-i="${i}" class="hit"/>`});
+ s+=`</svg><div class="tip" hidden></div>`;el.innerHTML=s;
+ const svg=el.querySelector("svg"),tip=el.querySelector(".tip");
+ el.querySelectorAll(".hit").forEach(rc=>{rc.addEventListener("pointerenter",()=>{const i=+rc.dataset.i,d=share[i],r=svg.getBoundingClientRect();tip.innerHTML=`<b>${MONTHS[i]} 2026</b><br>${d.k} of ${d.n} submittals<br>${fmt(d.v,1)}% with a critical finding`;tip.hidden=false;tip.style.left=Math.min(Math.max((m.l+bw*(i+.5))*r.width/W,100),r.width-100)+"px";tip.style.top=(y(d.v))+"px";el.querySelectorAll(".col").forEach(c=>c.style.opacity=c.dataset.i==i?1:.55)});
+  rc.addEventListener("pointerleave",()=>{tip.hidden=true;el.querySelectorAll(".col").forEach(c=>c.style.opacity=1)})});
+}
+$("#anGroup").addEventListener("change",renderAnalytics);
+let rz;window.addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(!$("#p-an").hidden)renderAnalytics()},150)});
+if(window.matchMedia)matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if(!$("#p-an").hidden)renderAnalytics()});
 
-/* ================= Model ================= */
-$("#w-sev").innerHTML = SEVS.map((s, i) => `<div class="ctrl"><label for="sw-${i}">${s}</label><input type="range" id="sw-${i}" min="1" max="5" step="1" data-sev="${s}"><output id="sw-${i}-o"></output></div>`).join("");
-function syncControls(){
-  SEVS.forEach((s, i) => { $("#sw-" + i).value = model.sevW[s]; $("#sw-" + i + "-o").textContent = model.sevW[s]; });
-  ["t1","t2"].forEach(k => { $("#" + k).value = model[k]; $("#" + k + "-o").textContent = model[k]; });
-  const n = Object.keys(model.adj).length;
-  $("#adj-summary").textContent = n ? `${n} deficienc${n === 1 ? "y has" : "ies have"} a field adjustment: ${Object.entries(model.adj).map(([k, v]) => k + " " + (v > 0 ? "+" : "") + v).join(", ")}.` : "None yet. Adjust a deficiency's frequency from its row on the Taxonomy sheet.";
-}
-$("#w-sev").addEventListener("input", e => { const s = e.target.dataset.sev; if (s){ model.sevW[s] = +e.target.value; saveModel(); } });
-["t1","t2"].forEach(k => $("#" + k).addEventListener("input", e => {
-  model[k] = +e.target.value;
-  if (model.t2 >= model.t1){ if (k === "t1") model.t2 = Math.max(1, model.t1 - 1); else model.t1 = Math.min(25, model.t2 + 1); }
-  saveModel();
-}));
-$("#reset-model").addEventListener("click", () => { model = deep(DEFAULTS); saveModel(); toast("Model defaults restored"); });
-const tip = $("#tip");
-function renderModel(){
-  const rows = Object.values(SC); let h = "";
-  SEVS.forEach(s => {
-    h += `<div class="ax">${s}<br><span class="mono muted">weight ${model.sevW[s]}</span></div>`;
-    for (let f = 1; f <= 5; f++){
-      const c = rows.filter(r => r.sev === s && r.freq === f), risk = model.sevW[s] * f, t = tierOf(risk);
-      h += `<button type="button" class="cell t${t}${c.length ? "" : " zero"}" data-sev="${s}" data-f="${f}" data-tip="${esc(s)}, frequency ${f}: risk ${risk}, ${TIER_NAME[t]}. ${c.length} deficienc${c.length === 1 ? "y" : "ies"}${c.length ? ": " + c.map(r => r.id).join(", ") : ""}" aria-label="${esc(s)}, frequency ${f}, risk ${risk}, ${c.length} deficiencies"><span class="c">${c.length}</span><span class="s">${risk}</span></button>`;
-    }
-  });
-  h += `<div></div>` + [1,2,3,4,5].map(f => `<div class="axx mono">${f}</div>`).join("");
-  $("#matrix").innerHTML = h;
-  const line = (lab, g, bold) => { const b = x => bold ? `<b>${x}</b>` : x; return `<tr><td>${b(lab)}</td><td class="num">${b(g.length)}</td><td class="num">${b(g.filter(r => r.tier === 1).length)}</td><td class="num">${b(g.filter(r => r.sev === "Life safety").length)}</td><td class="num">${b(g.filter(r => AUTO.has(r.id)).length)}</td><td class="num">${b((g.reduce((a, r) => a + r.risk, 0) / g.length).toFixed(1))}</td></tr>`; };
-  $("#sys-body").innerHTML = SYSTEMS.map(s => line(s, rows.filter(r => r.sys === s))).join("") + line("All systems", rows, true);
-}
-$("#matrix").addEventListener("mousemove", e => { const c = e.target.closest(".cell"); if (!c){ tip.hidden = true; return; } tip.textContent = c.dataset.tip; tip.hidden = false; tip.style.left = Math.min(e.clientX + 14, innerWidth - 280) + "px"; tip.style.top = (e.clientY + 14) + "px"; });
-$("#matrix").addEventListener("mouseleave", () => tip.hidden = true);
-$("#matrix").addEventListener("click", e => {
-  const c = e.target.closest(".cell"); if (!c) return; tip.hidden = true;
-  $("#f-q").value = ""; fSys.value = ""; $("#f-tier").value = ""; $("#f-sev").value = c.dataset.sev; $("#f-freq").value = c.dataset.f;
-  openRow = null; renderTax(); show("taxonomy");
-});
+/* ---------- Rule library ---------- */
+(function(){
+ const grp={All:"General",PV:"Photovoltaic systems",ESS:"Energy storage",EM:"Emergency and standby power"};let last="";
+ let h=`<thead><tr><th>Rule</th><th>Check</th><th>Reference</th><th>Type</th><th>Default score</th></tr></thead><tbody>`;
+ RULES.forEach(r=>{if(r.sys!==last){h+=`<tr class="grp"><td colspan="5">${grp[r.sys]}</td></tr>`;last=r.sys}const sc=r.base[0]*r.base[1],b=BAND(sc);
+  h+=`<tr><td class="mono">${r.id}</td><td>${esc(r.title)}</td><td class="mono">${esc(r.ref)}</td><td>${["PV-01","PV-02","PV-03","PV-04","ES-02","ES-03","EM-01","EM-02","EM-06"].includes(r.id)?"Calculated":"Presence check"}</td><td><span class="pill b-${b.k}">${b.i} ${sc} ${b.n}</span></td></tr>`});
+ $("#lib").innerHTML=h+"</tbody>";
+ $("#ruleCountH").textContent=`${RULES.length} rules in the MVP`;
+})();
 
-/* ================= Sources, contact ================= */
-$("#sources").innerHTML = SOURCES.map(s => `<div class="src"><span class="mono">${s.id}</span><div><a class="t" href="${esc(s.u)}" target="_blank" rel="noopener">${esc(s.t)}</a><div class="p">${esc(s.p)} · ${esc(s.ty)}${s.y && s.y !== "n.d." ? " · " + esc(s.y) : ""}</div></div></div>`).join("");
-$("#contact-box").innerHTML = CONFIG.email
-  ? `<div class="muted" style="font-size:12.5px;text-transform:uppercase;letter-spacing:.06em">Contact</div><div class="addr" id="addr">${esc(CONFIG.email)}</div><button class="btn sm" type="button" id="copy-addr" style="margin-top:8px">Copy email address</button>`
-  : `<p class="muted">Contact details for evaluation requests will be posted here.</p>`;
-if (CONFIG.email) $("#copy-addr").addEventListener("click", () => copyText(CONFIG.email, $("#addr")));
+/* ---------- Hero sample ---------- */
+(function(){const r=run(merge(BLANK(),deep(SAMPLES[0])));$("#heroName").textContent="10.4 kW PV + ESS";
+ $("#heroList").innerHTML=r.findings.slice(0,4).map(f=>`<div class="mini">${scoreBox(f)}<div><div class="t">${esc(f.rule.title)}</div><div class="r">${esc(f.rule.ref)} &middot; ${esc(f.detail.length>70?f.detail.slice(0,68)+"...":f.detail)}</div></div></div>`).join("");
+ $("#heroFoot").textContent=`${r.findings.length} likely deficiencies, ${r.passed.length} checks passed. Ranked by severity x likelihood.`})();
 
-/* ================= Tabs and boot ================= */
-const VIEWS = ["about","precheck","review","taxonomy","model","method"];
-function show(v){
-  if (!VIEWS.includes(v)) v = "about";
-  VIEWS.forEach(x => { document.getElementById("v-" + x).hidden = x !== v; document.getElementById("tab-" + x).setAttribute("aria-selected", x === v); });
-  $("#tb-sheet").textContent = "E-" + VIEWS.indexOf(v);
-  store.set("view", v);
-  try{ history.replaceState(null, "", "#" + v); }catch(e){}
-}
-document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.v)));
-document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => show(b.dataset.go)));
-function saveModel(){ store.set("model", model); renderAll(); }
-function renderAll(){ scoreAll(); result = run(data); syncControls(); renderPrecheck(); renderReview(); renderTax(); renderModel(); }
-renderForm(); writeScope(); renderAll();
-show((location.hash || "").slice(1) || store.get("view", "about"));
+/* ---------- Boot ---------- */
+renderForm();renderOut();renderReviewer();
+const tab=store.get("ohm.tab");const hash=(location.hash||"").slice(1);
+if(hash==="reviewer")selectTab("t-rev");else if(hash==="analytics")selectTab("t-an");else if(tab&&TABS.includes(tab))selectTab(tab);
 })();
 </script>
 </body>
