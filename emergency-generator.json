@@ -1,0 +1,28 @@
+{
+  "name": "Office tower emergency generator, 500 kW",
+  "address": "Sample: 14-story office building",
+  "occupancy": "B",
+  "code": "NEC 2023",
+  "hasPV": false,
+  "hasESS": false,
+  "hasEM": true,
+  "em": {
+    "art": "700",
+    "genKw": 500,
+    "loadKw": 468,
+    "xferS": 10,
+    "fuelH": 1.5,
+    "atsListed": true,
+    "coord": false,
+    "sep": false,
+    "lm": false
+  },
+  "docs": {
+    "sld": true,
+    "specs": true,
+    "ground": true,
+    "labels": true,
+    "struct": false,
+    "loadcalc": true
+  }
+}

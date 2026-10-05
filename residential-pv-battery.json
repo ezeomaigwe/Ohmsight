@@ -1,0 +1,43 @@
+{
+  "name": "Residential PV + battery, 10.4 kW",
+  "address": "Sample: single-family dwelling",
+  "occupancy": "R-3",
+  "code": "NEC 2023",
+  "hasPV": true,
+  "hasESS": true,
+  "hasEM": false,
+  "pv": {
+    "dcKw": 10.4,
+    "ns": 11,
+    "voc": 49.5,
+    "isc": 13.9,
+    "coef": -0.26,
+    "tmin": -2,
+    "maxDcV": 600,
+    "acA": 40,
+    "condA": 30,
+    "ic": "load",
+    "busA": 200,
+    "mainA": 200,
+    "brkA": 50,
+    "opp": true,
+    "roof": true,
+    "rsd": true,
+    "supplyDetail": false
+  },
+  "ess": {
+    "unitKwh": 13.5,
+    "units": 2,
+    "loc": "garage",
+    "ul9540": true,
+    "disc": false
+  },
+  "docs": {
+    "sld": true,
+    "specs": true,
+    "ground": true,
+    "labels": false,
+    "struct": false,
+    "loadcalc": false
+  }
+}

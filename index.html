@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='11' fill='none' stroke='%230A6C88' stroke-width='2.4'/%3E%3Cpath d='M8 17h3.2v-2.4a4 4 0 1 1 3.6 0V17H18' fill='none' stroke='%230A6C88' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ohmsight</title>
+<meta name="description" content="Ohmsight checks solar, battery and generator plans against the electrical code before you submit, so permits come back approved instead of with corrections.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: same drawing-set brand as the platform, opened up for a sales read. Big plain-language hero with a product card, then problem, cycle comparison, audiences, offers, FAQ, pilot form. */
+:root{
+  --paper:#EEF2F2; --sheet:#FBFCFC; --ink:#13212B; --ink-2:#3F4F59; --muted:#62737C;
+  --rule:#C6D0D3; --grid:#DFE6E8;
+  --accent:#0A6C88; --accent-ink:#FFFFFF; --accent-soft:#D9ECF2;
+  --crit:#B42318; --crit-soft:#FBE4E1; --high:#A94A06; --high-soft:#FBE9DA;
+  --med:#7F6200; --med-soft:#F8EEC4; --low:#356247; --low-soft:#DFEEE4;
+  --hl:#FFE36A; --band:#13212B; --band-ink:#EEF2F2;
+  --f-display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0D1317; --sheet:#141C21; --ink:#E1E9EC; --ink-2:#B2C0C6; --muted:#8B9BA3;
+  --rule:#2B3941; --grid:#19232A;
+  --accent:#4DB3D0; --accent-ink:#06141A; --accent-soft:#12313B;
+  --crit:#F2806F; --crit-soft:#3A1714; --high:#F0A15F; --high-soft:#3A2410;
+  --med:#E4C55C; --med-soft:#322A0B; --low:#82C59A; --low-soft:#14301F;
+  --hl:#5E4F0E; --band:#1B262D; --band-ink:#E1E9EC;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0D1317; --sheet:#141C21; --ink:#E1E9EC; --ink-2:#B2C0C6; --muted:#8B9BA3;
+  --rule:#2B3941; --grid:#19232A;
+  --accent:#4DB3D0; --accent-ink:#06141A; --accent-soft:#12313B;
+  --crit:#F2806F; --crit-soft:#3A1714; --high:#F0A15F; --high-soft:#3A2410;
+  --med:#E4C55C; --med-soft:#322A0B; --low:#82C59A; --low-soft:#14301F;
+  --hl:#5E4F0E; --band:#1B262D; --band-ink:#E1E9EC;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1.0625rem;line-height:1.6;padding-inline:16px;padding-block:0}
+.wrap{max-width:1140px;margin-inline:auto}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.06;letter-spacing:-.015em}
+h2{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:780;font-stretch:115%}
+h3{font-size:1.2rem;font-weight:700;font-stretch:105%;line-height:1.2}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.lead{font-size:1.15rem;color:var(--ink-2);max-width:60ch}
+.btn{font:inherit;font-weight:700;font-size:.95rem;border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);padding:12px 20px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border-radius:2px}
+.btn:hover{background:var(--accent-soft)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1.5px solid var(--ink);margin-inline:-16px;padding-inline:16px}
+.nav-in{max-width:1140px;margin-inline:auto;display:flex;align-items:center;gap:20px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand b{font-family:var(--f-display);font-stretch:125%;font-weight:800;font-size:1.1rem;letter-spacing:.02em}
+.nav-links{display:flex;gap:4px;flex:1;justify-content:flex-end;flex-wrap:wrap}
+.nav-links a{color:var(--ink-2);text-decoration:none;font-size:.9rem;padding:6px 10px;border-radius:2px}
+.nav-links a:hover{background:var(--sheet);color:var(--ink)}
+.nav-links a.cta{background:var(--ink);color:var(--paper);font-weight:700}
+@media (max-width:640px){.nav-links a.hide-sm{display:none}}
+
+section{padding-block:72px 0}
+.sec-head{display:grid;gap:12px;margin-bottom:32px;max-width:760px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:64px 8px;position:relative}
+.hero::before{content:"";position:absolute;inset:0 -16px;z-index:-1;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(ellipse at 75% 40%,#000 20%,transparent 70%)}
+.hero h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800;font-stretch:120%;letter-spacing:-.025em}
+.hero h1 mark{background:linear-gradient(transparent 60%,var(--hl) 60%);color:inherit;padding:0 .06em}
+.hero .lead{margin-top:22px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.hero .fine{margin-top:16px;font-size:.85rem;color:var(--muted)}
+@media (max-width:880px){.hero{grid-template-columns:1fr;gap:36px;padding-top:40px}}
+
+.card-prod{background:var(--sheet);border:1.5px solid var(--ink);box-shadow:8px 8px 0 var(--rule)}
+.cp-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.cp-h b{font-size:.95rem}
+.cp-h span{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.cp-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:13px 16px;border-bottom:1px dashed var(--grid);align-items:start}
+.cp-row h4{margin:0;font-size:.98rem;line-height:1.3}
+.cp-row p{font-size:.86rem;color:var(--ink-2);margin-top:2px}
+.cp-f{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 16px;font-size:.85rem;flex-wrap:wrap}
+.meter{flex:1;min-width:120px;height:8px;background:var(--grid);border-radius:4px;overflow:hidden;display:flex}
+.meter i{display:block;height:100%}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:2px;white-space:nowrap;border:1px solid currentColor}
+.b-crit{color:var(--crit);background:var(--crit-soft)}
+.b-high{color:var(--high);background:var(--high-soft)}
+.b-med{color:var(--med);background:var(--med-soft)}
+.b-low{color:var(--low);background:var(--low-soft)}
+
+/* Systems strip */
+.strip{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin-top:56px;padding-block:18px;border-block:1px solid var(--rule)}
+.strip .lbl{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.strip span.s{font-size:.9rem;font-weight:700;padding:5px 12px;border:1px solid var(--rule);background:var(--sheet);border-radius:2px}
+
+/* Cost grid */
+.costs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--rule);background:var(--sheet)}
+.costs>div{padding:24px;border-right:1px solid var(--rule);display:grid;gap:10px;align-content:start}
+.costs>div:last-child{border-right:0}
+.costs p{color:var(--ink-2);font-size:.98rem}
+.costs .k{font-family:var(--f-mono);font-size:.75rem;color:var(--crit);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:760px){.costs{grid-template-columns:1fr}.costs>div{border-right:0;border-bottom:1px solid var(--rule)}.costs>div:last-child{border-bottom:0}}
+
+/* Cycle comparison */
+.cycles{display:grid;gap:14px;margin-top:28px}
+.cyc{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;align-items:center}
+.cyc .who{font-family:var(--f-mono);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flow span{font-size:.88rem;padding:8px 12px;border:1px solid var(--rule);background:var(--sheet);border-radius:2px;white-space:nowrap}
+.flow span.bad{border-color:var(--crit);color:var(--crit);background:var(--crit-soft);font-weight:700}
+.flow span.good{border-color:var(--low);color:var(--low);background:var(--low-soft);font-weight:700}
+.flow span.pre{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:700}
+.flow em{font-style:normal;color:var(--muted);font-size:.9rem}
+@media (max-width:640px){.cyc{grid-template-columns:1fr;gap:8px}}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;gap:10px;align-content:start;padding-top:18px;border-top:2px solid var(--ink)}
+.steps li::before{content:"Step " counter(s);font-family:var(--f-mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.steps p{color:var(--ink-2);font-size:.98rem}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* Audiences */
+.aud{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.aud>article{background:var(--sheet);border:1px solid var(--rule);padding:24px;display:grid;gap:12px;align-content:start}
+.aud .tag{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.aud .pain{font-style:italic;color:var(--ink-2);font-size:.95rem;border-left:2px solid var(--rule);padding-left:12px}
+.aud ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-size:.95rem}
+.aud li{display:grid;grid-template-columns:18px 1fr;gap:8px}
+.aud li::before{content:"\2713";color:var(--low);font-weight:700}
+@media (max-width:880px){.aud{grid-template-columns:1fr}}
+
+/* Band */
+.band{background:var(--band);color:var(--band-ink);margin-inline:-16px;padding-inline:16px;margin-top:80px}
+.band-in{max-width:1140px;margin-inline:auto;padding-block:56px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.band h3{color:var(--band-ink);font-size:1.15rem}
+.band p{opacity:.82;font-size:.96rem;margin-top:8px}
+.band .eyebrow{color:var(--hl)}
+:root[data-theme="dark"] .band .eyebrow{color:var(--med)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .band .eyebrow{color:var(--med)}}
+@media (max-width:760px){.band-in{grid-template-columns:1fr;gap:24px}}
+
+/* Offers */
+.offers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1.5px solid var(--ink);background:var(--sheet)}
+.offers>div{padding:26px;border-right:1px solid var(--rule);display:grid;gap:12px;align-content:start}
+.offers>div:last-child{border-right:0}
+.offers .st{justify-self:start;font-family:var(--f-mono);font-size:.72rem;font-weight:600;padding:3px 8px;border-radius:2px;border:1px solid currentColor}
+.st.now{color:var(--low);background:var(--low-soft)}
+.st.soon{color:var(--med);background:var(--med-soft)}
+.st.open{color:var(--accent);background:var(--accent-soft)}
+.offers ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:.95rem;display:grid;gap:5px}
+.offers .btn{justify-self:start;margin-top:6px}
+.offers .feat{background:var(--accent-soft)}
+@media (max-width:880px){.offers{grid-template-columns:1fr}.offers>div{border-right:0;border-bottom:1px solid var(--rule)}.offers>div:last-child{border-bottom:0}}
+
+/* FAQ */
+.faq{display:grid;gap:0;border-top:1.5px solid var(--ink);max-width:860px}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;padding:18px 0;font-weight:700;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);color:var(--accent);font-size:1.2rem;line-height:1}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{padding:0 0 18px;color:var(--ink-2);max-width:68ch}
+
+/* Pilot form */
+.pilot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:48px;align-items:start}
+@media (max-width:880px){.pilot{grid-template-columns:1fr;gap:28px}}
+form.pf{background:var(--sheet);border:1.5px solid var(--ink);padding:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+form.pf .w{grid-column:1/-1}
+@media (max-width:520px){form.pf{grid-template-columns:1fr}}
+form.pf label{display:block;font-size:.8rem;font-weight:700;color:var(--ink-2);margin-bottom:4px}
+.ctl{font:inherit;font-size:.95rem;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:2px;padding:10px 11px;width:100%}
+.ctl:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 2px var(--accent-soft)}
+textarea.ctl{min-height:96px;resize:vertical}
+.err{color:var(--crit);font-size:.85rem}
+.ok{grid-column:1/-1;background:var(--low-soft);color:var(--low);border:1px solid var(--low);padding:14px;font-weight:700}
+.checks{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
+.checks li{display:grid;grid-template-columns:22px 1fr;gap:10px;color:var(--ink-2)}
+.checks li::before{content:"\2192";color:var(--accent);font-weight:700}
+
+footer{margin-top:88px;border-top:1.5px solid var(--ink);padding-block:22px 40px;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px;font-size:.9rem;color:var(--ink-2)}
+footer nav{display:grid;gap:6px;align-content:start}
+footer nav a{color:var(--ink-2)}
+@media (max-width:760px){footer{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Ohmsight home">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 17h3.2v-2.4a4 4 0 1 1 3.6 0V17H18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <b>OHMSIGHT</b>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#who">Who it's for</a>
+      <a class="hide-sm" href="#offers">Plans</a>
+      <a href="platform.html">Product</a>
+      <a class="cta" href="#pilot">Request a pilot</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Solar &middot; Battery storage &middot; Generators</div>
+      <h1 style="margin-top:14px">Get it approved on the <mark>first submittal.</mark></h1>
+      <p class="lead">Ohmsight checks your solar, battery and backup power plans against the electrical code before you submit. You see what a plan reviewer is likely to flag, ranked by how serious it is, with the fix for each one.</p>
+      <div class="ctas">
+        <a class="btn primary" href="platform.html#mvp">Try the free pre-check</a>
+        <a class="btn" href="#pilot">Request a pilot</a>
+      </div>
+      <p class="fine">No account needed. Your project data stays in your browser.</p>
+    </div>
+
+    <figure class="card-prod" style="margin:0" aria-label="Example pre-check result">
+      <div class="cp-h"><b>Pre-check: 10.4 kW home solar + battery</b><span>5 issues found</span></div>
+      <div class="cp-row"><span class="pill b-crit">&#9650; Critical</span><div><h4>The main panel can't accept this much solar</h4><p>Lower the main breaker, upgrade the panel, or connect on the supply side.</p></div></div>
+      <div class="cp-row"><span class="pill b-high">&#9670; High</span><div><h4>Battery shutoff is missing from the plans</h4><p>Show a lockable disconnect within sight of the battery.</p></div></div>
+      <div class="cp-row"><span class="pill b-high">&#9670; High</span><div><h4>No structural letter for the roof</h4><p>Add an engineer's letter for the added array weight.</p></div></div>
+      <div class="cp-row" style="border-bottom:0"><span class="pill b-med">&#9679; Medium</span><div><h4>String voltage is close to the inverter limit</h4><p>Confirm the cold-weather voltage calculation on the plans.</p></div></div>
+      <div class="cp-f"><span style="font-weight:700">Fix 5 items, then submit</span>
+        <span class="meter" aria-hidden="true"><i style="width:20%;background:var(--crit)"></i><i style="width:40%;background:var(--high)"></i><i style="width:40%;background:var(--med)"></i></span></div>
+    </figure>
+  </div>
+
+  <div class="strip" aria-label="Systems covered">
+    <span class="lbl">Covers</span>
+    <span class="s">Rooftop solar</span><span class="s">Commercial PV</span><span class="s">Home batteries</span><span class="s">Emergency generators</span><span class="s">Standby power</span>
+  </div>
+
+  <section id="problem">
+    <div class="sec-head">
+      <div class="eyebrow">The problem</div>
+      <h2>Every correction letter puts the job back in line</h2>
+      <p class="lead">Most solar, battery and generator plans that come back with corrections miss the same handful of items. Each miss means redrawing, resubmitting and waiting for another review.</p>
+    </div>
+    <div class="costs">
+      <div><span class="k">Time</span><h3>Weeks lost per cycle</h3><p>A resubmittal goes back into the review queue. The install date slides with it, and so does the next job on the calendar.</p></div>
+      <div><span class="k">Money</span><h3>Crews and capital sit idle</h3><p>Equipment is ordered, crews are scheduled, financing deadlines are running. A permit delay costs more than the redesign.</p></div>
+      <div><span class="k">Trust</span><h3>Customers lose patience</h3><p>Homeowners and building owners hear "we're waiting on the city" and start to wonder if they picked the right contractor.</p></div>
+    </div>
+    <div class="cycles" aria-label="Permit cycle comparison">
+      <div class="cyc"><span class="who" style="color:var(--crit)">Today</span>
+        <div class="flow"><span>Submit</span><em>&rarr;</em><span class="bad">Corrections</span><em>&rarr;</em><span>Redraw</span><em>&rarr;</em><span>Resubmit</span><em>&rarr;</em><span class="bad">Corrections</span><em>&rarr;</em><span>Resubmit</span><em>&rarr;</em><span class="good">Approved</span></div></div>
+      <div class="cyc"><span class="who" style="color:var(--low)">With Ohmsight</span>
+        <div class="flow"><span class="pre">Pre-check</span><em>&rarr;</em><span>Fix</span><em>&rarr;</em><span>Submit</span><em>&rarr;</em><span class="good">Approved</span></div></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="sec-head">
+      <div class="eyebrow">How it works</div>
+      <h2>Three steps, a few minutes</h2>
+    </div>
+    <ol class="steps">
+      <li><h3>Enter the project</h3><p>Panel and breaker sizes, solar module and inverter ratings, battery size and location, or generator details. Type them in or upload a file.</p></li>
+      <li><h3>See what will get flagged</h3><p>Ohmsight runs the code checks and lists the likely problems, most serious first, with the math shown and the fix spelled out.</p></li>
+      <li><h3>Fix it and submit</h3><p>Correct the plans before they go in. Reviewers using Ohmsight see the same ranked checklist, so both sides work from one list.</p></li>
+    </ol>
+  </section>
+
+  <section id="who">
+    <div class="sec-head">
+      <div class="eyebrow">Who it's for</div>
+      <h2>Built for both sides of the counter</h2>
+    </div>
+    <div class="aud">
+      <article><span class="tag">Solar and battery installers</span><h3>Start installs on schedule</h3>
+        <p class="pain">"We lost two weeks on a breaker size."</p>
+        <ul><li>Catch panel and breaker problems before the city does</li><li>Give crews firm start dates</li><li>Spend less time on redraws and resubmittals</li></ul></article>
+      <article><span class="tag">Engineering and design firms</span><h3>Send cleaner packages</h3>
+        <p class="pain">"The study was done, it just wasn't in the set."</p>
+        <ul><li>Confirm every required document is in the package</li><li>Check generator sizing, transfer time and fuel duration</li><li>Hand clients a pre-check report with the submittal</li></ul></article>
+      <article><span class="tag">Building departments</span><h3>Review the risky items first</h3>
+        <p class="pain">"We write the same corrections every week."</p>
+        <ul><li>A checklist ranked by life-safety risk</li><li>Correction letters drafted from confirmed items</li><li>A dashboard of the most common deficiencies to guide outreach</li></ul></article>
+    </div>
+  </section>
+
+  <div class="band">
+    <div class="band-in">
+      <div><div class="eyebrow">Built by an engineer</div><h3 style="margin-top:8px">Code knowledge, not guesswork</h3><p>Ohmsight is led by electrical engineer Ezeoma Igwe. Every check traces to a specific section of the electrical code.</p></div>
+      <div><div class="eyebrow">Transparent</div><h3 style="margin-top:8px">Shows its work</h3><p>Each issue comes with the calculation behind it, so you can verify it, explain it to a client, or push back.</p></div>
+      <div><div class="eyebrow">Private</div><h3 style="margin-top:8px">Your plans stay yours</h3><p>The free pre-check runs entirely in your browser. Nothing you enter is uploaded or stored on our servers.</p></div>
+    </div>
+  </div>
+
+  <section id="offers">
+    <div class="sec-head">
+      <div class="eyebrow">Ways to work with us</div>
+      <h2>Start free, grow into a team plan</h2>
+    </div>
+    <div class="offers">
+      <div><span class="st now">Available now</span><h3>Free pre-check</h3><p style="color:var(--ink-2);font-size:.95rem">For anyone preparing a solar, battery or generator submittal.</p>
+        <ul><li>Code checks for PV, storage and emergency power</li><li>Issues ranked by risk, with fixes</li><li>Reviewer checklist and correction list</li></ul>
+        <a class="btn" href="platform.html#mvp">Try it now</a></div>
+      <div class="feat"><span class="st open">Accepting partners</span><h3>Building department pilot</h3><p style="color:var(--ink-2);font-size:.95rem">For jurisdictions that want faster, more consistent electrical reviews.</p>
+        <ul><li>Checks tuned to your local amendments</li><li>Deficiency trend dashboard for your program</li><li>Help measuring review time before and after</li></ul>
+        <a class="btn primary" href="#pilot">Request a pilot</a></div>
+      <div><span class="st soon">In development</span><h3>Team plan</h3><p style="color:var(--ink-2);font-size:.95rem">For installers and design firms with steady permit volume.</p>
+        <ul><li>Saved projects and shared team history</li><li>Pre-check reports to attach to submittals</li><li>Values pulled from equipment spec sheets</li></ul>
+        <a class="btn" href="#pilot">Join the waitlist</a></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head"><div class="eyebrow">Questions</div><h2>Frequently asked</h2></div>
+    <div class="faq">
+      <details><summary>Does Ohmsight approve my plans?</summary><p>No. Ohmsight flags likely problems before you submit, and helps reviewers work faster. The building department makes the final decision on every permit.</p></details>
+      <details><summary>Which code does it check against?</summary><p>The checks follow the 2023 National Electrical Code, plus residential battery limits from the International Residential Code and NFPA 855. Local amendments are added for pilot jurisdictions.</p></details>
+      <details><summary>What kinds of projects does it cover?</summary><p>Rooftop and ground-mounted solar, home and commercial battery storage, emergency generators, legally required standby systems and optional standby generators.</p></details>
+      <details><summary>Do I need to upload my drawings?</summary><p>Not today. You enter the key values from the plans, or upload a simple data file. Reading values directly from spec sheets is on the roadmap.</p></details>
+      <details><summary>What does it cost?</summary><p>The pre-check is free while in early access. Pilot terms for building departments and pricing for the team plan are set with each partner. Use the form below to start the conversation.</p></details>
+    </div>
+  </section>
+
+  <section id="pilot">
+    <div class="pilot">
+      <div>
+        <div class="eyebrow">Request a pilot</div>
+        <h2 style="margin-top:12px">Bring Ohmsight to your team</h2>
+        <p class="lead" style="margin-top:14px">Tell us about your organization and the permits you handle. We'll follow up to set up a short demo.</p>
+        <ul class="checks">
+          <li>A walkthrough on one of your own recent projects</li>
+          <li>A review of which checks matter most for your volume</li>
+          <li>A pilot plan with clear goals and a set end date</li>
+        </ul>
+      </div>
+      <form class="pf" id="pilotForm" name="pilot" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="pilot">
+        <p hidden><label>Leave blank <input name="bot-field"></label></p>
+        <div><label for="pf_name">Name</label><input class="ctl" id="pf_name" name="name" autocomplete="name" required></div>
+        <div><label for="pf_org">Organization</label><input class="ctl" id="pf_org" name="organization" autocomplete="organization" required></div>
+        <div><label for="pf_email">Work email</label><input class="ctl" id="pf_email" name="email" type="email" autocomplete="email" required></div>
+        <div><label for="pf_role">I'm with a</label><select class="ctl" id="pf_role" name="role">
+          <option>Solar or battery installer</option><option>Engineering or design firm</option><option>Building department</option><option>Other</option></select></div>
+        <div class="w"><label for="pf_vol">Permits per month (approximate)</label><select class="ctl" id="pf_vol" name="volume">
+          <option>Fewer than 10</option><option>10 to 50</option><option>50 to 200</option><option>More than 200</option></select></div>
+        <div class="w"><label for="pf_msg">What would you like Ohmsight to help with?</label><textarea class="ctl" id="pf_msg" name="message"></textarea></div>
+        <div class="w" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button class="btn primary" type="submit">Send request</button><span class="err" id="pf_err" role="alert"></span></div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div style="display:grid;gap:8px">
+      <b style="color:var(--ink)">Ohmsight</b>
+      <p>Pre-check and review assist for solar, battery storage and emergency power permits.</p>
+      <p>Ohmsight flags likely deficiencies. It does not approve plans. Final code determinations rest with the authority having jurisdiction.</p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="platform.html">Product and methodology</a>
+      <a href="platform.html#mvp">Free pre-check</a>
+      <a href="platform.html#rules">Rule library</a>
+      <a href="#pilot">Request a pilot</a>
+    </nav>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var f=document.getElementById("pilotForm"),err=document.getElementById("pf_err");
+  var embedded=false;try{embedded=window.self!==window.top}catch(e){embedded=true}
+  f.addEventListener("submit",function(e){
+    err.textContent="";
+    var g=function(id){return document.getElementById(id)};var name=g("pf_name").value.trim(),org=g("pf_org").value.trim(),email=g("pf_email").value.trim();
+    if(!name||!org){e.preventDefault();err.textContent="Add your name and organization.";return}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){e.preventDefault();err.textContent="Enter a valid work email, like name@company.com.";g("pf_email").focus();return}
+    if(embedded||location.protocol==="file:"){
+      e.preventDefault();
+      f.innerHTML='<div class="ok">Thanks, '+name.replace(/[<>&"]/g,"")+'. This is a preview copy of the site, so the request was not sent. On the live site it goes straight to the Ohmsight team.</div>';
+    }
+  });
+})();
+</script>
+</body>
+</html>

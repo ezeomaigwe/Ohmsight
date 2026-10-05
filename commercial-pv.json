@@ -1,0 +1,36 @@
+{
+  "name": "Commercial rooftop PV, 98 kW",
+  "address": "Sample: two-story office building",
+  "occupancy": "B",
+  "code": "NEC 2023",
+  "hasPV": true,
+  "hasESS": false,
+  "hasEM": false,
+  "pv": {
+    "dcKw": 98,
+    "ns": 16,
+    "voc": 41.2,
+    "isc": 13.1,
+    "coef": -0.29,
+    "tmin": -5,
+    "maxDcV": 1000,
+    "acA": 120,
+    "condA": 20,
+    "ic": "supply",
+    "busA": 800,
+    "mainA": 800,
+    "brkA": 150,
+    "opp": false,
+    "roof": true,
+    "rsd": false,
+    "supplyDetail": true
+  },
+  "docs": {
+    "sld": true,
+    "specs": true,
+    "ground": false,
+    "labels": true,
+    "struct": true,
+    "loadcalc": false
+  }
+}

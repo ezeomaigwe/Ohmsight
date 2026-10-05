@@ -1,0 +1,36 @@
+key,value
+name,Residential PV + battery, 10.4 kW
+address,Sample: single-family dwelling
+occupancy,R-3
+code,NEC 2023
+hasPV,true
+hasESS,true
+hasEM,false
+pv.dcKw,10.4
+pv.ns,11
+pv.voc,49.5
+pv.isc,13.9
+pv.coef,-0.26
+pv.tmin,-2
+pv.maxDcV,600
+pv.acA,40
+pv.condA,30
+pv.ic,load
+pv.busA,200
+pv.mainA,200
+pv.brkA,50
+pv.opp,true
+pv.roof,true
+pv.rsd,true
+pv.supplyDetail,false
+ess.unitKwh,13.5
+ess.units,2
+ess.loc,garage
+ess.ul9540,true
+ess.disc,false
+docs.sld,true
+docs.specs,true
+docs.ground,true
+docs.labels,false
+docs.struct,false
+docs.loadcalc,false
