@@ -612,7 +612,7 @@ const BLANK=()=>({name:"",address:"",occupancy:"R-3",code:"NEC 2023",hasPV:true,
  docs:{sld:false,specs:false,ground:false,labels:false,struct:false,loadcalc:false}});
 
 const SAMPLES=[
- {name:"Residential PV + battery, 10.4 kW",address:"Sample: single-family dwelling, Los Angeles",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:true,hasEM:false,
+ {name:"Residential PV + battery, 10.4 kW",address:"Sample: single-family dwelling, Houston",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:true,hasEM:false,
   pv:{dcKw:10.4,ns:11,voc:49.5,isc:13.9,coef:-0.26,tmin:-2,maxDcV:600,acA:40,condA:30,ic:"load",busA:200,mainA:200,brkA:50,opp:true,roof:true,rsd:true,supplyDetail:false},
   ess:{unitKwh:13.5,units:2,loc:"garage",ul9540:true,disc:false},
   em:{art:"702",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
@@ -675,7 +675,7 @@ function run(d){
   const u=num(e.unitKwh),n=num(e.units)||1;
   if(dwell){
    if(u==null)need("ES-02","Needs unit capacity.");else{const det=`Largest unit ${fmt(u,1)} kWh vs 20 kWh per unit`;u>20?add("ES-02","fail",det):pass("ES-02",det)}
-   const LIM={garage:40,utility:40,outdoor:80,habitable:0};const nm={garage:"attached garage",utility:"utility closet or basement",outdoor:"exterior wall or outdoors",habitable:"habitable space"}[e.loc];
+   const LIM={garage:80,utility:40,outdoor:80,habitable:0};const nm={garage:"attached garage",utility:"utility closet or basement",outdoor:"exterior wall or outdoors",habitable:"habitable space"}[e.loc];
    if(u!=null&&e.loc!=="habitable"){const agg=u*n,lim=LIM[e.loc];const det=`${n} x ${fmt(u,1)} kWh = ${fmt(agg,1)} kWh vs ${lim} kWh in ${nm}`;agg>lim?add("ES-03","fail",det):(agg>0.9*lim?add("ES-03","warn",det+" (within 10% of limit)",[3,3]):pass("ES-03",det))}
    e.loc==="habitable"?add("ES-04","fail","ESS shown inside habitable space."):pass("ES-04",`Located in ${nm}.`);
   }
