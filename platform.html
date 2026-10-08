@@ -284,8 +284,9 @@ footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;displa
       <a href="#mvp"><span>E-3</span>MVP</a>
       <a href="#rules"><span>E-4</span>Rule library</a>
       <a href="#roadmap"><span>E-5</span>Roadmap</a>
+      <a href="#revisions"><span>E-6</span>Revisions</a>
     </nav>
-    <div class="tb-meta"><span>REV 0.3</span><span>2026-10-01</span></div>
+    <div class="tb-meta"><span>REV 0.2</span><span>2026-10-07</span></div>
   </div>
 </header>
 
@@ -493,6 +494,25 @@ footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;displa
     </div>
   </section>
 
+  <!-- E-6 -->
+  <section class="sheet" id="revisions">
+    <div class="sheet-head"><div class="sheet-tag">E-6</div><div class="label">Revision history</div><h2>Changes from field review</h2></div>
+    <p class="prose" style="margin-bottom:20px">Each revision records what changed and where the change came from. Field review items were suggested by Ezeoma Igwe from recurring plan check corrections.</p>
+    <div class="lib-wrap"><table class="lib">
+      <thead><tr><th>Rev</th><th>Date</th><th>Change</th><th>Rules</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Inverter type option. Microinverter checks for module voltage at the microinverter input and for the AC branch circuit; optimizer systems checked on their fixed string voltage.</td><td class="mono">PV-01, PV-12</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Height of rooftop raceways and cables above the roof. Where under 7/8 in. and not XHHW-2, the 33 &deg;C adder is applied before the conductor ampacity check.</td><td class="mono">PV-02, PV-11<br>NEC 310.15(B)(2)</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Grounding electrode conductor sized from the service conductors, and equipment grounding conductor sized from the overcurrent device.</td><td class="mono">GEN-04, GEN-05<br>NEC 250.66, 250.122</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Available fault current check against equipment AIC or SCCR, from a utility letter or a point-to-point estimate from transformer data.</td><td class="mono">GEN-03<br>NEC 110.9, 110.10</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Document check for plans signed or stamped by a licensed engineer or contractor.</td><td class="mono">GEN-02</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Local coordination flags, set by each jurisdiction: structural review for large or ballasted roof arrays; fire department review for nonresidential PV and for batteries inside a building.</td><td class="mono">Local overlay</td><td>Field review, E. Igwe</td></tr>
+        <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Battery limit in garages corrected to 80 kWh total; utility closets and basements remain at 40 kWh.</td><td class="mono">ES-03<br>IRC/CRC R328</td><td>Code reference check</td></tr>
+        <tr><td class="mono">0.1</td><td class="mono">2026-10-05</td><td>Initial MVP: pre-check, reviewer view and analytics demo for PV, energy storage and emergency power.</td><td class="mono">23 rules</td><td>Initial build</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
   <footer>
     <div style="display:grid;gap:8px">
       <b style="color:var(--ink)">Project Ohmsight</b>
@@ -501,7 +521,7 @@ footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;displa
     </div>
     <div style="display:grid;gap:4px;align-content:start" class="mono">
       <span class="label">Sheet index</span>
-      <span>E-1 Problem</span><span>E-2 Method</span><span>E-3 MVP</span><span>E-4 Rule library</span><span>E-5 Roadmap</span>
+      <span>E-1 Problem</span><span>E-2 Method</span><span>E-3 MVP</span><span>E-4 Rule library</span><span>E-5 Roadmap</span><span>E-6 Revisions</span>
     </div>
   </footer>
 </main>
@@ -520,6 +540,10 @@ async function copyText(txt,el){try{await navigator.clipboard.writeText(txt);toa
 /* ---------- Rule catalog ---------- */
 const RULES=[
  {id:"GEN-01",sys:"All",title:"Single-line diagram missing or incomplete",ref:"NEC 110.3(B); submittal requirement",base:[4,5]},
+ {id:"GEN-02",sys:"All",title:"Plans not signed or stamped by a licensed engineer or contractor",ref:"Local submittal requirement",base:[3,4]},
+ {id:"GEN-03",sys:"All",title:"Equipment rating below the available fault current",ref:"NEC 110.9, 110.10",base:[5,5]},
+ {id:"GEN-04",sys:"All",title:"Grounding electrode conductor smaller than Table 250.66",ref:"NEC 250.66",base:[4,5]},
+ {id:"GEN-05",sys:"All",title:"Equipment grounding conductor smaller than Table 250.122",ref:"NEC 250.122",base:[4,5]},
  {id:"PV-01",sys:"PV",title:"Maximum DC voltage exceeds equipment or dwelling limit",ref:"NEC 690.7",base:[5,5]},
  {id:"PV-02",sys:"PV",title:"DC source-circuit conductor undersized",ref:"NEC 690.8(A),(B)",base:[4,5]},
  {id:"PV-03",sys:"PV",title:"Busbar rule exceeded at load-side connection",ref:"NEC 705.12(B)(3)",base:[5,5]},
@@ -530,6 +554,8 @@ const RULES=[
  {id:"PV-08",sys:"PV",title:"Module and inverter listing or spec sheets missing",ref:"NEC 110.3(B), 690.4(B)",base:[3,4]},
  {id:"PV-09",sys:"PV",title:"Required labels and directory not shown",ref:"NEC 690.56(C), 705.10",base:[2,4]},
  {id:"PV-10",sys:"PV",title:"Structural letter missing for roof-mounted array",ref:"Building code; submittal requirement",base:[3,4]},
+ {id:"PV-11",sys:"PV",title:"Height of rooftop raceways above the roof not shown",ref:"NEC 310.15(B)(2)",base:[3,4]},
+ {id:"PV-12",sys:"PV",title:"Microinverter branch circuit over the breaker or manufacturer limit",ref:"NEC 690.8(B); 110.3(B)",base:[4,5]},
  {id:"ES-01",sys:"ESS",title:"ESS not listed to UL 9540",ref:"NEC 706.5; NFPA 855",base:[5,4]},
  {id:"ES-02",sys:"ESS",title:"Individual ESS unit exceeds 20 kWh at a dwelling",ref:"IRC R328; NFPA 855",base:[4,5]},
  {id:"ES-03",sys:"ESS",title:"Aggregate ESS capacity exceeds the limit for its location",ref:"IRC R328; NFPA 855",base:[4,5]},
@@ -546,6 +572,12 @@ const RULES=[
 const R=Object.fromEntries(RULES.map(r=>[r.id,r]));
 const FIX={
  "GEN-01":"Provide a complete single-line diagram showing every source, disconnect, OCPD, conductor size and point of connection.",
+ "GEN-02":"Have the plans signed or stamped by the licensed engineer or contractor responsible for the design, as the jurisdiction requires.",
+ "GEN-03":"Use equipment with an interrupting or short-circuit current rating at or above the available fault current, or a listed series rating. Show the fault current and equipment ratings on the plans.",
+ "GEN-04":"Upsize the grounding electrode conductor to the Table 250.66 size for the service conductors, or show the 250.66(A) or (B) electrode allowance that applies.",
+ "GEN-05":"Upsize the equipment grounding conductor to the Table 250.122 size for the overcurrent device protecting the circuit.",
+ "PV-11":"Show the height of rooftop raceways and cables above the roof. Where it is under 7/8 in. (23 mm), apply the 33 °C (60 °F) temperature adder in the ampacity calculation, or use XHHW-2 conductors.",
+ "PV-12":"Reduce the microinverters per branch circuit or resize the branch breaker so the circuit stays within 125% of continuous output and the manufacturer's maximum per branch.",
  "PV-01":"Reduce modules per string or select an inverter rated for the corrected open-circuit voltage. Show the calculation on the plans.",
  "PV-02":"Upsize the DC conductors so ampacity after correction and adjustment is at least 156% of module Isc.",
  "PV-03":"Downsize the main breaker, upgrade the busbar, move to a supply-side connection, or add a power control system. Show the revised busbar calculation.",
@@ -572,26 +604,55 @@ const FIX={
 const BAND=s=>s>=20?{k:"crit",n:"Critical",i:"▲"}:s>=12?{k:"high",n:"High",i:"◆"}:s>=6?{k:"med",n:"Medium",i:"●"}:{k:"low",n:"Low",i:"○"};
 
 /* ---------- Form schema ---------- */
+function merge(base,src){for(const k in src){if(src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])){if(!base[k]||typeof base[k]!=="object")base[k]={};merge(base[k],src[k])}else base[k]=src[k]}return base}
+const SIZES=["14","12","10","8","6","4","3","2","1","1/0","2/0","3/0","4/0","250","300","350","400","500","600","700","750","800","900","1000","1100","1250","1500","1750","2000"];
+const si=s=>SIZES.indexOf(String(s));
+const szL=s=>si(s)<=si("4/0")?`${s} AWG`:`${s} kcmil`;
+const SZ_OPT=[["","Not entered"],...SIZES.map(s=>[s,szL(s)])];
+const isMicro=d=>d.pv.invType==="micro",notMicro=d=>d.pv.invType!=="micro",xf=d=>d.fc.method==="xfmr";
+const LOCAL_DEF={struct:true,structPct:50,fireComm:true,fireEss:true};
+let LOCAL=Object.assign({},LOCAL_DEF,store.get("ohm.local")||{});
 const OCC=[["R-3","R-3 One- or two-family dwelling"],["R-2","R-2 Multifamily"],["B","B Business"],["M","M Mercantile"],["I-2","I-2 Institutional"],["S-1","S-1 Storage"]];
 const FS=[
  {key:"project",legend:"Project",fields:[
   {k:"name",l:"Project name",t:"text",w:1},{k:"address",l:"Address",t:"text",w:1},
   {k:"occupancy",l:"Occupancy",t:"sel",o:OCC},{k:"code",l:"Code basis",t:"sel",o:[["NEC 2023","NEC 2023"],["NEC 2020","NEC 2020"]]},
-  {k:"hasPV",l:"Includes PV",t:"bool"},{k:"hasESS",l:"Includes energy storage",t:"bool"},{k:"hasEM",l:"Includes emergency or standby power",t:"bool",w:1}]},
+  {k:"hasPV",l:"Includes PV",t:"bool"},{k:"hasESS",l:"Includes energy storage",t:"bool"},{k:"hasEM",l:"Includes emergency or standby power",t:"bool",w:1},
+  {k:"hasFC",l:"Check available fault current",t:"bool",w:1}]},
  {key:"pv",legend:"PV system",show:"hasPV",fields:[
-  {k:"pv.dcKw",l:"Array size",t:"num",u:"kW DC"},{k:"pv.ns",l:"Modules per series string",t:"num",u:"qty"},
-  {k:"pv.voc",l:"Module Voc",t:"num",u:"V"},{k:"pv.isc",l:"Module Isc",t:"num",u:"A"},
-  {k:"pv.coef",l:"Voc temperature coefficient",t:"num",u:"%/°C"},{k:"pv.tmin",l:"Design low temperature",t:"num",u:"°C"},
-  {k:"pv.maxDcV",l:"Inverter max DC input",t:"num",u:"V"},{k:"pv.acA",l:"Inverter max AC output",t:"num",u:"A"},
-  {k:"pv.condA",l:"DC conductor ampacity, corrected",t:"num",u:"A",w:1},
+  {k:"pv.invType",l:"Inverter type",t:"sel",o:[["string","String or central inverter"],["optimizer","String inverter with DC optimizers"],["micro","Microinverters"]],w:1},
+  {k:"pv.dcKw",l:"Array size",t:"num",u:"kW DC"},
+  {k:"pv.ns",l:"Modules per series string",t:"num",u:"qty",sh:d=>d.pv.invType==="string"},
+  {k:"pv.optV",l:"Max string voltage, optimizer system",t:"num",u:"V",sh:d=>d.pv.invType==="optimizer"},
+  {k:"pv.voc",l:"Module Voc",t:"num",u:"V",sh:d=>d.pv.invType!=="optimizer"},
+  {k:"pv.isc",l:"Module Isc",t:"num",u:"A",sh:notMicro},
+  {k:"pv.coef",l:"Voc temperature coefficient",t:"num",u:"%/°C",sh:d=>d.pv.invType!=="optimizer"},
+  {k:"pv.tmin",l:"Design low temperature",t:"num",u:"°C",sh:d=>d.pv.invType!=="optimizer"},
+  {k:"pv.maxDcV",l:"Inverter max DC input",t:"num",u:"V",sh:notMicro},
+  {k:"pv.acA",l:"Inverter max AC output",t:"num",u:"A",sh:notMicro},
+  {k:"pv.microMaxV",l:"Microinverter max DC input",t:"num",u:"V",sh:isMicro},
+  {k:"pv.microAcA",l:"Microinverter max AC output",t:"num",u:"A",sh:isMicro},
+  {k:"pv.perBranch",l:"Microinverters per branch circuit",t:"num",u:"qty",sh:isMicro},
+  {k:"pv.maxPerBranch",l:"Manufacturer max per branch",t:"num",u:"qty",sh:isMicro},
+  {k:"pv.branches",l:"Number of branch circuits",t:"num",u:"qty",sh:isMicro},
+  {k:"pv.branchA",l:"Branch circuit breaker",t:"num",u:"A",sh:isMicro},
+  {k:"pv.condBase",l:"DC conductor 90 °C table ampacity",t:"num",u:"A",sh:notMicro},
+  {k:"pv.tmax",l:"Design high ambient temperature",t:"num",u:"°C",sh:notMicro},
+  {k:"pv.ccc",l:"Current-carrying conductors in raceway",t:"num",u:"qty",sh:notMicro},
+  {k:"pv.condA",l:"Or: DC conductor ampacity, already corrected",t:"num",u:"A",sh:notMicro},
   {k:"pv.ic",l:"Interconnection",t:"sel",o:[["load","Load side (705.12)"],["supply","Supply side (705.11)"]],w:1},
   {k:"pv.busA",l:"Panel busbar rating",t:"num",u:"A"},{k:"pv.mainA",l:"Main OCPD",t:"num",u:"A"},
   {k:"pv.brkA",l:"PV backfeed breaker",t:"num",u:"A"},{k:"pv.opp",l:"PV breaker at opposite end from main",t:"bool"},
   {k:"pv.roof",l:"Roof-mounted array",t:"bool"},{k:"pv.rsd",l:"Rapid shutdown method documented",t:"bool"},
+  {k:"pv.roofRun",l:"Raceways or cables run on the roof in sunlight",t:"bool",w:1,sh:d=>d.pv.roof},
+  {k:"pv.roofHt",l:"Height above roof to bottom of raceway",t:"num",u:"in",sh:d=>d.pv.roof&&d.pv.roofRun},
+  {k:"pv.xhhw2",l:"XHHW-2 conductors",t:"bool",sh:d=>d.pv.roof&&d.pv.roofRun},
+  {k:"pv.roofPct",l:"Share of roof covered by PV",t:"num",u:"%",sh:d=>d.pv.roof},
+  {k:"pv.ballast",l:"Ballasted (non-penetrating) mounting",t:"bool",sh:d=>d.pv.roof},
   {k:"pv.supplyDetail",l:"Supply-side tap detail shown",t:"bool",w:1}]},
  {key:"ess",legend:"Energy storage",show:"hasESS",fields:[
   {k:"ess.unitKwh",l:"Largest unit capacity",t:"num",u:"kWh"},{k:"ess.units",l:"Number of units",t:"num",u:"qty"},
-  {k:"ess.loc",l:"Location",t:"sel",o:[["garage","Attached garage"],["utility","Utility closet or basement"],["outdoor","Exterior wall or outdoors"],["habitable","Habitable space"]],w:1},
+  {k:"ess.loc",l:"Location",t:"sel",o:[["garage","Attached or detached garage"],["utility","Utility closet, basement or storage space"],["outdoor","Exterior wall or outdoors"],["habitable","Habitable space"]],w:1},
   {k:"ess.ul9540",l:"Listed to UL 9540",t:"bool"},{k:"ess.disc",l:"ESS disconnect shown",t:"bool"}]},
  {key:"em",legend:"Emergency or standby power",show:"hasEM",fields:[
   {k:"em.art",l:"System type",t:"sel",o:[["700","Emergency (Art. 700)"],["701","Legally required standby (Art. 701)"],["702","Optional standby (Art. 702)"]],w:1},
@@ -599,43 +660,79 @@ const FS=[
   {k:"em.xferS",l:"Transfer time",t:"num",u:"s"},{k:"em.fuelH",l:"On-site fuel at full load",t:"num",u:"h"},
   {k:"em.atsListed",l:"Transfer switch listed for this system",t:"bool"},{k:"em.coord",l:"Selective coordination study",t:"bool"},
   {k:"em.sep",l:"Wiring separation shown",t:"bool"},{k:"em.lm",l:"Load management system",t:"bool"}]},
+ {key:"gnd",legend:"Grounding and bonding",fields:[
+  {k:"gnd.svc",l:"Largest service conductor (or equivalent area of parallel sets)",t:"sel",o:SZ_OPT,w:1},
+  {k:"gnd.svcMat",l:"Service conductor material",t:"sel",o:[["cu","Copper"],["al","Aluminum"]]},
+  {k:"gnd.elec",l:"Grounding electrode",t:"sel",o:[["other","Multiple or other electrodes"],["rod","Rod, pipe or plate only"],["cee","Concrete-encased only"]]},
+  {k:"gnd.gec",l:"GEC size (copper)",t:"sel",o:SZ_OPT,w:1},
+  {k:"gnd.ocpd",l:"OCPD protecting the circuit",t:"num",u:"A"},
+  {k:"gnd.egc",l:"EGC size (copper)",t:"sel",o:SZ_OPT}]},
+ {key:"fc",legend:"Available fault current",show:"hasFC",fields:[
+  {k:"fc.method",l:"Source",t:"sel",o:[["utility","Utility letter (value at the service)"],["xfmr","Estimate from utility transformer"]],w:1},
+  {k:"fc.utilA",l:"Available fault current at service",t:"num",u:"A",w:1,sh:d=>d.fc.method==="utility"},
+  {k:"fc.kva",l:"Transformer rating",t:"num",u:"kVA",sh:xf},{k:"fc.z",l:"Transformer impedance",t:"num",u:"%Z",sh:xf},
+  {k:"fc.volt",l:"Secondary voltage, line to line",t:"num",u:"V",sh:xf},{k:"fc.phase",l:"Phases",t:"sel",o:[["3","Three-phase"],["1","Single-phase"]],sh:xf},
+  {k:"fc.len",l:"Service conductor length",t:"num",u:"ft",sh:xf},{k:"fc.sets",l:"Parallel sets",t:"num",u:"qty",sh:xf},
+  {k:"fc.size",l:"Conductor size, per set",t:"sel",o:SZ_OPT,sh:xf},{k:"fc.mat",l:"Conductor material",t:"sel",o:[["cu","Copper"],["al","Aluminum"]],sh:xf},
+  {k:"fc.aic",l:"Lowest AIC or SCCR of service equipment",t:"num",u:"A",w:1}]},
  {key:"docs",legend:"Documents in the package",fields:[
   {k:"docs.sld",l:"Single-line diagram",t:"bool"},{k:"docs.specs",l:"Equipment spec sheets",t:"bool"},
   {k:"docs.ground",l:"Grounding and bonding detail",t:"bool"},{k:"docs.labels",l:"Labels and directory",t:"bool"},
-  {k:"docs.struct",l:"Structural letter",t:"bool"},{k:"docs.loadcalc",l:"Load calculation",t:"bool"}]}
+  {k:"docs.struct",l:"Structural letter",t:"bool"},{k:"docs.loadcalc",l:"Load calculation",t:"bool"},
+  {k:"docs.stamp",l:"Plans signed or stamped by a licensed engineer or contractor",t:"bool",w:1}]},
+ {key:"loc",legend:"Local requirements (set by jurisdiction)",fields:[
+  {k:"loc.struct",l:"Flag structural review for large or ballasted roof arrays",t:"bool",w:1},
+  {k:"loc.structPct",l:"Roof coverage that triggers structural review",t:"num",u:"%"},
+  {k:"loc.fireComm",l:"Flag fire department review for nonresidential PV",t:"bool",w:1},
+  {k:"loc.fireEss",l:"Flag fire department review for batteries inside a building",t:"bool",w:1}]}
 ];
 
-const BLANK=()=>({name:"",address:"",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
- pv:{dcKw:null,ns:null,voc:null,isc:null,coef:-0.27,tmin:null,maxDcV:null,acA:null,condA:null,ic:"load",busA:null,mainA:null,brkA:null,opp:true,roof:true,rsd:false,supplyDetail:false},
+const BLANK=()=>({name:"",address:"",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,hasFC:false,
+ pv:{invType:"string",dcKw:null,ns:null,optV:null,voc:null,isc:null,coef:-0.27,tmin:null,maxDcV:null,acA:null,microMaxV:null,microAcA:null,perBranch:null,maxPerBranch:null,branches:null,branchA:null,condBase:null,tmax:null,ccc:null,condA:null,ic:"load",busA:null,mainA:null,brkA:null,opp:true,roof:true,rsd:false,roofRun:false,roofHt:null,xhhw2:false,roofPct:null,ballast:false,supplyDetail:false},
  ess:{unitKwh:null,units:1,loc:"garage",ul9540:false,disc:false},
  em:{art:"700",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
- docs:{sld:false,specs:false,ground:false,labels:false,struct:false,loadcalc:false}});
+ gnd:{svc:"",svcMat:"cu",elec:"other",gec:"",ocpd:null,egc:""},
+ fc:{method:"utility",utilA:null,kva:null,z:null,volt:null,phase:"3",len:null,sets:1,size:"",mat:"cu",aic:null},
+ docs:{sld:false,specs:false,ground:false,labels:false,struct:false,loadcalc:false,stamp:false}});
 
 const SAMPLES=[
- {name:"Residential PV + battery, 10.4 kW",address:"Sample: single-family dwelling, Houston",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:true,hasEM:false,
-  pv:{dcKw:10.4,ns:11,voc:49.5,isc:13.9,coef:-0.26,tmin:-2,maxDcV:600,acA:40,condA:30,ic:"load",busA:200,mainA:200,brkA:50,opp:true,roof:true,rsd:true,supplyDetail:false},
+ {name:"Residential PV + battery, 10.4 kW",address:"Sample: single-family dwelling",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:true,hasEM:false,hasFC:false,
+  pv:{invType:"string",dcKw:10.4,ns:11,voc:49.5,isc:13.9,coef:-0.26,tmin:-2,maxDcV:600,acA:40,condBase:40,tmax:37,ccc:4,condA:null,ic:"load",busA:200,mainA:200,brkA:50,opp:true,roof:true,rsd:true,roofRun:true,roofHt:0.5,xhhw2:false,roofPct:35,ballast:false,supplyDetail:false},
   ess:{unitKwh:13.5,units:2,loc:"garage",ul9540:true,disc:false},
-  em:{art:"702",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
-  docs:{sld:true,specs:true,ground:true,labels:false,struct:false,loadcalc:false}},
- {name:"Commercial rooftop PV, 98 kW",address:"Sample: two-story office building",occupancy:"B",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
-  pv:{dcKw:98,ns:16,voc:41.2,isc:13.1,coef:-0.29,tmin:-5,maxDcV:1000,acA:120,condA:20,ic:"supply",busA:800,mainA:800,brkA:150,opp:false,roof:true,rsd:false,supplyDetail:true},
-  ess:{unitKwh:null,units:1,loc:"outdoor",ul9540:false,disc:false},
-  em:{art:"702",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
-  docs:{sld:true,specs:true,ground:false,labels:true,struct:true,loadcalc:false}},
- {name:"Office tower emergency generator, 500 kW",address:"Sample: 14-story office building",occupancy:"B",code:"NEC 2023",hasPV:false,hasESS:false,hasEM:true,
-  pv:BLANK().pv,ess:BLANK().ess,
+  gnd:{svc:"2/0",svcMat:"cu",elec:"rod",gec:"6",ocpd:50,egc:"10"},
+  docs:{sld:true,specs:true,ground:true,labels:false,struct:false,loadcalc:false,stamp:true}},
+ {name:"Commercial rooftop PV, 98 kW",address:"Sample: two-story office building",occupancy:"B",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,hasFC:true,
+  pv:{invType:"string",dcKw:98,ns:16,voc:41.2,isc:13.1,coef:-0.29,tmin:-5,maxDcV:1000,acA:120,condA:20,ic:"supply",busA:800,mainA:800,brkA:150,opp:false,roof:true,rsd:false,roofRun:true,roofHt:null,roofPct:60,ballast:true,supplyDetail:true},
+  gnd:{svc:"1000",svcMat:"cu",elec:"other",gec:"1/0",ocpd:150,egc:"8"},
+  fc:{method:"xfmr",kva:500,z:5,volt:480,phase:"3",len:50,sets:2,size:"500",mat:"cu",aic:10000},
+  docs:{sld:true,specs:true,ground:false,labels:true,struct:true,loadcalc:false,stamp:false}},
+ {name:"Office tower emergency generator, 500 kW",address:"Sample: 14-story office building",occupancy:"B",code:"NEC 2023",hasPV:false,hasESS:false,hasEM:true,hasFC:true,
   em:{art:"700",genKw:500,loadKw:468,xferS:10,fuelH:1.5,atsListed:true,coord:false,sep:false,lm:false},
-  docs:{sld:true,specs:true,ground:true,labels:true,struct:false,loadcalc:true}},
- {name:"Clean residential PV, 6.8 kW",address:"Sample: single-family dwelling",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,
-  pv:{dcKw:6.8,ns:10,voc:45.1,isc:11.4,coef:-0.27,tmin:0,maxDcV:600,acA:28,condA:30,ic:"load",busA:225,mainA:200,brkA:35,opp:true,roof:true,rsd:true,supplyDetail:false},
-  ess:BLANK().ess,em:BLANK().em,
-  docs:{sld:true,specs:true,ground:true,labels:true,struct:true,loadcalc:false}}
-];
+  gnd:{svc:"2000",svcMat:"cu",elec:"other",gec:"3/0",ocpd:600,egc:"1"},
+  fc:{method:"utility",utilA:42000,aic:65000},
+  docs:{sld:true,specs:true,ground:true,labels:true,struct:false,loadcalc:true,stamp:true}},
+ {name:"Clean residential PV, 6.8 kW microinverters",address:"Sample: single-family dwelling",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,hasFC:false,
+  pv:{invType:"micro",dcKw:6.8,voc:45.1,coef:-0.27,tmin:0,microMaxV:60,microAcA:1.21,perBranch:9,maxPerBranch:13,branches:2,branchA:20,ic:"load",busA:225,mainA:200,brkA:30,opp:true,roof:true,rsd:true,roofRun:false,roofPct:25,ballast:false,supplyDetail:false},
+  gnd:{svc:"2/0",svcMat:"cu",elec:"rod",gec:"6",ocpd:20,egc:"12"},
+  docs:{sld:true,specs:true,ground:true,labels:true,struct:true,loadcalc:false,stamp:true}}
+].map(s=>merge(BLANK(),s));
+
+/* Code tables (NEC 2023) */
+function gecReq(svc,mat,elec){const i=si(svc);let r;
+ if(mat==="al")r=i<=si("1/0")?"8":i<=si("3/0")?"6":i<=si("250")?"4":i<=si("500")?"2":i<=si("900")?"1/0":i<=si("1750")?"2/0":"3/0";
+ else r=i<=si("2")?"8":i<=si("1/0")?"6":i<=si("3/0")?"4":i<=si("350")?"2":i<=si("600")?"1/0":i<=si("1100")?"2/0":"3/0";
+ const cap=elec==="rod"?"6":elec==="cee"?"4":null;if(cap&&si(r)>si(cap))r=cap;return r}
+const EGC_T=[[15,"14"],[20,"12"],[60,"10"],[100,"8"],[200,"6"],[300,"4"],[400,"3"],[500,"2"],[600,"1"],[800,"1/0"],[1000,"2/0"],[1200,"3/0"],[1600,"4/0"],[2000,"250"],[2500,"350"],[3000,"400"],[4000,"500"],[5000,"700"],[6000,"800"]];
+const egcReq=a=>{const r=EGC_T.find(([x])=>a<=x);return r?r[1]:"800"};
+/* Point-to-point C values, three single conductors in steel conduit, 600 V (approximate) */
+const C_CU={"14":389,"12":617,"10":981,"8":1557,"6":2425,"4":3806,"3":4774,"2":5907,"1":7293,"1/0":8925,"2/0":10755,"3/0":12844,"4/0":15082,"250":16483,"300":18177,"350":19704,"400":20566,"500":22185,"600":22965,"750":24137,"1000":25278};
+const C_AL={"14":237,"12":376,"10":599,"8":951,"6":1481,"4":2346,"3":2952,"2":3713,"1":4645,"1/0":5777,"2/0":7187,"3/0":8826,"4/0":10741,"250":12122,"300":13910,"350":15484,"400":16671,"500":18756,"600":20093,"750":21766,"1000":23478};
 
 const getP=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o);
+const gv=k=>k.startsWith("loc.")?LOCAL[k.slice(4)]:getP(data,k);
+const sv=(k,v)=>{if(k.startsWith("loc.")){LOCAL[k.slice(4)]=v;store.set("ohm.local",LOCAL)}else setP(data,k,v)};
 const setP=(o,p,v)=>{const ks=p.split(".");let a=o;ks.slice(0,-1).forEach(k=>{if(a[k]==null||typeof a[k]!=="object")a[k]={};a=a[k]});a[ks[ks.length-1]]=v};
 const deep=o=>JSON.parse(JSON.stringify(o));
-function merge(base,src){for(const k in src){if(src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])){if(!base[k]||typeof base[k]!=="object")base[k]={};merge(base[k],src[k])}else base[k]=src[k]}return base}
 const num=v=>(v===null||v===""||v===undefined||isNaN(+v))?null:+v;
 
 /* ---------- Engine ---------- */
@@ -646,23 +743,60 @@ function run(d){
  const need=(id,detail)=>out.push({id,status:"data",detail,sev:0,lik:0,score:0,rule:R[id]});
  // general
  d.docs.sld?pass("GEN-01","Single-line diagram included."):add("GEN-01","fail","No single-line diagram in the package.");
+ d.docs.stamp?pass("GEN-02","Plans signed or stamped."):add("GEN-02","fail","Plans are not signed or stamped by a licensed engineer or contractor.");
+ const g=d.gnd||{};
+ if(g.svc&&g.gec){const req=gecReq(g.svc,g.svcMat,g.elec);const det=`${g.svcMat==="al"?"Aluminum":"Copper"} service conductor ${szL(g.svc)} needs at least a ${szL(req)} copper GEC${g.elec!=="other"?` (250.66(${g.elec==="rod"?"A":"B"}) electrode limit)`:""}; ${szL(g.gec)} shown`;si(g.gec)<si(req)?add("GEN-04","fail",det):pass("GEN-04",det)}
+ else need("GEN-04","Needs the largest service conductor and the GEC size.");
+ const ocp=num(g.ocpd);
+ if(ocp!=null&&g.egc){const req=egcReq(ocp);const det=`${fmt(ocp,0)} A overcurrent device needs at least a ${szL(req)} copper EGC; ${szL(g.egc)} shown`;si(g.egc)<si(req)?add("GEN-05","fail",det):pass("GEN-05",det)}
+ else need("GEN-05","Needs the overcurrent device rating and the EGC size.");
+ if(d.hasFC){const f=d.fc,aic=num(f.aic);let I=null,how="";
+  if(f.method==="utility"){I=num(f.utilA);how=`${fmt(I,0)} A from utility letter`}
+  else{const kva=num(f.kva),z=num(f.z),V=num(f.volt),L=num(f.len)||0,n=num(f.sets)||1,ph=f.phase==="1"?1:3,C=(f.mat==="al"?C_AL:C_CU)[f.size];
+   if(kva!=null&&z&&V){const fla=ph===3?kva*1000/(1.732*V):kva*1000/V;const isc=fla*100/(z*0.9);
+    if(L>0&&C){const ff=(ph===3?1.732:2)*L*isc/(C*n*V),M=1/(1+ff);I=isc*M;how=`Point-to-point estimate: ${fmt(isc,0)} A at transformer (${fmt(kva,0)} kVA, ${fmt(z,2)}%Z x 0.9), M = ${fmt(M,3)} over ${fmt(L,0)} ft of ${n} x ${szL(f.size)} ${f.mat==="al"?"Al":"Cu"} = ${fmt(I,0)} A at service`}
+    else{I=isc;how=`Estimate at transformer secondary: ${fmt(isc,0)} A (${fmt(kva,0)} kVA, ${fmt(z,2)}%Z x 0.9), no conductor reduction`}}}
+  if(I==null||aic==null)need("GEN-03","Needs the available fault current (or transformer data) and the lowest equipment AIC or SCCR.");
+  else{const det=`${how} vs ${fmt(aic,0)} A lowest equipment rating. Confirm with a fault current study.`;I>aic?add("GEN-03","fail",det):I>0.9*aic?add("GEN-03","warn",det+" Within 10% of the rating.",[4,3]):pass("GEN-03",det)}}
  if(d.hasPV){
-  const p=d.pv;const ns=num(p.ns),voc=num(p.voc),coef=num(p.coef),tmin=num(p.tmin),maxV=num(p.maxDcV);
-  if([ns,voc,coef,tmin,maxV].some(v=>v==null))need("PV-01","Needs modules per string, Voc, temperature coefficient, design low temperature and inverter max DC input.");
-  else{const k=1+(tmin-25)*coef/100;const v=ns*voc*k;let lim=maxV,why="inverter max DC input";if(dwell&&600<lim){lim=600;why="600 V limit for one- and two-family dwellings"}
-   const det=`${ns} x ${fmt(voc,1)} V x ${fmt(k,3)} = ${fmt(v,1)} V at ${fmt(tmin,0)} °C vs ${fmt(lim,0)} V ${why}`;
-   if(v>lim)add("PV-01","fail",det);else if(v>0.97*lim)add("PV-01","warn",det+` (${fmt(v/lim*100,1)}% of limit)`,[3,3]);else pass("PV-01",det);}
-  const isc=num(p.isc),cA=num(p.condA);
-  if(isc==null||cA==null)need("PV-02","Needs module Isc and corrected conductor ampacity.");
-  else{const req=isc*1.5625;const det=`Required ${fmt(isc,1)} A x 1.25 x 1.25 = ${fmt(req,1)} A vs ${fmt(cA,0)} A provided`;req>cA?add("PV-02","fail",det):pass("PV-02",det)}
-  const ac=num(p.acA),bus=num(p.busA),main=num(p.mainA),brk=num(p.brkA);
+  const p=d.pv,it=p.invType||"string",micro=it==="micro";
+  const coef=num(p.coef),tmin=num(p.tmin),voc=num(p.voc),kT=(coef!=null&&tmin!=null)?1+(tmin-25)*coef/100:null;
+  const vlim=(v,why)=>dwell&&v>600?[600,"600 V limit for one- and two-family dwellings"]:[v,why];
+  if(it==="string"){const ns=num(p.ns),maxV=num(p.maxDcV);
+   if([ns,voc,coef,tmin,maxV].some(v=>v==null))need("PV-01","Needs modules per string, Voc, temperature coefficient, design low temperature and inverter max DC input.");
+   else{const v=ns*voc*kT;const [lim,why]=vlim(maxV,"inverter max DC input");const det=`${ns} x ${fmt(voc,1)} V x ${fmt(kT,3)} = ${fmt(v,1)} V at ${fmt(tmin,0)} °C vs ${fmt(lim,0)} V ${why}`;
+    if(v>lim)add("PV-01","fail",det);else if(v>0.97*lim)add("PV-01","warn",det+` (${fmt(v/lim*100,1)}% of limit)`,[3,3]);else pass("PV-01",det);}}
+  else if(it==="optimizer"){const ov=num(p.optV),maxV=num(p.maxDcV);
+   if(ov==null||maxV==null)need("PV-01","Needs the optimizer system's maximum string voltage and the inverter max DC input.");
+   else{const [lim,why]=vlim(maxV,"inverter max DC input");const det=`Optimizer string voltage ${fmt(ov,0)} V vs ${fmt(lim,0)} V ${why}`;ov>lim?add("PV-01","fail",det):pass("PV-01",det)}}
+  else{const mv=num(p.microMaxV);
+   if([voc,coef,tmin,mv].some(v=>v==null))need("PV-01","Needs module Voc, temperature coefficient, design low temperature and microinverter max DC input.");
+   else{const v=voc*kT;const det=`${fmt(voc,1)} V x ${fmt(kT,3)} = ${fmt(v,1)} V per module at ${fmt(tmin,0)} °C vs ${fmt(mv,0)} V microinverter max input`;
+    if(v>mv)add("PV-01","fail",det);else if(v>0.97*mv)add("PV-01","warn",det,[3,3]);else pass("PV-01",det);}}
+  const ht=num(p.roofHt),adder=!!(p.roof&&p.roofRun&&ht!=null&&ht<0.875&&!p.xhhw2);
+  if(p.roof&&p.roofRun){ht==null?add("PV-11","fail","Raceways or cables run on the roof, but their height above the roof is not shown."):pass("PV-11",`${fmt(ht,2)} in. above the roof. `+(ht<0.875?(p.xhhw2?"Under 7/8 in., but XHHW-2 conductors are exempt from the adder.":"Under 7/8 in., so the 33 °C adder applies to the ampacity check."):"At least 7/8 in., so no adder applies."))}
+  if(micro)pass("PV-02","Not applicable: microinverters have no DC source circuits beyond the module leads.");
+  else{const isc=num(p.isc),base=num(p.condBase),tmax=num(p.tmax),ccc=num(p.ccc)||3;
+   if(isc==null)need("PV-02","Needs module Isc.");
+   else{const req=isc*1.5625;let prov=null,how="";
+    if(base!=null&&tmax!=null){const ta=tmax+(adder?33:0),cf=ta>=90?0:Math.sqrt((90-ta)/60),af=ccc<=3?1:ccc<=6?.8:ccc<=9?.7:ccc<=20?.5:ccc<=30?.45:ccc<=40?.4:.35;prov=base*cf*af;
+     how=`${fmt(base,0)} A x ${fmt(cf,3)} at ${fmt(ta,0)} °C${adder?" (incl. 33 °C rooftop adder)":""} x ${fmt(af,2)} for ${ccc} conductors = ${fmt(prov,1)} A`}
+    else if(num(p.condA)!=null){prov=num(p.condA);how=`${fmt(prov,0)} A corrected ampacity entered`}
+    if(prov==null)need("PV-02","Needs the 90 °C table ampacity and design high temperature, or an already-corrected ampacity.");
+    else{const det=`Required ${fmt(isc,1)} A x 1.25 x 1.25 = ${fmt(req,1)} A vs ${how}`;req>prov?add("PV-02","fail",det):pass("PV-02",det)}}}
+  let ac=num(p.acA);
+  if(micro){const per=num(p.perBranch),mx=num(p.maxPerBranch),br=num(p.branches),ma=num(p.microAcA),bA=num(p.branchA);
+   if(per==null||ma==null||bA==null)need("PV-12","Needs microinverters per branch, microinverter AC output and branch breaker size.");
+   else{const req=per*ma*1.25,over=mx!=null&&per>mx;const det=`${per} x ${fmt(ma,2)} A x 1.25 = ${fmt(req,1)} A vs ${fmt(bA,0)} A breaker`+(mx!=null?`; ${per} per branch vs ${mx} manufacturer max`:"");(req>bA||over)?add("PV-12","fail",det):pass("PV-12",det)}
+   ac=(per!=null&&br!=null&&ma!=null)?per*br*ma:null}
+  const bus=num(p.busA),main=num(p.mainA),brk=num(p.brkA);
   if(p.ic==="load"){
-   if([ac,bus,main].some(v=>v==null))need("PV-03","Needs inverter AC output, busbar rating and main OCPD.");
-   else{const pvA=1.25*ac,sum=main+pvA;const lim=p.opp?1.2*bus:bus;const det=`${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${fmt(ac,1)} A) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp?"120% of":"100% of"} ${fmt(bus,0)} A busbar)`;
+   if([ac,bus,main].some(v=>v==null))need("PV-03",micro?"Needs microinverters per branch, number of branches, microinverter AC output, busbar rating and main OCPD.":"Needs inverter AC output, busbar rating and main OCPD.");
+   else{const pvA=1.25*ac,sum=main+pvA;const lim=p.opp?1.2*bus:bus;const det=`${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${fmt(ac,1)} A${micro?" total microinverter output":""}) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp?"120% of":"100% of"} ${fmt(bus,0)} A busbar)`;
     sum>lim?add("PV-03","fail",det):(sum>0.97*lim?add("PV-03","warn",det,[3,3]):pass("PV-03",det))}
   }
   if(ac!=null&&brk!=null){const req=1.25*ac;const det=`Breaker ${fmt(brk,0)} A vs ${fmt(req,1)} A minimum (125% of ${fmt(ac,1)} A)`;brk<req?add("PV-04","fail",det):pass("PV-04",det)}
-  else need("PV-04","Needs inverter AC output and PV breaker size.");
+  else need("PV-04",micro?"Needs microinverter output, branch count and PV breaker size.":"Needs inverter AC output and PV breaker size.");
   if(p.roof){p.rsd?pass("PV-05","Rapid shutdown method documented."):add("PV-05","fail","Roof-mounted array with no rapid shutdown method identified.")}
   if(p.ic==="supply"){p.supplyDetail?pass("PV-06","Supply-side tap detail included."):add("PV-06","fail","Supply-side connection with no tap detail.")}
   d.docs.ground?pass("PV-07","Grounding detail included."):add("PV-07","fail","No grounding and bonding detail in the package.");
@@ -675,7 +809,7 @@ function run(d){
   const u=num(e.unitKwh),n=num(e.units)||1;
   if(dwell){
    if(u==null)need("ES-02","Needs unit capacity.");else{const det=`Largest unit ${fmt(u,1)} kWh vs 20 kWh per unit`;u>20?add("ES-02","fail",det):pass("ES-02",det)}
-   const LIM={garage:80,utility:40,outdoor:80,habitable:0};const nm={garage:"attached garage",utility:"utility closet or basement",outdoor:"exterior wall or outdoors",habitable:"habitable space"}[e.loc];
+   const LIM={garage:80,utility:40,outdoor:80,habitable:0};const nm={garage:"a garage",utility:"utility closet or basement",outdoor:"exterior wall or outdoors",habitable:"habitable space"}[e.loc];
    if(u!=null&&e.loc!=="habitable"){const agg=u*n,lim=LIM[e.loc];const det=`${n} x ${fmt(u,1)} kWh = ${fmt(agg,1)} kWh vs ${lim} kWh in ${nm}`;agg>lim?add("ES-03","fail",det):(agg>0.9*lim?add("ES-03","warn",det+" (within 10% of limit)",[3,3]):pass("ES-03",det))}
    e.loc==="habitable"?add("ES-04","fail","ESS shown inside habitable space."):pass("ES-04",`Located in ${nm}.`);
   }
@@ -694,8 +828,12 @@ function run(d){
   if(art==="700"){const f=num(m.fuelH);if(f==null)need("EM-06","Needs on-site fuel duration.");else{const det=`${fmt(f,1)} h on site vs 2 h minimum`;f<2?add("EM-06","fail",det):pass("EM-06",det)}}
   d.docs.loadcalc?pass("EM-07","Load calculation provided."):add("EM-07","fail","No alternate-source load calculation in the package.");
  }
+ const flags=[],nonres=!["R-3","R-2"].includes(d.occupancy);
+ if(d.hasPV&&d.pv.roof&&LOCAL.struct){const pct=num(d.pv.roofPct),th=num(LOCAL.structPct)??50;if(d.pv.ballast||(pct!=null&&pct>th))flags.push({k:"Structural",t:"Building or structural review likely required",d:d.pv.ballast?"Ballasted roof-mounted array.":`PV covers ${fmt(pct,0)}% of the roof, above the ${fmt(th,0)}% local threshold.`})}
+ if(d.hasPV&&nonres&&LOCAL.fireComm)flags.push({k:"Fire",t:"Fire department review likely required",d:"PV on a nonresidential building."});
+ if(d.hasESS&&d.ess.loc!=="outdoor"&&LOCAL.fireEss)flags.push({k:"Fire",t:"Fire department review likely required",d:"Battery storage installed inside a building."});
  const findings=out.filter(f=>f.status==="fail"||f.status==="warn").sort((a,b)=>b.score-a.score||b.sev-a.sev||a.id.localeCompare(b.id));
- return {findings,passed:out.filter(f=>f.status==="pass"),missing:out.filter(f=>f.status==="data"),all:out};
+ return {findings,passed:out.filter(f=>f.status==="pass"),missing:out.filter(f=>f.status==="data"),all:out,flags};
 }
 
 /* ---------- State ---------- */
@@ -704,24 +842,24 @@ const saved=store.get("ohm.project");if(saved&&saved.name!==undefined){data=merg
 
 /* ---------- Form render ---------- */
 function fieldHTML(f){
- const id="f_"+f.k.replace(/\./g,"_");const v=getP(data,f.k);const cls="f"+(f.w?" wide":"");
- if(f.t==="bool")return `<div class="${cls}"><label class="chk" for="${id}"><input type="checkbox" id="${id}" data-k="${f.k}" data-t="bool" ${v?"checked":""}><span>${esc(f.l)}</span></label></div>`;
- if(f.t==="sel")return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><select class="ctl" style="width:100%" id="${id}" data-k="${f.k}" data-t="sel">${f.o.map(([val,lab])=>`<option value="${esc(val)}" ${String(v)===val?"selected":""}>${esc(lab)}</option>`).join("")}</select></div>`;
- if(f.t==="num")return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><div class="unitwrap"><input class="ctl" id="${id}" data-k="${f.k}" data-t="num" type="number" step="any" inputmode="decimal" value="${v==null?"":esc(v)}"><span class="unit">${esc(f.u||"")}</span></div></div>`;
- return `<div class="${cls}"><label for="${id}">${esc(f.l)}</label><input class="ctl" id="${id}" data-k="${f.k}" data-t="text" type="text" value="${esc(v)}"></div>`;
+ const id="f_"+f.k.replace(/\./g,"_");const v=gv(f.k);const cls="f"+(f.w?" wide":"");const at=` data-fk="${f.k}"${f.sh&&!f.sh(data)?" hidden":""}`;
+ if(f.t==="bool")return `<div class="${cls}"${at}><label class="chk" for="${id}"><input type="checkbox" id="${id}" data-k="${f.k}" data-t="bool" ${v?"checked":""}><span>${esc(f.l)}</span></label></div>`;
+ if(f.t==="sel")return `<div class="${cls}"${at}><label for="${id}">${esc(f.l)}</label><select class="ctl" style="width:100%" id="${id}" data-k="${f.k}" data-t="sel">${f.o.map(([val,lab])=>`<option value="${esc(val)}" ${String(v)===val?"selected":""}>${esc(lab)}</option>`).join("")}</select></div>`;
+ if(f.t==="num")return `<div class="${cls}"${at}><label for="${id}">${esc(f.l)}</label><div class="unitwrap"><input class="ctl" id="${id}" data-k="${f.k}" data-t="num" type="number" step="any" inputmode="decimal" value="${v==null?"":esc(v)}"><span class="unit">${esc(f.u||"")}</span></div></div>`;
+ return `<div class="${cls}"${at}><label for="${id}">${esc(f.l)}</label><input class="ctl" id="${id}" data-k="${f.k}" data-t="text" type="text" value="${esc(v)}"></div>`;
 }
 function renderForm(){
  $("#form").innerHTML=FS.map(s=>`<fieldset data-sec="${s.key}" ${s.show&&!data[s.show]?"hidden":""}><legend>${esc(s.legend)}</legend><div class="fgrid">${s.fields.map(fieldHTML).join("")}</div></fieldset>`).join("");
 }
-function syncSections(){FS.forEach(s=>{if(s.show){$(`fieldset[data-sec="${s.key}"]`).hidden=!data[s.show]}})}
+function syncSections(){FS.forEach(s=>{if(s.show){$(`fieldset[data-sec="${s.key}"]`).hidden=!data[s.show]}s.fields.forEach(f=>{if(f.sh){const el=$(`[data-fk="${f.k}"]`);if(el)el.hidden=!f.sh(data)}})})}
 let rt;
 $("#form").addEventListener("input",e=>{
  const el=e.target;if(!el.dataset.k)return;
- const t=el.dataset.t;const v=t==="bool"?el.checked:t==="num"?num(el.value):el.value;setP(data,el.dataset.k,v);
- if(["hasPV","hasESS","hasEM"].includes(el.dataset.k))syncSections();
+ const t=el.dataset.t;const v=t==="bool"?el.checked:t==="num"?num(el.value):el.value;sv(el.dataset.k,v);
+ syncSections();
  clearTimeout(rt);rt=setTimeout(update,120);
 });
-$("#form").addEventListener("change",e=>{if(e.target.tagName==="SELECT"){setP(data,e.target.dataset.k,e.target.value);update()}});
+$("#form").addEventListener("change",e=>{if(e.target.tagName==="SELECT"){sv(e.target.dataset.k,e.target.value);syncSections();update()}});
 $("#form").addEventListener("submit",e=>e.preventDefault());
 
 /* ---------- Output render ---------- */
@@ -733,6 +871,7 @@ function renderOut(){
  let h="";
  if(!F.length)h+=`<div class="empty"><b style="color:var(--ink)">No likely deficiencies found.</b> The checks below passed on the data entered. A reviewer still confirms the plans match these values.</div>`;
  h+=F.map(f=>`<div class="find">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4><div class="meta">${bandPill(f)}<span class="label">${esc(f.id)} &middot; ${esc(f.rule.ref)}</span><span class="label">S${f.sev} x L${f.lik}</span></div><div class="det">${esc(f.detail)}</div><div class="fix"><b>Fix:</b> ${esc(FIX[f.id])}</div></div></div>`).join("");
+ if(result.flags.length)h+=`<div class="passed"><div style="font-size:var(--t-sm);font-weight:700">Coordination flags &middot; local requirements</div><ul>${result.flags.map(f=>`<li><span class="mono">${esc(f.k)}</span><span><b>${esc(f.t)}.</b> ${esc(f.d)}</span></li>`).join("")}</ul><p style="font-size:var(--t-xs);color:var(--muted);margin-top:6px">Not scored. These depend on local rules; switch them on or off under Local requirements.</p></div>`;
  if(result.missing.length)h+=`<div class="passed"><details open><summary>${result.missing.length} check${result.missing.length>1?"s":""} need more data</summary><ul>${result.missing.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
  if(result.passed.length)h+=`<div class="passed"><details><summary>${result.passed.length} check${result.passed.length>1?"s":""} passed</summary><ul>${result.passed.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.rule.title.replace(/ (missing|not shown|not documented|not provided|exceeds|undersized|below).*$/,""))}: ${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
  $("#out").innerHTML=h;
@@ -788,6 +927,7 @@ function renderNotice(all){
  let t=`CORRECTION LIST\n${data.name||"Untitled project"}\n${data.address?data.address+"\n":""}Code basis: ${data.code}\n\n`;
  if(!defs.length)t+="No items marked as deficiencies yet.";
  else t+=defs.map((f,i)=>{const n=(dec[f.id].note||"").trim();return `${i+1}. [${f.rule.ref}] ${f.rule.title}.\n   Finding: ${f.detail}\n   Required: ${FIX[f.id]}${n?`\n   Reviewer note: ${n}`:""}`}).join("\n\n");
+ if(result.flags.length)t+="\n\nCOORDINATION (LOCAL REQUIREMENTS)\n"+result.flags.map(f=>`- ${f.t}: ${f.d}`).join("\n");
  $("#notice").textContent=t;
 }
 $("#rvList").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;const id=b.closest(".ck").dataset.id;dec[id]=dec[id]||{};dec[id].d=dec[id].d===b.dataset.d?null:b.dataset.d;store.set(decKey(),dec);
@@ -891,7 +1031,7 @@ if(window.matchMedia)matchMedia("(prefers-color-scheme: dark)").addEventListener
  const grp={All:"General",PV:"Photovoltaic systems",ESS:"Energy storage",EM:"Emergency and standby power"};let last="";
  let h=`<thead><tr><th>Rule</th><th>Check</th><th>Reference</th><th>Type</th><th>Default score</th></tr></thead><tbody>`;
  RULES.forEach(r=>{if(r.sys!==last){h+=`<tr class="grp"><td colspan="5">${grp[r.sys]}</td></tr>`;last=r.sys}const sc=r.base[0]*r.base[1],b=BAND(sc);
-  h+=`<tr><td class="mono">${r.id}</td><td>${esc(r.title)}</td><td class="mono">${esc(r.ref)}</td><td>${["PV-01","PV-02","PV-03","PV-04","ES-02","ES-03","EM-01","EM-02","EM-06"].includes(r.id)?"Calculated":"Presence check"}</td><td><span class="pill b-${b.k}">${b.i} ${sc} ${b.n}</span></td></tr>`});
+  h+=`<tr><td class="mono">${r.id}</td><td>${esc(r.title)}</td><td class="mono">${esc(r.ref)}</td><td>${["GEN-03","GEN-04","GEN-05","PV-01","PV-02","PV-03","PV-04","PV-12","ES-02","ES-03","EM-01","EM-02","EM-06"].includes(r.id)?"Calculated":"Presence check"}</td><td><span class="pill b-${b.k}">${b.i} ${sc} ${b.n}</span></td></tr>`});
  $("#lib").innerHTML=h+"</tbody>";
  $("#ruleCountH").textContent=`${RULES.length} rules in the MVP`;
 })();
