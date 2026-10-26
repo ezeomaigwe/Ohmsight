@@ -286,7 +286,7 @@ footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;displa
       <a href="#roadmap"><span>E-5</span>Roadmap</a>
       <a href="#revisions"><span>E-6</span>Revisions</a>
     </nav>
-    <div class="tb-meta"><span>REV 0.2</span><span>2026-10-07</span></div>
+    <div class="tb-meta"><span>REV 0.3</span><span>2026-10-25</span></div>
   </div>
 </header>
 
@@ -501,6 +501,10 @@ footer{margin-top:64px;border-top:1.5px solid var(--ink);padding-top:18px;displa
     <div class="lib-wrap"><table class="lib">
       <thead><tr><th>Rev</th><th>Date</th><th>Change</th><th>Rules</th><th>Source</th></tr></thead>
       <tbody>
+        <tr><td class="mono">0.3</td><td class="mono">2026-10-25</td><td>Data-gap rule: when the height of rooftop raceways is missing, the DC conductor check reports that it needs data instead of passing, and the missing height carries that check's score (20, critical).</td><td class="mono">PV-02, PV-11</td><td>Verification, White Paper 3</td></tr>
+        <tr><td class="mono">0.3</td><td class="mono">2026-10-25</td><td>Busbar calculation adds the AC output of an AC-coupled battery, or uses the power control system current setting where one limits current to the panel.</td><td class="mono">PV-03<br>NEC 705.12(B)(3), 705.13</td><td>Verification, White Paper 3</td></tr>
+        <tr><td class="mono">0.3</td><td class="mono">2026-10-25</td><td>New rule: power control system listing and current setting must be documented.</td><td class="mono">ES-06<br>NEC 705.13</td><td>Taxonomy ES-06</td></tr>
+        <tr><td class="mono">0.3</td><td class="mono">2026-10-25</td><td>Each rule shows its matching deficiency taxonomy ID. Demonstration data regenerated to include all current rules.</td><td class="mono">All</td><td>White Papers 2 and 3</td></tr>
         <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Inverter type option. Microinverter checks for module voltage at the microinverter input and for the AC branch circuit; optimizer systems checked on their fixed string voltage.</td><td class="mono">PV-01, PV-12</td><td>Field review, E. Igwe</td></tr>
         <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Height of rooftop raceways and cables above the roof. Where under 7/8 in. and not XHHW-2, the 33 &deg;C adder is applied before the conductor ampacity check.</td><td class="mono">PV-02, PV-11<br>NEC 310.15(B)(2)</td><td>Field review, E. Igwe</td></tr>
         <tr><td class="mono">0.2</td><td class="mono">2026-10-07</td><td>Grounding electrode conductor sized from the service conductors, and equipment grounding conductor sized from the overcurrent device.</td><td class="mono">GEN-04, GEN-05<br>NEC 250.66, 250.122</td><td>Field review, E. Igwe</td></tr>
@@ -561,6 +565,7 @@ const RULES=[
  {id:"ES-03",sys:"ESS",title:"Aggregate ESS capacity exceeds the limit for its location",ref:"IRC R328; NFPA 855",base:[4,5]},
  {id:"ES-04",sys:"ESS",title:"ESS located in a habitable space or sleeping room",ref:"IRC R328; NFPA 855",base:[5,5]},
  {id:"ES-05",sys:"ESS",title:"ESS disconnecting means not shown",ref:"NEC 706.15",base:[4,4]},
+ {id:"ES-06",sys:"ESS",title:"Power control system listing or current setting not documented",ref:"NEC 705.13",base:[4,4]},
  {id:"EM-01",sys:"EM",title:"Generator capacity below calculated load",ref:"NEC 700.4, 701.4, 702.4",base:[5,5]},
  {id:"EM-02",sys:"EM",title:"Transfer time exceeds the limit for the system",ref:"NEC 700.12, 701.12",base:[5,5]},
  {id:"EM-03",sys:"EM",title:"Selective coordination study not provided",ref:"NEC 700.32, 701.32",base:[5,4]},
@@ -569,6 +574,8 @@ const RULES=[
  {id:"EM-06",sys:"EM",title:"On-site fuel below 2 hours at full demand load",ref:"NEC 700.12",base:[4,5]},
  {id:"EM-07",sys:"EM",title:"Load calculation for the alternate source not provided",ref:"NEC 700.4, 701.4, 702.4",base:[3,4]}
 ];
+const TAX={"GEN-01":"GD-02","GEN-02":"(local)","GEN-03":"SD-01","GEN-04":"SD-05","GEN-05":"SD-05","PV-01":"PV-01","PV-02":"PV-02","PV-03":"PV-05","PV-04":"PV-02","PV-05":"PV-03","PV-06":"PV-06","PV-07":"PV-10","PV-08":"PV-12","PV-09":"PV-08","PV-10":"(building)","PV-11":"SD-04","PV-12":"PV-02","ES-01":"ES-05","ES-02":"ES-02","ES-03":"ES-02","ES-04":"ES-02","ES-05":"ES-01","ES-06":"ES-06","EM-01":"EM-05","EM-02":"(candidate)","EM-03":"EM-04","EM-04":"EM-07","EM-05":"EM-02","EM-06":"(candidate)","EM-07":"EM-06"};
+RULES.forEach(r=>r.tax=TAX[r.id]);
 const R=Object.fromEntries(RULES.map(r=>[r.id,r]));
 const FIX={
  "GEN-01":"Provide a complete single-line diagram showing every source, disconnect, OCPD, conductor size and point of connection.",
@@ -593,6 +600,7 @@ const FIX={
  "ES-03":"Reduce aggregate capacity, split units across permitted locations, or relocate to an exterior wall or outdoors.",
  "ES-04":"Relocate the ESS out of habitable space, sleeping rooms and closets that open into them.",
  "ES-05":"Show a lockable ESS disconnecting means within sight of the ESS, with its label.",
+ "ES-06":"Provide the power control system listing and show its configured current limit, the busbar or conductors it protects, and how the setting is secured against change.",
  "EM-01":"Increase generator rating or add load management. Revise the load calculation to match.",
  "EM-02":"Select transfer equipment and controls that restore power within the system limit, and state the transfer time on the plans.",
  "EM-03":"Provide a selective coordination study by a qualified engineer for all emergency or legally required OCPDs.",
@@ -649,10 +657,15 @@ const FS=[
   {k:"pv.xhhw2",l:"XHHW-2 conductors",t:"bool",sh:d=>d.pv.roof&&d.pv.roofRun},
   {k:"pv.roofPct",l:"Share of roof covered by PV",t:"num",u:"%",sh:d=>d.pv.roof},
   {k:"pv.ballast",l:"Ballasted (non-penetrating) mounting",t:"bool",sh:d=>d.pv.roof},
-  {k:"pv.supplyDetail",l:"Supply-side tap detail shown",t:"bool",w:1}]},
+  {k:"pv.supplyDetail",l:"Supply-side tap detail shown",t:"bool",w:1},
+  {k:"pv.pcs",l:"Power control system limits current to the panel (705.13)",t:"bool",w:1},
+  {k:"pv.pcsA",l:"PCS current setting",t:"num",u:"A",sh:d=>d.pv.pcs},
+  {k:"pv.pcsDoc",l:"PCS listing and setting documented",t:"bool",sh:d=>d.pv.pcs}]},
  {key:"ess",legend:"Energy storage",show:"hasESS",fields:[
   {k:"ess.unitKwh",l:"Largest unit capacity",t:"num",u:"kWh"},{k:"ess.units",l:"Number of units",t:"num",u:"qty"},
   {k:"ess.loc",l:"Location",t:"sel",o:[["garage","Attached or detached garage"],["utility","Utility closet, basement or storage space"],["outdoor","Exterior wall or outdoors"],["habitable","Habitable space"]],w:1},
+  {k:"ess.coupling",l:"Coupling",t:"sel",o:[["dc","DC-coupled through the PV inverter"],["ac","AC-coupled with its own inverter"]],w:1},
+  {k:"ess.acA",l:"Battery inverter max AC output",t:"num",u:"A",sh:d=>d.ess.coupling==="ac"},
   {k:"ess.ul9540",l:"Listed to UL 9540",t:"bool"},{k:"ess.disc",l:"ESS disconnect shown",t:"bool"}]},
  {key:"em",legend:"Emergency or standby power",show:"hasEM",fields:[
   {k:"em.art",l:"System type",t:"sel",o:[["700","Emergency (Art. 700)"],["701","Legally required standby (Art. 701)"],["702","Optional standby (Art. 702)"]],w:1},
@@ -688,8 +701,8 @@ const FS=[
 ];
 
 const BLANK=()=>({name:"",address:"",occupancy:"R-3",code:"NEC 2023",hasPV:true,hasESS:false,hasEM:false,hasFC:false,
- pv:{invType:"string",dcKw:null,ns:null,optV:null,voc:null,isc:null,coef:-0.27,tmin:null,maxDcV:null,acA:null,microMaxV:null,microAcA:null,perBranch:null,maxPerBranch:null,branches:null,branchA:null,condBase:null,tmax:null,ccc:null,condA:null,ic:"load",busA:null,mainA:null,brkA:null,opp:true,roof:true,rsd:false,roofRun:false,roofHt:null,xhhw2:false,roofPct:null,ballast:false,supplyDetail:false},
- ess:{unitKwh:null,units:1,loc:"garage",ul9540:false,disc:false},
+ pv:{invType:"string",dcKw:null,ns:null,optV:null,voc:null,isc:null,coef:-0.27,tmin:null,maxDcV:null,acA:null,microMaxV:null,microAcA:null,perBranch:null,maxPerBranch:null,branches:null,branchA:null,condBase:null,tmax:null,ccc:null,condA:null,ic:"load",busA:null,mainA:null,brkA:null,opp:true,roof:true,rsd:false,roofRun:false,roofHt:null,xhhw2:false,roofPct:null,ballast:false,supplyDetail:false,pcs:false,pcsA:null,pcsDoc:false},
+ ess:{unitKwh:null,units:1,loc:"garage",coupling:"dc",acA:null,ul9540:false,disc:false},
  em:{art:"700",genKw:null,loadKw:null,xferS:null,fuelH:null,atsListed:false,coord:false,sep:false,lm:false},
  gnd:{svc:"",svcMat:"cu",elec:"other",gec:"",ocpd:null,egc:""},
  fc:{method:"utility",utilA:null,kva:null,z:null,volt:null,phase:"3",len:null,sets:1,size:"",mat:"cu",aic:null},
@@ -774,10 +787,11 @@ function run(d){
    else{const v=voc*kT;const det=`${fmt(voc,1)} V x ${fmt(kT,3)} = ${fmt(v,1)} V per module at ${fmt(tmin,0)} °C vs ${fmt(mv,0)} V microinverter max input`;
     if(v>mv)add("PV-01","fail",det);else if(v>0.97*mv)add("PV-01","warn",det,[3,3]);else pass("PV-01",det);}}
   const ht=num(p.roofHt),adder=!!(p.roof&&p.roofRun&&ht!=null&&ht<0.875&&!p.xhhw2);
-  if(p.roof&&p.roofRun){ht==null?add("PV-11","fail","Raceways or cables run on the roof, but their height above the roof is not shown."):pass("PV-11",`${fmt(ht,2)} in. above the roof. `+(ht<0.875?(p.xhhw2?"Under 7/8 in., but XHHW-2 conductors are exempt from the adder.":"Under 7/8 in., so the 33 °C adder applies to the ampacity check."):"At least 7/8 in., so no adder applies."))}
+  if(p.roof&&p.roofRun){ht==null?add("PV-11","fail","Raceways or cables run on the roof, but their height above the roof is not shown."+(micro?"":" The DC conductor ampacity check (PV-02) cannot be completed without it, so this finding carries that check's score."),micro?null:[4,5]):pass("PV-11",`${fmt(ht,2)} in. above the roof. `+(ht<0.875?(p.xhhw2?"Under 7/8 in., but XHHW-2 conductors are exempt from the adder.":"Under 7/8 in., so the 33 °C adder applies to the ampacity check."):"At least 7/8 in., so no adder applies."))}
   if(micro)pass("PV-02","Not applicable: microinverters have no DC source circuits beyond the module leads.");
   else{const isc=num(p.isc),base=num(p.condBase),tmax=num(p.tmax),ccc=num(p.ccc)||3;
    if(isc==null)need("PV-02","Needs module Isc.");
+   else if(p.roof&&p.roofRun&&ht==null)need("PV-02","Needs the height of rooftop raceways above the roof (PV-11) to decide whether the 33 °C adder applies.");
    else{const req=isc*1.5625;let prov=null,how="";
     if(base!=null&&tmax!=null){const ta=tmax+(adder?33:0),cf=ta>=90?0:Math.sqrt((90-ta)/60),af=ccc<=3?1:ccc<=6?.8:ccc<=9?.7:ccc<=20?.5:ccc<=30?.45:ccc<=40?.4:.35;prov=base*cf*af;
      how=`${fmt(base,0)} A x ${fmt(cf,3)} at ${fmt(ta,0)} °C${adder?" (incl. 33 °C rooftop adder)":""} x ${fmt(af,2)} for ${ccc} conductors = ${fmt(prov,1)} A`}
@@ -790,9 +804,12 @@ function run(d){
    else{const req=per*ma*1.25,over=mx!=null&&per>mx;const det=`${per} x ${fmt(ma,2)} A x 1.25 = ${fmt(req,1)} A vs ${fmt(bA,0)} A breaker`+(mx!=null?`; ${per} per branch vs ${mx} manufacturer max`:"");(req>bA||over)?add("PV-12","fail",det):pass("PV-12",det)}
    ac=(per!=null&&br!=null&&ma!=null)?per*br*ma:null}
   const bus=num(p.busA),main=num(p.mainA),brk=num(p.brkA);
+  const essAc=(d.hasESS&&d.ess.coupling==="ac")?num(d.ess.acA):0,pcsA=p.pcs?num(p.pcsA):null;
   if(p.ic==="load"){
-   if([ac,bus,main].some(v=>v==null))need("PV-03",micro?"Needs microinverters per branch, number of branches, microinverter AC output, busbar rating and main OCPD.":"Needs inverter AC output, busbar rating and main OCPD.");
-   else{const pvA=1.25*ac,sum=main+pvA;const lim=p.opp?1.2*bus:bus;const det=`${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${fmt(ac,1)} A${micro?" total microinverter output":""}) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp?"120% of":"100% of"} ${fmt(bus,0)} A busbar)`;
+   if(d.hasESS&&d.ess.coupling==="ac"&&essAc==null)need("PV-03","Needs the battery inverter AC output for an AC-coupled battery.");
+   else if(p.pcs&&pcsA==null)need("PV-03","Needs the power control system current setting.");
+   else if([ac,bus,main].some(v=>v==null))need("PV-03",micro?"Needs microinverters per branch, number of branches, microinverter AC output, busbar rating and main OCPD.":"Needs inverter AC output, busbar rating and main OCPD.");
+   else{const src=p.pcs?pcsA:ac+essAc;const what=p.pcs?`PCS setting ${fmt(pcsA,1)} A`:essAc?`${fmt(ac,1)} A PV + ${fmt(essAc,1)} A battery`:`${fmt(ac,1)} A${micro?" total microinverter output":""}`;const pvA=1.25*src,sum=main+pvA;const lim=p.opp?1.2*bus:bus;const det=`${fmt(main,0)} A main + ${fmt(pvA,1)} A (125% of ${what}) = ${fmt(sum,1)} A vs ${fmt(lim,0)} A (${p.opp?"120% of":"100% of"} ${fmt(bus,0)} A busbar)`;
     sum>lim?add("PV-03","fail",det):(sum>0.97*lim?add("PV-03","warn",det,[3,3]):pass("PV-03",det))}
   }
   if(ac!=null&&brk!=null){const req=1.25*ac;const det=`Breaker ${fmt(brk,0)} A vs ${fmt(req,1)} A minimum (125% of ${fmt(ac,1)} A)`;brk<req?add("PV-04","fail",det):pass("PV-04",det)}
@@ -804,6 +821,7 @@ function run(d){
   d.docs.labels?pass("PV-09","Labels and directory shown."):add("PV-09","fail","Label schedule and source directory not shown.");
   if(p.roof)d.docs.struct?pass("PV-10","Structural letter included."):add("PV-10","fail","Roof-mounted array with no structural letter or calculation.");
  }
+ if(d.hasPV&&d.pv.pcs){d.pv.pcsDoc?pass("ES-06",`Power control system documented${num(d.pv.pcsA)!=null?`, set to ${fmt(num(d.pv.pcsA),0)} A`:""}.`):add("ES-06","fail","A power control system is used to limit current, but its listing and current setting are not documented.")}
  if(d.hasESS){
   const e=d.ess;e.ul9540?pass("ES-01","UL 9540 listing documented."):add("ES-01","fail","No UL 9540 listing documented for the ESS.");
   const u=num(e.unitKwh),n=num(e.units)||1;
@@ -870,7 +888,7 @@ function renderOut(){
  $("#sum").innerHTML=[["crit","Critical"],["high","High"],["med","Medium"],["low","Low"]].map(([k,n])=>`<div><span class="label">${n}</span><b class="${c[k]?"":""}" style="color:${c[k]?`var(--${k})`:"var(--muted)"}">${c[k]}</b><span class="bar b-${k}" style="background:${c[k]?`var(--${k})`:"var(--grid)"}"></span></div>`).join("");
  let h="";
  if(!F.length)h+=`<div class="empty"><b style="color:var(--ink)">No likely deficiencies found.</b> The checks below passed on the data entered. A reviewer still confirms the plans match these values.</div>`;
- h+=F.map(f=>`<div class="find">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4><div class="meta">${bandPill(f)}<span class="label">${esc(f.id)} &middot; ${esc(f.rule.ref)}</span><span class="label">S${f.sev} x L${f.lik}</span></div><div class="det">${esc(f.detail)}</div><div class="fix"><b>Fix:</b> ${esc(FIX[f.id])}</div></div></div>`).join("");
+ h+=F.map(f=>`<div class="find">${scoreBox(f)}<div style="min-width:0"><h4>${esc(f.rule.title)}</h4><div class="meta">${bandPill(f)}<span class="label">${esc(f.id)} &middot; ${esc(f.rule.ref)}</span><span class="label">S${f.sev} x L${f.lik}</span><span class="label">Taxonomy ${esc(f.rule.tax)}</span></div><div class="det">${esc(f.detail)}</div><div class="fix"><b>Fix:</b> ${esc(FIX[f.id])}</div></div></div>`).join("");
  if(result.flags.length)h+=`<div class="passed"><div style="font-size:var(--t-sm);font-weight:700">Coordination flags &middot; local requirements</div><ul>${result.flags.map(f=>`<li><span class="mono">${esc(f.k)}</span><span><b>${esc(f.t)}.</b> ${esc(f.d)}</span></li>`).join("")}</ul><p style="font-size:var(--t-xs);color:var(--muted);margin-top:6px">Not scored. These depend on local rules; switch them on or off under Local requirements.</p></div>`;
  if(result.missing.length)h+=`<div class="passed"><details open><summary>${result.missing.length} check${result.missing.length>1?"s":""} need more data</summary><ul>${result.missing.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
  if(result.passed.length)h+=`<div class="passed"><details><summary>${result.passed.length} check${result.passed.length>1?"s":""} passed</summary><ul>${result.passed.map(f=>`<li><span class="mono">${f.id}</span><span>${esc(f.rule.title.replace(/ (missing|not shown|not documented|not provided|exceeds|undersized|below).*$/,""))}: ${esc(f.detail)}</span></li>`).join("")}</ul></details></div>`;
@@ -946,11 +964,11 @@ $(".tabs").addEventListener("keydown",e=>{const i=TABS.indexOf(document.activeEl
 
 /* ---------- Analytics (synthetic) ---------- */
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const P={"GEN-01":.05,"PV-01":.06,"PV-02":.08,"PV-03":.22,"PV-04":.07,"PV-05":.14,"PV-06":.05,"PV-07":.18,"PV-08":.2,"PV-09":.3,"PV-10":.16,"ES-01":.06,"ES-02":.04,"ES-03":.1,"ES-04":.03,"ES-05":.24,"EM-01":.12,"EM-02":.05,"EM-03":.36,"EM-04":.08,"EM-05":.21,"EM-06":.12,"EM-07":.16};
+const P={"GEN-02":.05,"GEN-03":.06,"GEN-04":.09,"GEN-05":.07,"PV-11":.12,"PV-12":.04,"ES-06":.08,"GEN-01":.05,"PV-01":.06,"PV-02":.08,"PV-03":.22,"PV-04":.07,"PV-05":.14,"PV-06":.05,"PV-07":.18,"PV-08":.2,"PV-09":.3,"PV-10":.16,"ES-01":.06,"ES-02":.04,"ES-03":.1,"ES-04":.03,"ES-05":.24,"EM-01":.12,"EM-02":.05,"EM-03":.36,"EM-04":.08,"EM-05":.21,"EM-06":.12,"EM-07":.16};
 const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"];
 const DATA=(function(){const rnd=mulberry(20261005);const rows=[];
  MONTHS.forEach((m,mi)=>{const n=22+Math.floor(rnd()*9);for(let i=0;i<n;i++){const u=rnd();const g=u<.55?"PV":u<.8?"ESS":"EM";
-  const ids=RULES.filter(r=>r.id==="GEN-01"||(g==="EM"?r.sys==="EM":r.sys==="PV"||(g==="ESS"&&r.sys==="ESS"))).map(r=>r.id);
+  const ids=RULES.filter(r=>r.sys==="All"||(g==="EM"?r.sys==="EM":r.sys==="PV"||(g==="ESS"&&r.sys==="ESS"))).map(r=>r.id);
   const drift=1-0.03*mi;const f=ids.filter(id=>rnd()<P[id]*drift*(g==="EM"&&id==="EM-03"&&mi>5?0.8:1));rows.push({m:mi,g,f})}});
  return rows})();
 const GROUPS=[{k:"PV",n:"PV only",c:"--s1"},{k:"ESS",n:"PV with storage",c:"--s2"},{k:"EM",n:"Emergency and standby",c:"--s3"}];
@@ -1029,9 +1047,9 @@ if(window.matchMedia)matchMedia("(prefers-color-scheme: dark)").addEventListener
 /* ---------- Rule library ---------- */
 (function(){
  const grp={All:"General",PV:"Photovoltaic systems",ESS:"Energy storage",EM:"Emergency and standby power"};let last="";
- let h=`<thead><tr><th>Rule</th><th>Check</th><th>Reference</th><th>Type</th><th>Default score</th></tr></thead><tbody>`;
- RULES.forEach(r=>{if(r.sys!==last){h+=`<tr class="grp"><td colspan="5">${grp[r.sys]}</td></tr>`;last=r.sys}const sc=r.base[0]*r.base[1],b=BAND(sc);
-  h+=`<tr><td class="mono">${r.id}</td><td>${esc(r.title)}</td><td class="mono">${esc(r.ref)}</td><td>${["GEN-03","GEN-04","GEN-05","PV-01","PV-02","PV-03","PV-04","PV-12","ES-02","ES-03","EM-01","EM-02","EM-06"].includes(r.id)?"Calculated":"Presence check"}</td><td><span class="pill b-${b.k}">${b.i} ${sc} ${b.n}</span></td></tr>`});
+ let h=`<thead><tr><th>Rule</th><th>Check</th><th>Reference</th><th>Type</th><th>Default score</th><th>Taxonomy</th></tr></thead><tbody>`;
+ RULES.forEach(r=>{if(r.sys!==last){h+=`<tr class="grp"><td colspan="6">${grp[r.sys]}</td></tr>`;last=r.sys}const sc=r.base[0]*r.base[1],b=BAND(sc);
+  h+=`<tr><td class="mono">${r.id}</td><td>${esc(r.title)}</td><td class="mono">${esc(r.ref)}</td><td>${["GEN-03","GEN-04","GEN-05","PV-01","PV-02","PV-03","PV-04","PV-12","ES-02","ES-03","EM-01","EM-02","EM-06"].includes(r.id)?"Calculated":"Presence check"}</td><td><span class="pill b-${b.k}">${b.i} ${sc} ${b.n}</span></td><td class="mono">${esc(r.tax)}</td></tr>`});
  $("#lib").innerHTML=h+"</tbody>";
  $("#ruleCountH").textContent=`${RULES.length} rules in the MVP`;
 })();
